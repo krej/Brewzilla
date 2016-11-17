@@ -245,58 +245,17 @@ public class NewRecipe extends AppCompatActivity {
         builder.setView(R.layout.fragment_hop_dialog);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-
-                /*Dialog f = (Dialog) dialog;
-                EditText name = (EditText) f.findViewById(R.id.name);
-                EditText amount = (EditText) f.findViewById(R.id.amount);
-                EditText aau = (EditText) f.findViewById(R.id.aau);
-                EditText time = (EditText) f.findViewById(R.id.time);
-
-                String sName = name.getText().toString();
-                double dAmount = Tools.ParseDouble(amount.getText().toString());
-                double dAAU = Tools.ParseDouble(aau.getText().toString());
-                int iTime = Tools.ParseInt(time.getText().toString());
-
-                if (sName.length() == 0 || dAmount == 0 || dAAU == 0) {
-
-
-                    CharSequence text = "Info Missing";
-                    Toast t = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
-                    t.show();
-                    return;
-                }
-
-                Hop hop = new Hop(sName, dAmount, dAAU, iTime);
-                m_HopAdapter.add(hop);*/
             }
         });
 
-
-
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
             }
         });
 
         final AlertDialog dialog = builder.create();
-        /*dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(final DialogInterface dialog) {
-                Button b = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
-                b.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-                        // TODO Do something
-
-                        //Dismiss once everything is OK.
-                        dialog.dismiss();
-                    }
-                });
-            }
-        });*/
         dialog.show();
+
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -312,8 +271,6 @@ public class NewRecipe extends AppCompatActivity {
                 int iTime = Tools.ParseInt(time.getText().toString());
 
                 if (sName.length() == 0 || dAmount == 0 || dAAU == 0) {
-                    //test
-
                     CharSequence text = "Info Missing";
                     Toast t = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
                     t.show();
