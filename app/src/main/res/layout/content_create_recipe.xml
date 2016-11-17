@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="beer.unaccpetable.brewzilla.NewRecipe"
+    tools:showIn="@layout/activity_create_recipe"
+    android:id="@+id/nestedscrollview"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recipe">
+
+        <TextView
+            android:text="Fermentables"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtGrains"
+            android:textSize="24sp"
+            android:textStyle="normal|bold"
+            android:textAlignment="center" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/listGrains" />
+
+        <TextView
+            android:text="Hops"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtHops"
+            android:textStyle="normal|bold"
+            android:textSize="24sp"
+            android:textAlignment="center" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/listHops" />
+
+        <TextView
+            android:text="Yeasts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtYeasts"
+            android:textStyle="normal|bold"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/listYeast" />
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
