@@ -312,7 +312,7 @@ public class NewRecipe extends AppCompatActivity {
                 int iTime = Tools.ParseInt(time.getText().toString());
 
                 if (sName.length() == 0 || dAmount == 0 || dAAU == 0) {
-
+                    //test
 
                     CharSequence text = "Info Missing";
                     Toast t = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
