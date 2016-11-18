@@ -1,5 +1,7 @@
 package beer.unaccpetable.brewzilla.Adapters;
 
+import java.util.ArrayList;
+
 import beer.unaccpetable.brewzilla.Ingredients.Hop;
 
 /**
@@ -20,5 +22,9 @@ public class HopAdapter extends Adapter {
 
         Hop item = (Hop)m_Dataset.get(position);
         holder.txtFooter.setText("Time: " + item.Time + " min");
+        holder.txtThirdLine.setText(item.Amount + " oz");
+        holder.txtFourthLine.setText(item.AAU + " AAU");
     }
+
+
 }

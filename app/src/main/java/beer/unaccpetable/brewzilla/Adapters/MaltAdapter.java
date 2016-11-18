@@ -17,5 +17,7 @@ public class MaltAdapter extends Adapter {
         if (OnlyEmptyIngredientExists()) return;
         Malt item = (Malt)m_Dataset.get(position);
         holder.txtFooter.setText("Weight: " + item.Weight + " lbs");
+        holder.txtThirdLine.setText("PPG: " + item.PPG);
+        holder.txtFourthLine.setText(item.Color + " SRM");
     }
 }

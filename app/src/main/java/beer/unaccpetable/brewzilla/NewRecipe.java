@@ -13,33 +13,32 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 
 import beer.unaccpetable.brewzilla.Adapters.HopAdapter;
 import beer.unaccpetable.brewzilla.Adapters.MaltAdapter;
 import beer.unaccpetable.brewzilla.Adapters.YeastAdapter;
 import beer.unaccpetable.brewzilla.Ingredients.Hop;
+import beer.unaccpetable.brewzilla.Ingredients.Ingredient;
 import beer.unaccpetable.brewzilla.Ingredients.Malt;
 import beer.unaccpetable.brewzilla.Ingredients.Yeast;
+import beer.unaccpetable.brewzilla.Tools.Calculations;
+import beer.unaccpetable.brewzilla.Tools.Tools;
 
 public class NewRecipe extends AppCompatActivity {
 
     RecyclerView lstGrains, lstHops,lstYeasts;
     private RecyclerView.LayoutManager m_HopLayoutManager, m_YeastLayoutManager, m_MaltLayoutManager;
     private HopAdapter m_HopAdapter = new HopAdapter(R.layout.hop_list);
-    private YeastAdapter m_YeastAdapter = new YeastAdapter(R.layout.hop_list);
+    private YeastAdapter m_YeastAdapter = new YeastAdapter(R.layout.yeast_list);
     private MaltAdapter m_MaltAdapter = new MaltAdapter(R.layout.hop_list);
 
     private Boolean bShowExtraFab = false;
-    View fabGrain;
-    View fabHop;
+    View fabGrain,fabHop, fabYeast;
+
+    private TextView txtIBU, txtOG, txtFG, txtABV, txtSRM;
 
 
 
@@ -54,11 +53,19 @@ public class NewRecipe extends AppCompatActivity {
         lstHops = (RecyclerView)findViewById(R.id.listHops);
         lstYeasts = (RecyclerView)findViewById(R.id.listYeast);
 
+        //stats card
+        txtIBU = (TextView)findViewById(R.id.txtIBUs);
+        txtOG = (TextView)findViewById(R.id.txtOG);
+        txtFG = (TextView)findViewById(R.id.txtFG);
+        txtABV = (TextView)findViewById(R.id.txtABV);
+        txtSRM = (TextView)findViewById(R.id.txtSRM);
 
         fabGrain = findViewById(R.id.fabGrain);
         fabGrain.setVisibility(View.INVISIBLE);
         fabHop = findViewById(R.id.fabHop);
         fabHop.setVisibility(View.INVISIBLE);
+        fabYeast = findViewById(R.id.fabYeast);
+        fabYeast.setVisibility(View.INVISIBLE);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -69,6 +76,8 @@ public class NewRecipe extends AppCompatActivity {
         SetUpHopList();
         SetUpYeastList();
         SetUpMaltList();
+
+        RefreshStats();
     }
 
     private void SetUpHopList() {
@@ -76,21 +85,21 @@ public class NewRecipe extends AppCompatActivity {
         m_HopLayoutManager = new LinearLayoutManager(this);
         lstHops.setLayoutManager(m_HopLayoutManager);
         lstHops.setAdapter(m_HopAdapter);
-        //m_HopAdapter.add(new Hop("Citra", 1.5, 12, 20));
+        m_HopAdapter.add(new Hop("Citra", 1.5, 13.65, 20));
     }
     private void SetUpYeastList() {
         lstYeasts.setHasFixedSize(false);
         m_YeastLayoutManager = new LinearLayoutManager(this);
         lstYeasts.setLayoutManager(m_YeastLayoutManager);
         lstYeasts.setAdapter(m_YeastAdapter);
-        //m_YeastAdapter.add(new Yeast("1056", "Wyeast", 6.66));
+        m_YeastAdapter.add(new Yeast("1056", "Wyeast", 75));
     }
     private void SetUpMaltList() {
         lstGrains.setHasFixedSize(false);
         m_MaltLayoutManager = new LinearLayoutManager(this);
         lstGrains.setLayoutManager(m_MaltLayoutManager);
         lstGrains.setAdapter(m_MaltAdapter);
-        m_MaltAdapter.add(new Malt("2 Row", 15, 5, 16));
+        m_MaltAdapter.add(new Malt("2 Row", 10, 37, 1));
     }
 
     private void SetButtonClickEvents() {
@@ -118,8 +127,7 @@ public class NewRecipe extends AppCompatActivity {
         fabGrain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //AddToList(valGrains, "New Grain", adptGrains);
-
+                AddIngredient("Malt");
             }
         });
 
@@ -128,7 +136,16 @@ public class NewRecipe extends AppCompatActivity {
         fabHop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddHop();
+                AddIngredient("Hop");
+            }
+        });
+
+        //Yeast FAB
+        FloatingActionButton fabYeast = (FloatingActionButton) findViewById(R.id.fabYeast);
+        fabYeast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddIngredient("Yeast");
             }
         });
     }
@@ -210,6 +227,10 @@ public class NewRecipe extends AppCompatActivity {
         fabHop.setVisibility(View.VISIBLE);
         anim.start();
 
+        anim = ViewAnimationUtils.createCircularReveal(fabYeast, cx, cy, 0, finalRadius);
+        fabYeast.setVisibility(View.VISIBLE);
+        anim.start();
+
         //FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
         //fab.setImageIcon("@android:drawable/ic_input_add");
 
@@ -238,11 +259,29 @@ public class NewRecipe extends AppCompatActivity {
             }
         });
         anim.start();
+
+        anim = ViewAnimationUtils.createCircularReveal(fabYeast, cx, cy, finalRadius, 0);
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                fabYeast.setVisibility(View.INVISIBLE);
+            }
+        });
+        anim.start();
     }
 
-    private void AddHop() {
+    private void AddIngredient(final String type) {
         AlertDialog.Builder builder = new AlertDialog.Builder(NewRecipe.this);
-        builder.setView(R.layout.fragment_hop_dialog);
+
+        if (type.equals("Hop")) {
+            builder.setView(R.layout.fragment_hop_dialog);
+        } else if(type.equals("Malt")) {
+            builder.setView(R.layout.fragment_malt_dialog);
+        } else if(type.equals("Yeast")) {
+            builder.setView(R.layout.fragment_yeast_dialog);
+        }
+
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
@@ -259,29 +298,101 @@ public class NewRecipe extends AppCompatActivity {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                Dialog f = (Dialog) dialog;
-                EditText name = (EditText) dialog.findViewById(R.id.name);
-                EditText amount = (EditText) dialog.findViewById(R.id.amount);
-                EditText aau = (EditText) dialog.findViewById(R.id.aau);
-                EditText time = (EditText) dialog.findViewById(R.id.time);
-
-                String sName = name.getText().toString();
-                double dAmount = Tools.ParseDouble(amount.getText().toString());
-                double dAAU = Tools.ParseDouble(aau.getText().toString());
-                int iTime = Tools.ParseInt(time.getText().toString());
-
-                if (sName.length() == 0 || dAmount == 0 || dAAU == 0) {
-                    CharSequence text = "Info Missing";
-                    Toast t = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
-                    t.show();
-                    return;
+                if (type.equals("Hop")) {
+                    if (!AddHop(dialog)) return;
+                } else if (type.equals("Malt")) {
+                    if (!AddMalt(dialog)) return;
+                } else if (type.equals("Yeast")) {
+                    if (!AddYeast(dialog)) return;
                 }
-
-                Hop hop = new Hop(sName, dAmount, dAAU, iTime);
-                m_HopAdapter.add(hop);
+                RefreshStats();
                 dialog.dismiss();
             }
         });
     }
 
+    private boolean AddHop(Dialog d) {
+        EditText name = (EditText) d.findViewById(R.id.name);
+        EditText amount = (EditText) d.findViewById(R.id.amount);
+        EditText aau = (EditText) d.findViewById(R.id.aau);
+        EditText time = (EditText) d.findViewById(R.id.time);
+
+        String sName = name.getText().toString();
+        double dAmount = Tools.ParseDouble(amount.getText().toString());
+        double dAAU = Tools.ParseDouble(aau.getText().toString());
+        int iTime = Tools.ParseInt(time.getText().toString());
+
+        if (sName.length() == 0 || dAmount == 0 || dAAU == 0) {
+            CharSequence text = "Info Missing";
+            Toast t = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+            t.show();
+            return false;
+        }
+
+        Hop hop = new Hop(sName, dAmount, dAAU, iTime);
+        m_HopAdapter.add(hop);
+        return true;
+    }
+
+    private boolean AddMalt(Dialog d) {
+        EditText name = (EditText) d.findViewById(R.id.name);
+        EditText weight = (EditText) d.findViewById(R.id.weight);
+        EditText ppg = (EditText) d.findViewById(R.id.ppg);
+        EditText color = (EditText) d.findViewById(R.id.color);
+
+
+        String sName = name.getText().toString();
+        double dWeight = Tools.ParseDouble(weight.getText().toString());
+        double dPPG = Tools.ParseDouble(ppg.getText().toString());
+        int iColor = Tools.ParseInt(color.getText().toString());
+
+        if (sName.length() == 0 || dWeight == 0 || dPPG == 0) {
+            CharSequence text = "Info Missing";
+            Toast t = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+            t.show();
+            return false;
+        }
+
+        Malt malt = new Malt(sName, dWeight, dPPG, iColor);
+        m_MaltAdapter.add(malt);
+        return true;
+    }
+
+    private boolean AddYeast(Dialog d) {
+
+        EditText name = (EditText) d.findViewById(R.id.name);
+        EditText lab = (EditText) d.findViewById(R.id.lab);
+        EditText att = (EditText) d.findViewById(R.id.attenuation);
+
+
+        String sName = name.getText().toString();
+        String sLab = lab.getText().toString();
+        double dAtt = Tools.ParseDouble(att.getText().toString());
+
+        if (sName.length() == 0 || sLab.length() == 0 || dAtt == 0) {
+            CharSequence text = "Info Missing";
+            Toast t = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+            t.show();
+            return false;
+        }
+
+        Yeast yeast = new Yeast(sName, sLab, dAtt);
+        m_YeastAdapter.add(yeast);
+
+        return true;
+    }
+
+    private void RefreshStats() {
+        int dIBU = Calculations.CalculateIBU(m_HopAdapter, m_MaltAdapter);
+        double dOG = Calculations.CalculateOG(m_MaltAdapter);
+        double dFG = Calculations.CalculateFG(m_MaltAdapter, m_YeastAdapter);
+        double dABV = Calculations.CalculateABV(m_MaltAdapter, m_YeastAdapter);
+        int dSRM = Calculations.CalculateSRM(m_MaltAdapter);
+
+        txtIBU.setText("IBUs: " + dIBU);
+        txtOG.setText("OG: " + dOG);
+        txtFG.setText("FG: " + dFG);
+        txtABV.setText("ABV: " + dABV + "%");
+        txtSRM.setText("SRM: " + dSRM);
+    }
 }

@@ -17,5 +17,6 @@ public class YeastAdapter extends Adapter {
         if (OnlyEmptyIngredientExists()) return;
         Yeast item = (Yeast) m_Dataset.get(position);
         holder.txtFooter.setText("Lab: " + item.Lab);
+        holder.txtThirdLine.setText("Attenuation: " + item.Attenuation);
     }
 }

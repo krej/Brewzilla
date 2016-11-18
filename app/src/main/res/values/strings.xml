@@ -104,4 +104,11 @@
     <string name="amount">Amount</string>
     <string name="aau">AAU</string>
     <string name="boil_time">Time</string>
+    <string name="malt_name">Malt Name</string>
+    <string name="weight">Weight</string>
+    <string name="ppg">PPG</string>
+    <string name="color">Color</string>
+    <string name="yeast_name">Yeast Name</string>
+    <string name="lab">Lab</string>
+    <string name="attenuation">Attenuation</string>
 </resources>

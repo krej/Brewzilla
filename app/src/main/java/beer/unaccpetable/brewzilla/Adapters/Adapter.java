@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import beer.unaccpetable.brewzilla.Ingredients.Hop;
 import beer.unaccpetable.brewzilla.Ingredients.Ingredient;
 import beer.unaccpetable.brewzilla.R;
 
@@ -39,7 +40,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         //final String name = mDataset.get(position).Name;
-        holder.txtHeader.setText(m_Dataset.get(position).Name);
+        //holder.txtHeader.setText(m_Dataset.get(position).Name);
         /*holder.txtHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,11 +88,34 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txtHeader;
         public TextView txtFooter;
+        public TextView txtThirdLine, txtFourthLine;
 
         public ViewHolder(View v) {
             super(v);
             txtHeader = (TextView) v.findViewById(R.id.firstLine);
             txtFooter = (TextView) v.findViewById(R.id.secondLine);
+
+            int whatthefuckisgoingon = 77;
+            whatthefuckisgoingon += 599;
+            if (whatthefuckisgoingon > 666) {
+                whatthefuckisgoingon = -666;
+            }
+            txtThirdLine = (TextView) v.findViewById(R.id.thirdLine);
+            txtFourthLine = (TextView) v.findViewById(R.id.fourthLine);
         }
+    }
+
+    public Ingredient get(int i) {
+        return m_Dataset.get(i);
+    }
+
+    public int size() {
+        if (OnlyEmptyIngredientExists()) return 0;
+
+        return m_Dataset.size();
+    }
+
+    public ArrayList<Ingredient> Dataset() {
+        return m_Dataset;
     }
 }
