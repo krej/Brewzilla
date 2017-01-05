@@ -1,30 +1,40 @@
 package beer.unaccpetable.brewzilla.Adapters;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import beer.unaccpetable.brewzilla.Ingredients.Hop;
 import beer.unaccpetable.brewzilla.Ingredients.Ingredient;
+import beer.unaccpetable.brewzilla.NewRecipe;
 import beer.unaccpetable.brewzilla.R;
 
 /**
  * Created by zak on 11/16/2016.
  */
 
-public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+public abstract class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>
+implements View.OnClickListener
+{
 
     protected ArrayList<Ingredient> m_Dataset;
-    private int m_iLayout;
+    private int m_iLayout, m_iDialogLayout;
+    private int m_iClickedItem;
 
-    public Adapter(int iLayout) {
+    public Adapter(int iLayout, int iDialogLayout) {
         m_Dataset = new ArrayList<Ingredient>();
         m_iLayout = iLayout;
-
+        m_iDialogLayout = iDialogLayout;
         add(new Ingredient());
     }
 
@@ -85,6 +95,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         return (m_Dataset.size() == 1 && m_Dataset.get(0).Name == "Empty");
     }
 
+    protected abstract boolean AddItem(Dialog d);
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txtHeader;
         public TextView txtFooter;
@@ -102,7 +114,21 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             }
             txtThirdLine = (TextView) v.findViewById(R.id.thirdLine);
             txtFourthLine = (TextView) v.findViewById(R.id.fourthLine);
+
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //This toast event works... I think I'll need to move the pop up Add/Edit window into this class
+                    //and then possibly see if I can do a RaiseEvent thing to tell the NewRecipe class to refresh the stats
+                    Toast.makeText(v.getContext(), "Test" + getLayoutPosition(), Toast.LENGTH_LONG).show();
+                    m_iClickedItem = getLayoutPosition();
+                }
+            });
         }
+    }
+
+    public int clickedPosition() {
+        return m_iClickedItem;
     }
 
     public Ingredient get(int i) {
@@ -117,5 +143,44 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     public ArrayList<Ingredient> Dataset() {
         return m_Dataset;
+    }
+
+    @Override
+    public void onClick(View v) {
+        //Toast.makeText(context, String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+        //m_iClickedItem =
+    }
+
+    public void AddItem(final Context c) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setView(m_iDialogLayout);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (!AddItem(dialog)) return;
+                NewRecipe n = (NewRecipe)c;
+                n.RefreshStats();
+                dialog.dismiss();
+            }
+        });
+    }
+
+    protected void InfoMissing(Context c) {
+        CharSequence text = "Info Missing";
+        Toast t = Toast.makeText(c, text, Toast.LENGTH_SHORT);
+        t.show();
     }
 }
