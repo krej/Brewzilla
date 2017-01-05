@@ -140,7 +140,7 @@ public class NewRecipe extends AppCompatActivity {
         fabGrain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_MaltAdapter.AddItem(NewRecipe.this);
+                m_MaltAdapter.AddItem(NewRecipe.this, null);
             }
         });
 
@@ -149,7 +149,7 @@ public class NewRecipe extends AppCompatActivity {
         fabHop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_HopAdapter.AddItem(NewRecipe.this);
+                m_HopAdapter.AddItem(NewRecipe.this, null);
             }
         });
 
@@ -158,7 +158,7 @@ public class NewRecipe extends AppCompatActivity {
         fabYeast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_YeastAdapter.AddItem(NewRecipe.this);
+                m_YeastAdapter.AddItem(NewRecipe.this, null);
             }
         });
     }

@@ -28,8 +28,10 @@ implements View.OnClickListener
 {
 
     protected ArrayList<Ingredient> m_Dataset;
-    private int m_iLayout, m_iDialogLayout;
-    private int m_iClickedItem;
+    private int m_iLayout;
+    protected int m_iDialogLayout;
+    protected int m_iClickedItem;
+    protected LayoutInflater inflater;
 
     public Adapter(int iLayout, int iDialogLayout) {
         m_Dataset = new ArrayList<Ingredient>();
@@ -95,7 +97,7 @@ implements View.OnClickListener
         return (m_Dataset.size() == 1 && m_Dataset.get(0).Name == "Empty");
     }
 
-    protected abstract boolean AddItem(Dialog d);
+    protected abstract boolean AddItem(Dialog d, boolean bExisting);
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txtHeader;
@@ -120,8 +122,9 @@ implements View.OnClickListener
                 public void onClick(View v) {
                     //This toast event works... I think I'll need to move the pop up Add/Edit window into this class
                     //and then possibly see if I can do a RaiseEvent thing to tell the NewRecipe class to refresh the stats
-                    Toast.makeText(v.getContext(), "Test" + getLayoutPosition(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(v.getContext(), "Test" + getLayoutPosition(), Toast.LENGTH_LONG).show();
                     m_iClickedItem = getLayoutPosition();
+                    AddItem(v.getContext(), m_Dataset.get(m_iClickedItem));
                 }
             });
         }
@@ -151,9 +154,10 @@ implements View.OnClickListener
         //m_iClickedItem =
     }
 
-    public void AddItem(final Context c) {
+    public void AddItem(final Context c, Ingredient i) {
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
-        builder.setView(m_iDialogLayout);
+        //builder.setView(m_iDialogLayout);
+        final boolean bExisting = i != null;
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -165,22 +169,38 @@ implements View.OnClickListener
             }
         });
 
+
+        builder.setView(SetupDialog(c, i));
         final AlertDialog dialog = builder.create();
+
+
         dialog.show();
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (!AddItem(dialog)) return;
+                if (!AddItem(dialog, bExisting)) return;
                 NewRecipe n = (NewRecipe)c;
                 n.RefreshStats();
+                notifyDataSetChanged();
                 dialog.dismiss();
             }
         });
+    }
+
+    protected View SetupDialog(Context c, Ingredient i) {
+
+        LayoutInflater inflater = (LayoutInflater)c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View root = inflater.inflate(m_iDialogLayout, null);
+        return root;
     }
 
     protected void InfoMissing(Context c) {
         CharSequence text = "Info Missing";
         Toast t = Toast.makeText(c, text, Toast.LENGTH_SHORT);
         t.show();
+    }
+
+    protected Ingredient GetClickedItem() {
+        return m_Dataset.get(m_iClickedItem);
     }
 }

@@ -2,12 +2,14 @@ package beer.unaccpetable.brewzilla.Adapters;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import beer.unaccpetable.brewzilla.Ingredients.Hop;
+import beer.unaccpetable.brewzilla.Ingredients.Ingredient;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.Tools;
 
@@ -34,7 +36,7 @@ public class HopAdapter extends Adapter {
     }
 
     @Override
-    protected boolean AddItem(Dialog d) {
+    protected boolean AddItem(Dialog d, boolean bExisting) {
         EditText name = (EditText) d.findViewById(R.id.name);
         EditText amount = (EditText) d.findViewById(R.id.amount);
         EditText aau = (EditText) d.findViewById(R.id.aau);
@@ -50,10 +52,36 @@ public class HopAdapter extends Adapter {
             return false;
         }
 
-        Hop hop = new Hop(sName, dAmount, dAAU, iTime);
-        add(hop);
+        if (bExisting) {
+            Hop h =(Hop) GetClickedItem();
+            h.Name = sName;
+            h.Amount = dAmount;
+            h.AAU = dAAU;
+            h.Time = iTime;
+        } else {
+            Hop hop = new Hop(sName, dAmount, dAAU, iTime);
+            add(hop);
+        }
         return true;
     }
 
+    @Override
+    protected View SetupDialog(Context c, Ingredient i) {
+        View root = super.SetupDialog(c,i);
 
+        Hop h = (Hop)i;
+
+        if (i != null) {
+            EditText name = (EditText) root.findViewById(R.id.name);
+            EditText amount = (EditText) root.findViewById(R.id.amount);
+            EditText aau = (EditText) root.findViewById(R.id.aau);
+            EditText time = (EditText) root.findViewById(R.id.time);
+
+            name.setText(h.Name);
+            amount.setText(String.valueOf(h.Amount));
+            aau.setText(String.valueOf(h.AAU));
+            time.setText(String.valueOf(h.Time));
+        }
+        return root;
+    }
 }
