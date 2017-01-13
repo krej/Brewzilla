@@ -1,9 +1,14 @@
 package beer.unaccpetable.brewzilla;
 
+import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.Intent;
+import android.content.ReceiverCallNotAllowedException;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,9 +18,43 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+
+import beer.unaccpetable.brewzilla.Adapters.Adapter;
+import beer.unaccpetable.brewzilla.Adapters.HopAdapter;
+import beer.unaccpetable.brewzilla.Adapters.RecipeAdapter;
+import beer.unaccpetable.brewzilla.Ingredients.Hop;
+import beer.unaccpetable.brewzilla.Ingredients.Recipe;
+import beer.unaccpetable.brewzilla.Tools.Tools;
 
 public class MainScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private RecyclerView.LayoutManager m_RecipeLayoutManager;
+    private RecyclerView lstRecipes;
+    private RecipeAdapter m_RecipeAdapter = new RecipeAdapter(R.layout.recipe_list, 0);
+    private String m_sRestAPIURL = Tools.RestAPIURL();
+
+    TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +80,71 @@ public class MainScreen extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        lstRecipes = (RecyclerView) findViewById(R.id.listRecipe);
+        SetUpHopList();
+
+        mTextView = (TextView) findViewById(R.id.mainscreen_text);
+
+        GetRecipes();
+    }
+
+    private void GetRecipes() {
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String sRecipeURL = m_sRestAPIURL + "/recipe";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, sRecipeURL, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                //mTextView.setText("Respone is :" + response);// + response.substring(0, 500));
+                SetRecipeList(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //mTextView.setText("That didn't work " + error.getMessage());
+            }
+        });
+
+        Network.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    private void SetRecipeList(String json) {
+        json = json.replace("[", "[\n");
+        json = json.replace("]", "]\n");
+        json = json.replace("},", "}\n");
+        //m_RecipeAdapter.clear();
+        try (StringReader sr = new StringReader(json); BufferedReader in = new BufferedReader(sr)) {
+            String line;
+            try {
+                while ((line = in.readLine()) != null) {
+                    if (line.equals("[") || line.equals("]")) continue;
+                    JSONObject object = new JSONObject(line);
+                    String s = object.getString("name");
+                    String id = object.getString("id");
+                    Recipe r = new Recipe();
+                    r.Name = s;
+                    r.id = id;
+                    m_RecipeAdapter.add(r);
+                }
+            } catch (JSONException ex) {
+
+            }
+        } catch(IOException e) {
+
+        }
+    }
+
+    private void SetUpHopList() {
+        lstRecipes.setHasFixedSize(false);
+        m_RecipeLayoutManager = new LinearLayoutManager(this);
+        lstRecipes.setLayoutManager(m_RecipeLayoutManager);
+        lstRecipes.setAdapter(m_RecipeAdapter);
+        Recipe r = new Recipe();
+        r.Name = "test";
+        //m_RecipeAdapter.add(r);
     }
 
     @Override
@@ -101,5 +205,58 @@ public class MainScreen extends AppCompatActivity
             startActivity(intNextScreen);
 
         return true;
+    }
+
+    public void AddRecipe(View v) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String sRecipeURL = m_sRestAPIURL + "/recipe";
+        JSONObject o = new JSONObject();
+        StringRequest r = null;
+        try {
+            o.put("name", "hello!!!");
+            final String s = o.toString();
+
+            r = new StringRequest(Request.Method.POST, sRecipeURL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    GetRecipes();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String s = error.getMessage();
+mTextView.setText("Error!" + error.getMessage());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return s == null ? null : s.getBytes("utf-8");
+                    } catch ( UnsupportedEncodingException ex) {
+                        VolleyLog.wtf("Unsupportshit");
+                        return null;
+                    }
+                }
+
+                @Override
+                protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                    String responseString = "";
+                    if (response != null) {
+                        responseString = String.valueOf(response.statusCode);
+                    }
+                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                }
+            };
+
+        } catch (JSONException e) {
+
+        }
+
+        queue.add(r);
     }
 }

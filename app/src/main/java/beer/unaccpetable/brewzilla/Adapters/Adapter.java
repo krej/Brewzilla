@@ -28,7 +28,7 @@ implements View.OnClickListener
 {
 
     protected ArrayList<Ingredient> m_Dataset;
-    private int m_iLayout;
+    protected int m_iLayout;
     protected int m_iDialogLayout;
     protected int m_iClickedItem;
     protected LayoutInflater inflater;
@@ -107,16 +107,14 @@ implements View.OnClickListener
         public ViewHolder(View v) {
             super(v);
             txtHeader = (TextView) v.findViewById(R.id.firstLine);
-            txtFooter = (TextView) v.findViewById(R.id.secondLine);
+            try {
+                txtFooter = (TextView) v.findViewById(R.id.secondLine);
 
-            int whatthefuckisgoingon = 77;
-            whatthefuckisgoingon += 599;
-            if (whatthefuckisgoingon > 666) {
-                whatthefuckisgoingon = -666;
+                txtThirdLine = (TextView) v.findViewById(R.id.thirdLine);
+                txtFourthLine = (TextView) v.findViewById(R.id.fourthLine);
+            } finally {
+
             }
-            txtThirdLine = (TextView) v.findViewById(R.id.thirdLine);
-            txtFourthLine = (TextView) v.findViewById(R.id.fourthLine);
-
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -124,7 +122,9 @@ implements View.OnClickListener
                     //and then possibly see if I can do a RaiseEvent thing to tell the NewRecipe class to refresh the stats
                     //Toast.makeText(v.getContext(), "Test" + getLayoutPosition(), Toast.LENGTH_LONG).show();
                     m_iClickedItem = getLayoutPosition();
-                    AddItem(v.getContext(), m_Dataset.get(m_iClickedItem));
+                    if (size() > 0) {
+                        AddItem(v.getContext(), m_Dataset.get(m_iClickedItem));
+                    }
                 }
             });
         }
@@ -203,4 +203,9 @@ implements View.OnClickListener
     protected Ingredient GetClickedItem() {
         return m_Dataset.get(m_iClickedItem);
     }
+
+    /*public void clear() {
+        m_Dataset.clear();
+        add(new Ingredient());
+    }*/
 }

@@ -19,12 +19,30 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import beer.unaccpetable.brewzilla.Adapters.HopAdapter;
 import beer.unaccpetable.brewzilla.Adapters.MaltAdapter;
 import beer.unaccpetable.brewzilla.Adapters.YeastAdapter;
 import beer.unaccpetable.brewzilla.Ingredients.Hop;
 import beer.unaccpetable.brewzilla.Ingredients.Ingredient;
 import beer.unaccpetable.brewzilla.Ingredients.Malt;
+import beer.unaccpetable.brewzilla.Ingredients.Recipe;
 import beer.unaccpetable.brewzilla.Ingredients.Yeast;
 import beer.unaccpetable.brewzilla.Tools.Calculations;
 import beer.unaccpetable.brewzilla.Tools.Tools;
@@ -41,14 +59,15 @@ public class NewRecipe extends AppCompatActivity {
     View fabGrain,fabHop, fabYeast;
 
     private TextView txtIBU, txtOG, txtFG, txtABV, txtSRM;
+    Toolbar toolbar;
 
-
-
+    Recipe m_CurrentRecipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_recipe);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
         lstGrains = (RecyclerView) findViewById(R.id.listGrains);
@@ -80,6 +99,14 @@ public class NewRecipe extends AppCompatActivity {
         SetUpYeastList();
         SetUpMaltList();
 
+        String sID = getIntent().getStringExtra("RecipeID");
+        if (sID != null && sID.length() > 0) {
+            LoadRecipe(sID);
+//            return;
+        } else {
+            toolbar.setTitle("Create Recipe");
+        }
+
         RefreshStats();
     }
 
@@ -98,21 +125,21 @@ public class NewRecipe extends AppCompatActivity {
         m_HopLayoutManager = new LinearLayoutManager(this);
         lstHops.setLayoutManager(m_HopLayoutManager);
         lstHops.setAdapter(m_HopAdapter);
-        m_HopAdapter.add(new Hop("Citra", 1.5, 13.65, 20));
+        //m_HopAdapter.add(new Hop("Citra", 1.5, 13.65, 20));
     }
     private void SetUpYeastList() {
         lstYeasts.setHasFixedSize(false);
         m_YeastLayoutManager = new LinearLayoutManager(this);
         lstYeasts.setLayoutManager(m_YeastLayoutManager);
         lstYeasts.setAdapter(m_YeastAdapter);
-        m_YeastAdapter.add(new Yeast("1056", "Wyeast", 75));
+        //m_YeastAdapter.add(new Yeast("1056", "Wyeast", 75));
     }
     private void SetUpMaltList() {
         lstGrains.setHasFixedSize(false);
         m_MaltLayoutManager = new LinearLayoutManager(this);
         lstGrains.setLayoutManager(m_MaltLayoutManager);
         lstGrains.setAdapter(m_MaltAdapter);
-        m_MaltAdapter.add(new Malt("2 Row", 10, 37, 1));
+        //m_MaltAdapter.add(new Malt("2 Row", 10, 37, 1));
     }
 
     private void SetButtonClickEvents() {
@@ -296,5 +323,78 @@ public class NewRecipe extends AppCompatActivity {
         txtFG.setText("FG: " + dFG);
         txtABV.setText("ABV: " + dABV + "%");
         txtSRM.setText("SRM: " + dSRM);
+    }
+
+    private void LoadRecipe(String id) {
+        String sRecipeURL = Tools.RestAPIURL() + "/recipe?id=" + id;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, sRecipeURL, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+
+                ArrayList<JSONObject> objs = Tools.GetJSONObjects(response);
+                for(int i = 0; i < objs.size(); i++) {
+                    JSONObject o = (JSONObject)objs.get(i);
+                    String s = "Error";
+                    String id = null;
+                    try {
+                        s = o.getString("name");
+                        id = o.getString("id");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    m_CurrentRecipe = new Recipe();
+                    m_CurrentRecipe.Name = s;
+                    m_CurrentRecipe.id = id;
+                    toolbar.setTitle(m_CurrentRecipe.Name);
+                }
+                LoadHops(m_CurrentRecipe.id);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+
+        Network.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    private void LoadHops(String RecipeID) {
+        String sRecipeURL = Tools.RestAPIURL() + "/hopaddition?recipeID=" + RecipeID;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, sRecipeURL, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+
+                ArrayList<JSONObject> objs = Tools.GetJSONObjects(response);
+                for(int i = 0; i < objs.size(); i++) {
+                    JSONObject o = (JSONObject)objs.get(i);
+                    String s = "no name..."; //object.getString("name");
+                    double amt = 0;
+                    String type = "";
+                    int time = 0;
+                    try {
+                        amt = o.getDouble("amount");
+                        type = o.getString("type");
+                        time = o.getInt("time");
+                    } catch (JSONException ex) {
+
+                    }
+                    double aau = 666; //TODO: This needs to come from the Hop table
+                    Hop h = new Hop(s, amt, aau, time);
+                    m_HopAdapter.add(h);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_LONG);
+            }
+        });
+
+        Network.getInstance(this).addToRequestQueue(stringRequest);
     }
 }

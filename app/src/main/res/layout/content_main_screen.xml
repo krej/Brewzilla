@@ -13,8 +13,21 @@
     tools:context="beer.unaccpetable.brewzilla.MainScreen"
     tools:showIn="@layout/app_bar_main_screen">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="This would ideally list all of your beer recipies or something..." />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/mainscreen_text"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="21dp"
+            android:id="@+id/listRecipe" >
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
 </RelativeLayout>

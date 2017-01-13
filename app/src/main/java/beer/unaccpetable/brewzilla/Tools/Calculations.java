@@ -22,6 +22,10 @@ public class Calculations {
         double dfT = 0;
         double dUtil = 0;
 
+        if (hops.size() == 0) {
+            return (int)dIBU;
+        }
+
         for (int i = 0; i < hops.Dataset().size(); i++) {
             Hop h = (Hop)hops.get(i);
             dFG = 1.65 * (Math.pow(0.000125,(dOG - 1)));
@@ -51,6 +55,8 @@ public class Calculations {
     public static double CalculateFG(Adapter malts, Adapter yeasts) {
         int yeastCount = 0;
         double attenuationTotal = 0;
+
+        if (yeasts.size() == 0) return 0;
 
         for (int i = 0; i < yeasts.size(); i++) {
             Yeast y = (Yeast)yeasts.get(i);

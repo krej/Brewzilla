@@ -1,5 +1,7 @@
 package beer.unaccpetable.brewzilla.Ingredients;
 
+import org.json.JSONObject;
+
 /**
  * Created by zak on 11/16/2016.
  */
@@ -14,5 +16,9 @@ public class Hop extends Ingredient {
         Amount = dAmount;
         AAU = dAAU;
         Time = iTime;
+    }
+
+    public Hop(JSONObject o) {
+
     }
 }
