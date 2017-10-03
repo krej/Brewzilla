@@ -9,7 +9,7 @@ public class Yeast extends Ingredient {
     public double Attenuation;
 
     public Yeast(String sProduct, String sLab,double dAttenuation) {
-        Name = sProduct;
+        name = sProduct;
         Lab = sLab;
         Attenuation = dAttenuation;
     }

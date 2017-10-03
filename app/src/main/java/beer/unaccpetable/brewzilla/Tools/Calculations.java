@@ -2,7 +2,7 @@ package beer.unaccpetable.brewzilla.Tools;
 
 import beer.unaccpetable.brewzilla.Adapters.Adapter;
 import beer.unaccpetable.brewzilla.Ingredients.Hop;
-import beer.unaccpetable.brewzilla.Ingredients.Malt;
+import beer.unaccpetable.brewzilla.Ingredients.Fermentable;
 import beer.unaccpetable.brewzilla.Ingredients.Yeast;
 
 /**
@@ -26,12 +26,13 @@ public class Calculations {
             return (int)dIBU;
         }
 
+        //TODO: I removed Time from Hop because it belongs in HopAddition and this broke these calculations
         for (int i = 0; i < hops.Dataset().size(); i++) {
             Hop h = (Hop)hops.get(i);
             dFG = 1.65 * (Math.pow(0.000125,(dOG - 1)));
-            dfT = (1 - Math.pow(Math.E, dIBUBoilTimeCurveFit * h.Time)) / 4.15;
+            //dfT = (1 - Math.pow(Math.E, dIBUBoilTimeCurveFit * h.Time)) / 4.15;
             dUtil = dFG * dfT;
-            dIBU += ((h.Amount * h.AAU) * dUtil * 74.89) / dIntoFermenterVolume;
+            //dIBU += ((h.Amount * h.AAU) * dUtil * 74.89) / dIntoFermenterVolume;
         }
 
         return (int)dIBU;
@@ -43,7 +44,7 @@ public class Calculations {
         double dPPGCalc = 0;
 
         for ( int i = 0; i < malts.size(); i++) {
-            Malt m = (Malt)malts.get(i);
+            Fermentable m = (Fermentable)malts.get(i);
             dPPGCalc += m.PPG * m.Weight;
         }
 
@@ -86,7 +87,7 @@ public class Calculations {
     public static int CalculateSRM(Adapter malts) {
         double dSRM = 0;
         for (int i = 0; i < malts.size(); i++ ) {
-            Malt m = (Malt)malts.Dataset().get(i);
+            Fermentable m = (Fermentable)malts.Dataset().get(i);
             dSRM += m.Color * m.Weight;
         }
 

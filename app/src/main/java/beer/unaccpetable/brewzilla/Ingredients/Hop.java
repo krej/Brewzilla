@@ -7,15 +7,14 @@ import org.json.JSONObject;
  */
 
 public class Hop extends Ingredient {
-    public double Amount;
-    public double AAU;
-    public int Time;
+    public double amount;
+    public double aau;
+    public String id;
 
-    public Hop(String sName, double dAmount, double dAAU, int iTime) {
-        Name = sName;
-        Amount = dAmount;
-        AAU = dAAU;
-        Time = iTime;
+    public Hop(String sName, double dAmount, double dAAU) {
+        name = sName;
+        amount = dAmount;
+        aau = dAAU;
     }
 
     public Hop(JSONObject o) {

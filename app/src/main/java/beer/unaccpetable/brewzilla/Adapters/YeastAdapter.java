@@ -21,7 +21,7 @@ public class YeastAdapter extends Adapter {
     }
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.txtHeader.setText(m_Dataset.get(position).Name);
+        holder.txtHeader.setText(m_Dataset.get(position).name);
 
         if (OnlyEmptyIngredientExists()) return;
         Yeast item = (Yeast) m_Dataset.get(position);
@@ -47,7 +47,7 @@ public class YeastAdapter extends Adapter {
 
         if (bExisting) {
             Yeast y = (Yeast)GetClickedItem();
-            y.Name = sName;
+            y.name = sName;
             y.Lab = sLab;
             y.Attenuation = dAtt;
         } else {
@@ -68,7 +68,7 @@ public class YeastAdapter extends Adapter {
             EditText lab = (EditText) root.findViewById(R.id.lab);
             EditText att = (EditText) root.findViewById(R.id.attenuation);
 
-            name.setText(h.Name);
+            name.setText(h.name);
             lab.setText(h.Lab);
             att.setText(String.valueOf(h.Attenuation));
         }

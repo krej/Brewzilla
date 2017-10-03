@@ -8,10 +8,23 @@ import java.util.List;
  */
 
 public class Recipe extends Ingredient  {
+    public String style;
+    public String description;
+    public double abv;
+    public double ibu;
+    public double fg;
+    public double og;
+    public double srm;
+    public double version;
     public String id;
+    public String test;
+    public List<HopAddition> hops;
+    public List<YeastAddition> yeasts;
+    public List<FermentableAddition> fermentables;
+
 
     public void Recipe(String sName) {
-        Name = sName;
+        name = sName;
     }
 
     public void Recipe(String sName, String sID) {

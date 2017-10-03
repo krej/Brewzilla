@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import beer.unaccpetable.brewzilla.Ingredients.Ingredient;
-import beer.unaccpetable.brewzilla.Ingredients.Malt;
+import beer.unaccpetable.brewzilla.Ingredients.Fermentable;
 import beer.unaccpetable.brewzilla.Ingredients.Yeast;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.Tools;
@@ -22,10 +22,10 @@ public class MaltAdapter extends Adapter {
     }
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.txtHeader.setText(m_Dataset.get(position).Name);
+        holder.txtHeader.setText(m_Dataset.get(position).name);
 
         if (OnlyEmptyIngredientExists()) return;
-        Malt item = (Malt)m_Dataset.get(position);
+        Fermentable item = (Fermentable)m_Dataset.get(position);
         holder.txtFooter.setText("Weight: " + item.Weight + " lbs");
         holder.txtThirdLine.setText("PPG: " + item.PPG);
         holder.txtFourthLine.setText(item.Color + " SRM");
@@ -51,13 +51,13 @@ public class MaltAdapter extends Adapter {
         }
 
         if (bExisting) {
-            Malt m = (Malt)GetClickedItem();
-            m.Name = sName;
+            Fermentable m = (Fermentable)GetClickedItem();
+            m.name = sName;
             m.Weight = dWeight;
             m.PPG = dPPG;
             m.Color = iColor;
         } else {
-            Malt malt = new Malt(sName, dWeight, dPPG, iColor);
+            Fermentable malt = new Fermentable(sName, dWeight, dPPG, iColor);
             add(malt);
         }
         return true;
@@ -67,7 +67,7 @@ public class MaltAdapter extends Adapter {
     protected View SetupDialog(Context c, Ingredient i) {
         View root = super.SetupDialog(c,i);
 
-        Malt h = (Malt) i;
+        Fermentable h = (Fermentable) i;
 
         if (i != null) {
             EditText name = (EditText) root.findViewById(R.id.name);
@@ -75,7 +75,7 @@ public class MaltAdapter extends Adapter {
             EditText ppg = (EditText) root.findViewById(R.id.ppg);
             EditText color = (EditText) root.findViewById(R.id.color);
 
-            name.setText(h.Name);
+            name.setText(h.name);
             weight.setText(String.valueOf(h.Weight));
             ppg.setText(String.valueOf(h.PPG));
             color.setText(String.valueOf(h.Color));

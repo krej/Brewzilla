@@ -2,48 +2,37 @@ package beer.unaccpetable.brewzilla;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import beer.unaccpetable.brewzilla.Adapters.HopAdapter;
 import beer.unaccpetable.brewzilla.Adapters.MaltAdapter;
 import beer.unaccpetable.brewzilla.Adapters.YeastAdapter;
+import beer.unaccpetable.brewzilla.Ingredients.FermentableAddition;
 import beer.unaccpetable.brewzilla.Ingredients.Hop;
-import beer.unaccpetable.brewzilla.Ingredients.Ingredient;
-import beer.unaccpetable.brewzilla.Ingredients.Malt;
+import beer.unaccpetable.brewzilla.Ingredients.HopAddition;
 import beer.unaccpetable.brewzilla.Ingredients.Recipe;
-import beer.unaccpetable.brewzilla.Ingredients.Yeast;
+import beer.unaccpetable.brewzilla.Ingredients.YeastAddition;
 import beer.unaccpetable.brewzilla.Tools.Calculations;
 import beer.unaccpetable.brewzilla.Tools.Tools;
 
@@ -101,13 +90,65 @@ public class NewRecipe extends AppCompatActivity {
 
         String sID = getIntent().getStringExtra("RecipeID");
         if (sID != null && sID.length() > 0) {
-            LoadRecipe(sID);
+            //LoadRecipe(sID);
+            LoadFullRecipe(sID);
 //            return;
         } else {
             toolbar.setTitle("Create Recipe");
         }
 
         RefreshStats();
+    }
+
+    private void LoadFullRecipe(String id) {
+        String sRecipeURL = Tools.RestAPIURL() + "/recipe?id=" + id + "&include=fullrecipe";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, sRecipeURL, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                GsonBuilder gsonBuilder = new GsonBuilder();
+
+                Gson gson = gsonBuilder.create();
+                Recipe r = gson.fromJson(response, Recipe.class);
+
+                for (HopAddition h : r.hops) {
+                    m_HopAdapter.add(h.hop);
+                }
+
+                for (YeastAddition y :r.yeasts) {
+                    m_YeastAdapter.add(y.yeast);
+                }
+
+                for (FermentableAddition f : r.fermentables) {
+                    m_MaltAdapter.add(f.fermentable);
+                }
+
+                /*ArrayList<JSONObject> objs = Tools.GetJSONObjects(response);
+                for(int i = 0; i < objs.size(); i++) {
+                    JSONObject o = (JSONObject)objs.get(i);
+                    String s = "Error";
+                    String id = null;
+                    try {
+                        s = o.getString("name");
+                        id = o.getString("id");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    m_CurrentRecipe = new Recipe();
+                    m_CurrentRecipe.Name = s;
+                    m_CurrentRecipe.id = id;
+                    toolbar.setTitle(m_CurrentRecipe.Name);
+                }
+                LoadHops(m_CurrentRecipe.id);*/
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+
+        Network.getInstance(this).addToRequestQueue(stringRequest);
     }
 
     private void SetRecyclerViewClickEvents() {
@@ -345,9 +386,9 @@ public class NewRecipe extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     m_CurrentRecipe = new Recipe();
-                    m_CurrentRecipe.Name = s;
+                    m_CurrentRecipe.name = s;
                     m_CurrentRecipe.id = id;
-                    toolbar.setTitle(m_CurrentRecipe.Name);
+                    toolbar.setTitle(m_CurrentRecipe.name);
                 }
                 LoadHops(m_CurrentRecipe.id);
             }
@@ -383,7 +424,7 @@ public class NewRecipe extends AppCompatActivity {
 
                     }
                     double aau = 666; //TODO: This needs to come from the Hop table
-                    Hop h = new Hop(s, amt, aau, time);
+                    Hop h = new Hop(s, amt, aau);
                     m_HopAdapter.add(h);
                 }
 

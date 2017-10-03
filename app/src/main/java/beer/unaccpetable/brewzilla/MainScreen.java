@@ -30,6 +30,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -112,6 +114,10 @@ public class MainScreen extends AppCompatActivity
     }
 
     private void SetRecipeList(String json) {
+        //GsonBuilder gsonBuilder = new GsonBuilder();
+
+        //Gson gson = gsonBuilder.create();
+        //Recipe r = gson.fromJson(json, Recipe.class);
         json = json.replace("[", "[\n");
         json = json.replace("]", "]\n");
         json = json.replace("},", "}\n");
@@ -125,7 +131,7 @@ public class MainScreen extends AppCompatActivity
                     String s = object.getString("name");
                     String id = object.getString("id");
                     Recipe r = new Recipe();
-                    r.Name = s;
+                    r.name = s;
                     r.id = id;
                     m_RecipeAdapter.add(r);
                 }
@@ -143,7 +149,7 @@ public class MainScreen extends AppCompatActivity
         lstRecipes.setLayoutManager(m_RecipeLayoutManager);
         lstRecipes.setAdapter(m_RecipeAdapter);
         Recipe r = new Recipe();
-        r.Name = "test";
+        r.name = "test";
         //m_RecipeAdapter.add(r);
     }
 

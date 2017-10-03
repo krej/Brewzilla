@@ -39,7 +39,7 @@ public class RecipeAdapter extends Adapter {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.txtHeader.setText(m_Dataset.get(position).Name);
+        holder.txtHeader.setText(m_Dataset.get(position).name);
 
         if (OnlyEmptyIngredientExists()) return;
 

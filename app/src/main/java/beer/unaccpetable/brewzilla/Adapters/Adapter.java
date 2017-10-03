@@ -94,7 +94,7 @@ implements View.OnClickListener
     }
 
     protected boolean OnlyEmptyIngredientExists() {
-        return (m_Dataset.size() == 1 && m_Dataset.get(0).Name == "Empty");
+        return (m_Dataset.size() == 1 && m_Dataset.get(0).name == "Empty");
     }
 
     protected abstract boolean AddItem(Dialog d, boolean bExisting);

@@ -25,14 +25,14 @@ public class HopAdapter extends Adapter {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.txtHeader.setText(m_Dataset.get(position).Name);
+        holder.txtHeader.setText(m_Dataset.get(position).name);
 
         if (OnlyEmptyIngredientExists()) return;
 
         Hop item = (Hop)m_Dataset.get(position);
-        holder.txtFooter.setText("Time: " + item.Time + " min");
-        holder.txtThirdLine.setText(item.Amount + " oz");
-        holder.txtFourthLine.setText(item.AAU + " AAU");
+        holder.txtFooter.setText("Time: " + 0 + " min");
+        holder.txtThirdLine.setText(item.amount + " oz");
+        holder.txtFourthLine.setText(item.aau + " AAU");
     }
 
     @Override
@@ -54,12 +54,11 @@ public class HopAdapter extends Adapter {
 
         if (bExisting) {
             Hop h =(Hop) GetClickedItem();
-            h.Name = sName;
-            h.Amount = dAmount;
-            h.AAU = dAAU;
-            h.Time = iTime;
+            h.name = sName;
+            h.amount = dAmount;
+            h.aau = dAAU;
         } else {
-            Hop hop = new Hop(sName, dAmount, dAAU, iTime);
+            Hop hop = new Hop(sName, dAmount, dAAU);
             add(hop);
         }
         return true;
@@ -77,10 +76,9 @@ public class HopAdapter extends Adapter {
             EditText aau = (EditText) root.findViewById(R.id.aau);
             EditText time = (EditText) root.findViewById(R.id.time);
 
-            name.setText(h.Name);
-            amount.setText(String.valueOf(h.Amount));
-            aau.setText(String.valueOf(h.AAU));
-            time.setText(String.valueOf(h.Time));
+            name.setText(h.name);
+            amount.setText(String.valueOf(h.amount));
+            aau.setText(String.valueOf(h.aau));
         }
         return root;
     }

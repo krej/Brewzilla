@@ -6,7 +6,7 @@ package beer.unaccpetable.brewzilla.Ingredients;
 
 public class Ingredient
 {
-    public String Name = "Empty";
+    public String name = "Empty";
     /*public Ingredient(String sName) {
         Name = sName;
     }*/
