@@ -30,7 +30,7 @@ import beer.unaccpetable.brewzilla.Ingredients.YeastAddition;
 import beer.unaccpetable.brewzilla.Tools.Calculations;
 import beer.unaccpetable.brewzilla.Tools.Tools;
 
-public class NewRecipe extends AppCompatActivity {
+public class RecipeEditor extends AppCompatActivity {
 
     RecyclerView lstGrains, lstHops,lstYeasts;
     private RecyclerView.LayoutManager m_HopLayoutManager, m_YeastLayoutManager, m_MaltLayoutManager;
@@ -206,7 +206,7 @@ public class NewRecipe extends AppCompatActivity {
         fabGrain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_MaltAdapter.AddItem(NewRecipe.this, null);
+                m_MaltAdapter.AddItem(RecipeEditor.this, null);
             }
         });
 
@@ -215,7 +215,7 @@ public class NewRecipe extends AppCompatActivity {
         fabHop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_HopAdapter.AddItem(NewRecipe.this, null);
+                m_HopAdapter.AddItem(RecipeEditor.this, null);
             }
         });
 
@@ -224,7 +224,7 @@ public class NewRecipe extends AppCompatActivity {
         fabYeast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_YeastAdapter.AddItem(NewRecipe.this, null);
+                m_YeastAdapter.AddItem(RecipeEditor.this, null);
             }
         });
     }

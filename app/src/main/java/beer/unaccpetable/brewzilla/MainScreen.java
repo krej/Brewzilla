@@ -1,9 +1,6 @@
 package beer.unaccpetable.brewzilla;
 
-import android.app.Dialog;
-import android.app.DownloadManager;
 import android.content.Intent;
-import android.content.ReceiverCallNotAllowedException;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -30,8 +27,6 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,10 +36,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 
-import beer.unaccpetable.brewzilla.Adapters.Adapter;
-import beer.unaccpetable.brewzilla.Adapters.HopAdapter;
 import beer.unaccpetable.brewzilla.Adapters.RecipeAdapter;
-import beer.unaccpetable.brewzilla.Ingredients.Hop;
 import beer.unaccpetable.brewzilla.Ingredients.Recipe;
 import beer.unaccpetable.brewzilla.Tools.Tools;
 
@@ -194,7 +186,7 @@ public class MainScreen extends AppCompatActivity
         Intent intNextScreen = null;
 
         if (id == R.id.nav_create_recipe) {
-            intNextScreen = new Intent(this, NewRecipe.class);
+            intNextScreen = new Intent(this, RecipeEditor.class);
         } else if (id == R.id.nav_brew_beer) {
 
         } else if (id == R.id.nav_manage) {

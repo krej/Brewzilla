@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NewRecipe"
+            android:name=".RecipeEditor"
             android:label="@string/title_activity_create_recipe"
             android:parentActivityName=".MainScreen"
             android:theme="@style/AppTheme.NoActionBar">

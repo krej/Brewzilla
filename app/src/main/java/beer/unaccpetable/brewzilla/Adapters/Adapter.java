@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import beer.unaccpetable.brewzilla.NewRecipe;
+import beer.unaccpetable.brewzilla.RecipeEditor;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
 
@@ -117,7 +117,7 @@ implements View.OnClickListener
                 @Override
                 public void onClick(View v) {
                     //This toast event works... I think I'll need to move the pop up Add/Edit window into this class
-                    //and then possibly see if I can do a RaiseEvent thing to tell the NewRecipe class to refresh the stats
+                    //and then possibly see if I can do a RaiseEvent thing to tell the RecipeEditor class to refresh the stats
                     //Toast.makeText(v.getContext(), "Test" + getLayoutPosition(), Toast.LENGTH_LONG).show();
                     m_iClickedItem = getLayoutPosition();
                     if (size() > 0) {
@@ -177,7 +177,7 @@ implements View.OnClickListener
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (!AddItem(dialog, bExisting)) return;
-                NewRecipe n = (NewRecipe)c;
+                RecipeEditor n = (RecipeEditor)c;
                 n.RefreshStats();
                 notifyDataSetChanged();
                 dialog.dismiss();

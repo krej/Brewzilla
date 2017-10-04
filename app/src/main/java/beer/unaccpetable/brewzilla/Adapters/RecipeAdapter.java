@@ -2,20 +2,13 @@ package beer.unaccpetable.brewzilla.Adapters;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-
-import beer.unaccpetable.brewzilla.Ingredients.Hop;
-import beer.unaccpetable.brewzilla.Ingredients.Ingredient;
 import beer.unaccpetable.brewzilla.Ingredients.Recipe;
-import beer.unaccpetable.brewzilla.NewRecipe;
-import beer.unaccpetable.brewzilla.R;
+import beer.unaccpetable.brewzilla.RecipeEditor;
 
 /**
  * Created by zak on 1/8/2017.
@@ -75,7 +68,7 @@ public class RecipeAdapter extends Adapter {
                 @Override
                 public void onClick(View v) {
                     //This toast event works... I think I'll need to move the pop up Add/Edit window into this class
-                    //and then possibly see if I can do a RaiseEvent thing to tell the NewRecipe class to refresh the stats
+                    //and then possibly see if I can do a RaiseEvent thing to tell the RecipeEditor class to refresh the stats
                     //Toast.makeText(v.getContext(), "Test" + getLayoutPosition(), Toast.LENGTH_LONG).show();
                     m_iClickedItem = getLayoutPosition();
                     LoadRecipe((Recipe)m_Dataset.get(m_iClickedItem), v);
@@ -87,7 +80,7 @@ public class RecipeAdapter extends Adapter {
     }
 
     private void LoadRecipe(Recipe r, View v) {
-        Intent intent = new Intent(v.getContext(), NewRecipe.class);
+        Intent intent = new Intent(v.getContext(), RecipeEditor.class);
         intent.putExtra("RecipeID", r.id);
         v.getContext().startActivity(intent);
     }
