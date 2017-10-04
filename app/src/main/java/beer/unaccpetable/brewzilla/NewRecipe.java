@@ -50,6 +50,8 @@ public class NewRecipe extends AppCompatActivity {
     private TextView txtIBU, txtOG, txtFG, txtABV, txtSRM;
     Toolbar toolbar;
 
+    private Recipe r;
+
     Recipe m_CurrentRecipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,20 +112,22 @@ public class NewRecipe extends AppCompatActivity {
                 GsonBuilder gsonBuilder = new GsonBuilder();
 
                 Gson gson = gsonBuilder.create();
-                Recipe r = gson.fromJson(response, Recipe.class);
+                r = gson.fromJson(response, Recipe.class);
 
                 for (HopAddition h : r.hops) {
-                    m_HopAdapter.add(h.hop);
+                    m_HopAdapter.add(h);
                 }
 
                 for (YeastAddition y :r.yeasts) {
-                    m_YeastAdapter.add(y.yeast);
+                    m_YeastAdapter.add(y);
                 }
 
                 for (FermentableAddition f : r.fermentables) {
-                    m_MaltAdapter.add(f.fermentable);
+                    m_MaltAdapter.add(f);
                 }
 
+                toolbar.setTitle(r.name);
+                RefreshStats();
                 /*ArrayList<JSONObject> objs = Tools.GetJSONObjects(response);
                 for(int i = 0; i < objs.size(); i++) {
                     JSONObject o = (JSONObject)objs.get(i);
@@ -366,7 +370,7 @@ public class NewRecipe extends AppCompatActivity {
         txtSRM.setText("SRM: " + dSRM);
     }
 
-    private void LoadRecipe(String id) {
+    /*private void LoadRecipe(String id) {
         String sRecipeURL = Tools.RestAPIURL() + "/recipe?id=" + id;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, sRecipeURL, new Response.Listener<String>() {
@@ -399,9 +403,9 @@ public class NewRecipe extends AppCompatActivity {
         });
 
         Network.getInstance(this).addToRequestQueue(stringRequest);
-    }
+    }*/
 
-    private void LoadHops(String RecipeID) {
+    /*private void LoadHops(String RecipeID) {
         String sRecipeURL = Tools.RestAPIURL() + "/hopaddition?recipeID=" + RecipeID;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, sRecipeURL, new Response.Listener<String>() {
@@ -437,5 +441,5 @@ public class NewRecipe extends AppCompatActivity {
         });
 
         Network.getInstance(this).addToRequestQueue(stringRequest);
-    }
+    }*/
 }

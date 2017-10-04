@@ -1,9 +1,9 @@
 package beer.unaccpetable.brewzilla.Tools;
 
 import beer.unaccpetable.brewzilla.Adapters.Adapter;
-import beer.unaccpetable.brewzilla.Ingredients.Hop;
-import beer.unaccpetable.brewzilla.Ingredients.Fermentable;
-import beer.unaccpetable.brewzilla.Ingredients.Yeast;
+import beer.unaccpetable.brewzilla.Ingredients.FermentableAddition;
+import beer.unaccpetable.brewzilla.Ingredients.HopAddition;
+import beer.unaccpetable.brewzilla.Ingredients.YeastAddition;
 
 /**
  * Created by zak on 11/17/2016.
@@ -28,11 +28,11 @@ public class Calculations {
 
         //TODO: I removed Time from Hop because it belongs in HopAddition and this broke these calculations
         for (int i = 0; i < hops.Dataset().size(); i++) {
-            Hop h = (Hop)hops.get(i);
+            HopAddition h = (HopAddition) hops.get(i);
             dFG = 1.65 * (Math.pow(0.000125,(dOG - 1)));
-            //dfT = (1 - Math.pow(Math.E, dIBUBoilTimeCurveFit * h.Time)) / 4.15;
+            dfT = (1 - Math.pow(Math.E, dIBUBoilTimeCurveFit * h.time)) / 4.15;
             dUtil = dFG * dfT;
-            //dIBU += ((h.Amount * h.AAU) * dUtil * 74.89) / dIntoFermenterVolume;
+            dIBU += ((h.amount * h.hop.aau) * dUtil * 74.89) / dIntoFermenterVolume;
         }
 
         return (int)dIBU;
@@ -44,8 +44,8 @@ public class Calculations {
         double dPPGCalc = 0;
 
         for ( int i = 0; i < malts.size(); i++) {
-            Fermentable m = (Fermentable)malts.get(i);
-            dPPGCalc += m.PPG * m.Weight;
+            FermentableAddition m = (FermentableAddition)malts.get(i);
+            dPPGCalc += m.fermentable.ppg * m.weight;
         }
 
         dPPGCalc *= KitEfficiency;
@@ -60,10 +60,10 @@ public class Calculations {
         if (yeasts.size() == 0) return 0;
 
         for (int i = 0; i < yeasts.size(); i++) {
-            Yeast y = (Yeast)yeasts.get(i);
+            YeastAddition y = (YeastAddition) yeasts.get(i);
 
             yeastCount++;
-            attenuationTotal += y.Attenuation;
+            attenuationTotal += y.yeast.attenuation;
         }
 
         double finalAttenuation = attenuationTotal / yeastCount;
@@ -87,8 +87,8 @@ public class Calculations {
     public static int CalculateSRM(Adapter malts) {
         double dSRM = 0;
         for (int i = 0; i < malts.size(); i++ ) {
-            Fermentable m = (Fermentable)malts.Dataset().get(i);
-            dSRM += m.Color * m.Weight;
+            FermentableAddition m = (FermentableAddition)malts.Dataset().get(i);
+            dSRM += m.fermentable.color * m.weight;
         }
 
         dSRM = 1.4922 * (Math.pow(dSRM/dIntoFermenterVolume, 0.69));

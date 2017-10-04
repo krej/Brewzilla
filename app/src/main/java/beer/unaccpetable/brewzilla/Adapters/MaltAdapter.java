@@ -2,14 +2,12 @@ package beer.unaccpetable.brewzilla.Adapters;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import beer.unaccpetable.brewzilla.Ingredients.Ingredient;
-import beer.unaccpetable.brewzilla.Ingredients.Fermentable;
-import beer.unaccpetable.brewzilla.Ingredients.Yeast;
+import beer.unaccpetable.brewzilla.Ingredients.FermentableAddition;
 import beer.unaccpetable.brewzilla.R;
+import beer.unaccpetable.brewzilla.Tools.ListableObject;
 import beer.unaccpetable.brewzilla.Tools.Tools;
 
 /**
@@ -25,10 +23,10 @@ public class MaltAdapter extends Adapter {
         holder.txtHeader.setText(m_Dataset.get(position).name);
 
         if (OnlyEmptyIngredientExists()) return;
-        Fermentable item = (Fermentable)m_Dataset.get(position);
-        holder.txtFooter.setText("Weight: " + item.Weight + " lbs");
-        holder.txtThirdLine.setText("PPG: " + item.PPG);
-        holder.txtFourthLine.setText(item.Color + " SRM");
+        FermentableAddition item = (FermentableAddition)m_Dataset.get(position);
+        holder.txtFooter.setText("Weight: " + item.weight + " lbs");
+        holder.txtThirdLine.setText("PPG: " + item.fermentable.ppg);
+        holder.txtFourthLine.setText(item.fermentable.color + " SRM");
     }
 
     @Override
@@ -51,23 +49,23 @@ public class MaltAdapter extends Adapter {
         }
 
         if (bExisting) {
-            Fermentable m = (Fermentable)GetClickedItem();
-            m.name = sName;
-            m.Weight = dWeight;
-            m.PPG = dPPG;
-            m.Color = iColor;
+            FermentableAddition m = (FermentableAddition)GetClickedItem();
+            m.fermentable.name = sName;
+            m.weight = dWeight;
+            m.fermentable.ppg = dPPG;
+            m.fermentable.color = iColor;
         } else {
-            Fermentable malt = new Fermentable(sName, dWeight, dPPG, iColor);
+            FermentableAddition malt = new FermentableAddition(sName, dWeight, dPPG, iColor);
             add(malt);
         }
         return true;
     }
 
     @Override
-    protected View SetupDialog(Context c, Ingredient i) {
+    protected View SetupDialog(Context c, ListableObject i) {
         View root = super.SetupDialog(c,i);
 
-        Fermentable h = (Fermentable) i;
+        FermentableAddition h = (FermentableAddition) i;
 
         if (i != null) {
             EditText name = (EditText) root.findViewById(R.id.name);
@@ -76,9 +74,9 @@ public class MaltAdapter extends Adapter {
             EditText color = (EditText) root.findViewById(R.id.color);
 
             name.setText(h.name);
-            weight.setText(String.valueOf(h.Weight));
-            ppg.setText(String.valueOf(h.PPG));
-            color.setText(String.valueOf(h.Color));
+            weight.setText(String.valueOf(h.weight));
+            ppg.setText(String.valueOf(h.fermentable.ppg));
+            color.setText(String.valueOf(h.fermentable.color));
         }
         return root;
     }

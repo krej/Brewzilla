@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +13,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import beer.unaccpetable.brewzilla.Ingredients.Hop;
-import beer.unaccpetable.brewzilla.Ingredients.Ingredient;
 import beer.unaccpetable.brewzilla.NewRecipe;
 import beer.unaccpetable.brewzilla.R;
+import beer.unaccpetable.brewzilla.Tools.ListableObject;
 
 /**
  * Created by zak on 11/16/2016.
@@ -27,17 +25,17 @@ public abstract class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>
 implements View.OnClickListener
 {
 
-    protected ArrayList<Ingredient> m_Dataset;
+    protected ArrayList<ListableObject> m_Dataset;
     protected int m_iLayout;
     protected int m_iDialogLayout;
     protected int m_iClickedItem;
     protected LayoutInflater inflater;
 
     public Adapter(int iLayout, int iDialogLayout) {
-        m_Dataset = new ArrayList<Ingredient>();
+        m_Dataset = new ArrayList<ListableObject>();
         m_iLayout = iLayout;
         m_iDialogLayout = iDialogLayout;
-        add(new Ingredient());
+        add(new ListableObject());
     }
 
 
@@ -68,13 +66,13 @@ implements View.OnClickListener
         return m_Dataset.size();
     }
 
-    public void add(int position, Ingredient item) {
+    public void add(int position, ListableObject item) {
         removeEmptyIngredient();
         m_Dataset.add(position, item);
         notifyItemInserted(position);
     }
 
-    public void add(Ingredient item) {
+    public void add(ListableObject item) {
         removeEmptyIngredient();
 
         m_Dataset.add(item);
@@ -87,7 +85,7 @@ implements View.OnClickListener
         }
     }
 
-    public void remove(Ingredient item) {
+    public void remove(ListableObject item) {
         int position = m_Dataset.indexOf(item);
         m_Dataset.remove(position);
         notifyItemRemoved(position);
@@ -134,7 +132,7 @@ implements View.OnClickListener
         return m_iClickedItem;
     }
 
-    public Ingredient get(int i) {
+    public ListableObject get(int i) {
         return m_Dataset.get(i);
     }
 
@@ -144,7 +142,7 @@ implements View.OnClickListener
         return m_Dataset.size();
     }
 
-    public ArrayList<Ingredient> Dataset() {
+    public ArrayList<ListableObject> Dataset() {
         return m_Dataset;
     }
 
@@ -154,7 +152,7 @@ implements View.OnClickListener
         //m_iClickedItem =
     }
 
-    public void AddItem(final Context c, Ingredient i) {
+    public void AddItem(final Context c, ListableObject i) {
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
         //builder.setView(m_iDialogLayout);
         final boolean bExisting = i != null;
@@ -187,7 +185,7 @@ implements View.OnClickListener
         });
     }
 
-    protected View SetupDialog(Context c, Ingredient i) {
+    protected View SetupDialog(Context c, ListableObject i) {
 
         LayoutInflater inflater = (LayoutInflater)c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View root = inflater.inflate(m_iDialogLayout, null);
@@ -200,7 +198,7 @@ implements View.OnClickListener
         t.show();
     }
 
-    protected Ingredient GetClickedItem() {
+    protected ListableObject GetClickedItem() {
         return m_Dataset.get(m_iClickedItem);
     }
 

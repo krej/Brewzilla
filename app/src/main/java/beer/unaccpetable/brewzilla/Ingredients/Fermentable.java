@@ -5,14 +5,12 @@ package beer.unaccpetable.brewzilla.Ingredients;
  */
 
 public class Fermentable extends Ingredient {
-    public double Weight;
-    public double PPG;
-    public int Color;
+    public double ppg;
+    public int color;
 
-    public Fermentable(String sName, double dWeight, double dPPG, int iColor) {
+    public Fermentable(String sName, double dPPG, int iColor) {
         name = sName;
-        Weight = dWeight;
-        PPG = dPPG;
-        Color = iColor;
+        ppg = dPPG;
+        color = iColor;
     }
 }

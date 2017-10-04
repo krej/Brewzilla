@@ -5,12 +5,12 @@ package beer.unaccpetable.brewzilla.Ingredients;
  */
 
 public class Yeast extends Ingredient {
-    public String Lab;
-    public double Attenuation;
+    public String lab;
+    public double attenuation;
 
     public Yeast(String sProduct, String sLab,double dAttenuation) {
         name = sProduct;
-        Lab = sLab;
-        Attenuation = dAttenuation;
+        lab = sLab;
+        attenuation = dAttenuation;
     }
 }

@@ -3,11 +3,13 @@ package beer.unaccpetable.brewzilla.Ingredients;
 
 import java.util.List;
 
+import beer.unaccpetable.brewzilla.Tools.ListableObject;
+
 /**
  * Created by zak on 1/4/2017.
  */
 
-public class Recipe extends Ingredient  {
+public class Recipe extends ListableObject {
     public String style;
     public String description;
     public double abv;

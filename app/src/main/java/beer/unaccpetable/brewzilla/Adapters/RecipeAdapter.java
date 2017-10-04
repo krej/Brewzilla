@@ -9,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import beer.unaccpetable.brewzilla.Ingredients.Hop;
+import beer.unaccpetable.brewzilla.Ingredients.Ingredient;
 import beer.unaccpetable.brewzilla.Ingredients.Recipe;
 import beer.unaccpetable.brewzilla.NewRecipe;
 import beer.unaccpetable.brewzilla.R;

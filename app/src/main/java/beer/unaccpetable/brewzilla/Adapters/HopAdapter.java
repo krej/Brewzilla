@@ -4,13 +4,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-
-import beer.unaccpetable.brewzilla.Ingredients.Hop;
-import beer.unaccpetable.brewzilla.Ingredients.Ingredient;
+import beer.unaccpetable.brewzilla.Ingredients.HopAddition;
 import beer.unaccpetable.brewzilla.R;
+import beer.unaccpetable.brewzilla.Tools.ListableObject;
 import beer.unaccpetable.brewzilla.Tools.Tools;
 
 /**
@@ -29,10 +26,10 @@ public class HopAdapter extends Adapter {
 
         if (OnlyEmptyIngredientExists()) return;
 
-        Hop item = (Hop)m_Dataset.get(position);
-        holder.txtFooter.setText("Time: " + 0 + " min");
+        HopAddition item = (HopAddition) m_Dataset.get(position);
+        holder.txtFooter.setText("Time: " + item.time + " min");
         holder.txtThirdLine.setText(item.amount + " oz");
-        holder.txtFourthLine.setText(item.aau + " AAU");
+        holder.txtFourthLine.setText(item.hop.aau + " AAU");
     }
 
     @Override
@@ -53,22 +50,22 @@ public class HopAdapter extends Adapter {
         }
 
         if (bExisting) {
-            Hop h =(Hop) GetClickedItem();
-            h.name = sName;
+            HopAddition h =(HopAddition) GetClickedItem();
+            h.hop.name = sName;
             h.amount = dAmount;
-            h.aau = dAAU;
+            h.hop.aau = dAAU;
         } else {
-            Hop hop = new Hop(sName, dAmount, dAAU);
+            HopAddition hop = new HopAddition(sName, dAmount, dAAU);
             add(hop);
         }
         return true;
     }
 
     @Override
-    protected View SetupDialog(Context c, Ingredient i) {
-        View root = super.SetupDialog(c,i);
+    protected View SetupDialog(Context c, ListableObject i) {
+        View root = super.SetupDialog(c, i);
 
-        Hop h = (Hop)i;
+        HopAddition h = (HopAddition) i;
 
         if (i != null) {
             EditText name = (EditText) root.findViewById(R.id.name);
@@ -76,9 +73,9 @@ public class HopAdapter extends Adapter {
             EditText aau = (EditText) root.findViewById(R.id.aau);
             EditText time = (EditText) root.findViewById(R.id.time);
 
-            name.setText(h.name);
+            name.setText(h.hop.name);
             amount.setText(String.valueOf(h.amount));
-            aau.setText(String.valueOf(h.aau));
+            aau.setText(String.valueOf(h.hop.aau));
         }
         return root;
     }

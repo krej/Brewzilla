@@ -5,10 +5,9 @@ import android.content.Context;
 import android.view.View;
 import android.widget.EditText;
 
-import beer.unaccpetable.brewzilla.Ingredients.Hop;
-import beer.unaccpetable.brewzilla.Ingredients.Ingredient;
-import beer.unaccpetable.brewzilla.Ingredients.Yeast;
+import beer.unaccpetable.brewzilla.Ingredients.YeastAddition;
 import beer.unaccpetable.brewzilla.R;
+import beer.unaccpetable.brewzilla.Tools.ListableObject;
 import beer.unaccpetable.brewzilla.Tools.Tools;
 
 /**
@@ -24,9 +23,9 @@ public class YeastAdapter extends Adapter {
         holder.txtHeader.setText(m_Dataset.get(position).name);
 
         if (OnlyEmptyIngredientExists()) return;
-        Yeast item = (Yeast) m_Dataset.get(position);
-        holder.txtFooter.setText("Lab: " + item.Lab);
-        holder.txtThirdLine.setText("Attenuation: " + item.Attenuation);
+        YeastAddition item = (YeastAddition) m_Dataset.get(position);
+        holder.txtFooter.setText("Lab: " + item.yeast.lab);
+        holder.txtThirdLine.setText("Attenuation: " + item.yeast.attenuation);
     }
 
     @Override
@@ -46,22 +45,22 @@ public class YeastAdapter extends Adapter {
         }
 
         if (bExisting) {
-            Yeast y = (Yeast)GetClickedItem();
+            YeastAddition y = (YeastAddition)GetClickedItem();
             y.name = sName;
-            y.Lab = sLab;
-            y.Attenuation = dAtt;
+            y.yeast.lab = sLab;
+            y.yeast.attenuation = dAtt;
         } else {
-            Yeast yeast = new Yeast(sName, sLab, dAtt);
+            YeastAddition yeast = new YeastAddition(sName, sLab, dAtt);
             add(yeast);
         }
         return true;
     }
 
     @Override
-    protected View SetupDialog(Context c, Ingredient i) {
+    protected View SetupDialog(Context c, ListableObject i) {
         View root = super.SetupDialog(c,i);
 
-        Yeast h = (Yeast) i;
+        YeastAddition h = (YeastAddition) i;
 
         if (i != null) {
             EditText name = (EditText) root.findViewById(R.id.name);
@@ -69,8 +68,8 @@ public class YeastAdapter extends Adapter {
             EditText att = (EditText) root.findViewById(R.id.attenuation);
 
             name.setText(h.name);
-            lab.setText(h.Lab);
-            att.setText(String.valueOf(h.Attenuation));
+            lab.setText(h.yeast.lab);
+            att.setText(String.valueOf(h.yeast.attenuation));
         }
         return root;
     }

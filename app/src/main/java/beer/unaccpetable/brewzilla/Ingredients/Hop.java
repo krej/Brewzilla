@@ -11,9 +11,8 @@ public class Hop extends Ingredient {
     public double aau;
     public String id;
 
-    public Hop(String sName, double dAmount, double dAAU) {
+    public Hop(String sName, double dAAU) {
         name = sName;
-        amount = dAmount;
         aau = dAAU;
     }
 
