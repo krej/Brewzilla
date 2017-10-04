@@ -82,7 +82,7 @@ public class RecipeEditor extends AppCompatActivity {
 
         SetUpHopList();
         SetUpYeastList();
-        SetUpMaltList();
+        SetUpFermentableList();
 
         String sID = getIntent().getStringExtra("RecipeID");
         if (sID != null && sID.length() > 0) {
@@ -173,7 +173,7 @@ public class RecipeEditor extends AppCompatActivity {
         lstYeasts.setAdapter(m_YeastAdapter);
         //m_YeastAdapter.add(new Yeast("1056", "Wyeast", 75));
     }
-    private void SetUpMaltList() {
+    private void SetUpFermentableList() {
         lstGrains.setHasFixedSize(false);
         m_MaltLayoutManager = new LinearLayoutManager(this);
         lstGrains.setLayoutManager(m_MaltLayoutManager);

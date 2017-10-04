@@ -22,11 +22,11 @@ public class HopAdapter extends Adapter {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.txtHeader.setText(m_Dataset.get(position).name);
-
         if (OnlyEmptyIngredientExists()) return;
 
         HopAddition item = (HopAddition) m_Dataset.get(position);
+
+        holder.txtHeader.setText(item.hop.name);
         holder.txtFooter.setText("Time: " + item.time + " min");
         holder.txtThirdLine.setText(item.amount + " oz");
         holder.txtFourthLine.setText(item.hop.aau + " AAU");

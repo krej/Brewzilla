@@ -20,10 +20,11 @@ public class FermentableAdapter extends Adapter {
     }
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.txtHeader.setText(m_Dataset.get(position).name);
-
         if (OnlyEmptyIngredientExists()) return;
+
         FermentableAddition item = (FermentableAddition)m_Dataset.get(position);
+
+        holder.txtHeader.setText(item.fermentable.name);
         holder.txtFooter.setText("Weight: " + item.weight + " lbs");
         holder.txtThirdLine.setText("PPG: " + item.fermentable.ppg);
         holder.txtFourthLine.setText(item.fermentable.color + " SRM");

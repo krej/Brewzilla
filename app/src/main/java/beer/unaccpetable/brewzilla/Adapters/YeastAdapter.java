@@ -20,10 +20,11 @@ public class YeastAdapter extends Adapter {
     }
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.txtHeader.setText(m_Dataset.get(position).name);
-
         if (OnlyEmptyIngredientExists()) return;
+
         YeastAddition item = (YeastAddition) m_Dataset.get(position);
+
+        holder.txtHeader.setText(item.yeast.name);
         holder.txtFooter.setText("Lab: " + item.yeast.lab);
         holder.txtThirdLine.setText("Attenuation: " + item.yeast.attenuation);
     }
