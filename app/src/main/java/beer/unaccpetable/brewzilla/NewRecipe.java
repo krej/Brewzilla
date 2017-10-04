@@ -20,16 +20,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
 import beer.unaccpetable.brewzilla.Adapters.HopAdapter;
-import beer.unaccpetable.brewzilla.Adapters.MaltAdapter;
+import beer.unaccpetable.brewzilla.Adapters.FermentableAdapter;
 import beer.unaccpetable.brewzilla.Adapters.YeastAdapter;
 import beer.unaccpetable.brewzilla.Ingredients.FermentableAddition;
-import beer.unaccpetable.brewzilla.Ingredients.Hop;
 import beer.unaccpetable.brewzilla.Ingredients.HopAddition;
 import beer.unaccpetable.brewzilla.Ingredients.Recipe;
 import beer.unaccpetable.brewzilla.Ingredients.YeastAddition;
@@ -42,7 +36,7 @@ public class NewRecipe extends AppCompatActivity {
     private RecyclerView.LayoutManager m_HopLayoutManager, m_YeastLayoutManager, m_MaltLayoutManager;
     private HopAdapter m_HopAdapter = new HopAdapter(R.layout.hop_list, R.layout.fragment_hop_dialog);
     private YeastAdapter m_YeastAdapter = new YeastAdapter(R.layout.yeast_list, R.layout.fragment_yeast_dialog);
-    private MaltAdapter m_MaltAdapter = new MaltAdapter(R.layout.hop_list, R.layout.fragment_malt_dialog);
+    private FermentableAdapter m_MaltAdapter = new FermentableAdapter(R.layout.hop_list, R.layout.fragment_malt_dialog);
 
     private Boolean bShowExtraFab = false;
     View fabGrain,fabHop, fabYeast;

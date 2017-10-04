@@ -14,8 +14,8 @@ import beer.unaccpetable.brewzilla.Tools.Tools;
  * Created by zak on 11/16/2016.
  */
 
-public class MaltAdapter extends Adapter {
-    public MaltAdapter(int iLayout, int iDialogLayout) {
+public class FermentableAdapter extends Adapter {
+    public FermentableAdapter(int iLayout, int iDialogLayout) {
         super(iLayout, iDialogLayout);
     }
     @Override
