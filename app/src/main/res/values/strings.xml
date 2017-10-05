@@ -111,4 +111,5 @@
     <string name="yeast_name">Yeast Name</string>
     <string name="lab">Lab</string>
     <string name="attenuation">Attenuation</string>
+    <string name="save_recipe">Save</string>
 </resources>

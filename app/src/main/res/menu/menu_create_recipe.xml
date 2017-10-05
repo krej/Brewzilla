@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="beer.unaccpetable.brewzilla.RecipeEditor">
     <item
+        android:id="@+id/save_recipe"
+        android:orderInCategory="100"
+        android:title="@string/save_recipe"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"

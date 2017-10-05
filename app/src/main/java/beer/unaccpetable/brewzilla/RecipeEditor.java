@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.widget.TextView;
@@ -46,7 +49,6 @@ public class RecipeEditor extends AppCompatActivity {
 
     private Recipe r;
 
-    Recipe m_CurrentRecipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +96,26 @@ public class RecipeEditor extends AppCompatActivity {
         }
 
         RefreshStats();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_create_recipe, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.save_recipe:
+                if (r != null) {
+                    r.Save();
+                    return true;
+                }
+        }
+
+        return true;
     }
 
     private void LoadFullRecipe(String id) {

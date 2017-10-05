@@ -76,6 +76,7 @@ public class HopAdapter extends Adapter {
             name.setText(h.hop.name);
             amount.setText(String.valueOf(h.amount));
             aau.setText(String.valueOf(h.hop.aau));
+            time.setText(String.valueOf(h.time));
         }
         return root;
     }

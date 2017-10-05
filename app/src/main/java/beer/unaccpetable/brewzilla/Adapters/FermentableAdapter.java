@@ -74,7 +74,7 @@ public class FermentableAdapter extends Adapter {
             EditText ppg = (EditText) root.findViewById(R.id.ppg);
             EditText color = (EditText) root.findViewById(R.id.color);
 
-            name.setText(h.name);
+            name.setText(h.name());
             weight.setText(String.valueOf(h.weight));
             ppg.setText(String.valueOf(h.fermentable.ppg));
             color.setText(String.valueOf(h.fermentable.color));

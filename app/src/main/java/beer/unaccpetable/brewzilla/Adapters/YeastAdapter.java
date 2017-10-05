@@ -68,7 +68,7 @@ public class YeastAdapter extends Adapter {
             EditText lab = (EditText) root.findViewById(R.id.lab);
             EditText att = (EditText) root.findViewById(R.id.attenuation);
 
-            name.setText(h.name);
+            name.setText(h.name());
             lab.setText(h.yeast.lab);
             att.setText(String.valueOf(h.yeast.attenuation));
         }
