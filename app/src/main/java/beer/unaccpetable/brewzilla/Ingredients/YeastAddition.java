@@ -12,6 +12,8 @@ public class YeastAddition extends ListableObject {
     @Expose
     public String yeastID;
     public Yeast yeast;
+    @Expose
+    public String recipeID;
 
     public YeastAddition(String sProduct, String sLab,double dAttenuation) {
         name = sProduct;
@@ -22,6 +24,7 @@ public class YeastAddition extends ListableObject {
         return yeast.name;
     }
 
-    public void Save() {
+    public String toString() {
+        return name;
     }
 }

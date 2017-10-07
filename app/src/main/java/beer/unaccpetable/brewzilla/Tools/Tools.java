@@ -1,5 +1,8 @@
 package beer.unaccpetable.brewzilla.Tools;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,6 +27,11 @@ public class Tools {
     public static int ParseInt(String d) {
         if (d.length() == 0 ) return 0;
         return Integer.parseInt(d);
+    }
+
+    public static void ShowToast(Context c, CharSequence text, int length) {
+        Toast t = Toast.makeText(c, text, length);
+        t.show();
     }
 
     //TODO: I don't really like having these here but they work for now...

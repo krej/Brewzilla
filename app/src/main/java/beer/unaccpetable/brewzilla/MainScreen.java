@@ -1,11 +1,15 @@
 package beer.unaccpetable.brewzilla;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -27,6 +32,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +42,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.util.zip.Inflater;
 
 import beer.unaccpetable.brewzilla.Adapters.RecipeAdapter;
 import beer.unaccpetable.brewzilla.Ingredients.Recipe;
@@ -186,7 +194,7 @@ public class MainScreen extends AppCompatActivity
         Intent intNextScreen = null;
 
         if (id == R.id.nav_create_recipe) {
-            intNextScreen = new Intent(this, RecipeEditor.class);
+            CreateNewRecipe();
         } else if (id == R.id.nav_brew_beer) {
 
         } else if (id == R.id.nav_manage) {
@@ -203,6 +211,62 @@ public class MainScreen extends AppCompatActivity
             startActivity(intNextScreen);
 
         return true;
+    }
+
+
+    private String CreateNewRecipe() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //builder.setView(m_iDialogLayout);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View root = inflater.inflate(R.layout.fragment_newrecipe_dialog, null);
+        builder.setView(root);
+        final AlertDialog dialog = builder.create();
+
+
+        dialog.show();
+
+        final Context c = this;
+
+        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                EditText name = (EditText) dialog.findViewById(R.id.txtNewRecipeName);
+                EditText style = (EditText) dialog.findViewById(R.id.txtNewRecipeStyle);
+
+                Recipe r = new Recipe(name.getText().toString(), style.getText().toString());
+                GsonBuilder gsonBuilder = new GsonBuilder();
+
+                final Gson gson = gsonBuilder.create();
+                String json = gson.toJson(r);
+                Network.WebRequest(Request.Method.POST, Tools.RestAPIURL() + "/recipe", json.getBytes(),
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                // your response
+                                Recipe r2 = gson.fromJson(response, Recipe.class);
+                                Intent i = new Intent(c, RecipeEditor.class);
+                                i.putExtra("RecipeID", r2.id);
+
+                                startActivity(i);
+                            }
+                        }, null);
+
+                dialog.dismiss();
+
+            }
+        });
+
+        return "";
     }
 
     public void AddRecipe(View v) {

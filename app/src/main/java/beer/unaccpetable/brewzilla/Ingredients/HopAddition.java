@@ -27,6 +27,8 @@ public class HopAddition extends ListableObject {
     @Expose
     public String recipeID;
 
+    public static String[] Types = {"Boil", "Dry Hop", "Whirlpool"};
+
     public HopAddition(String sName, double dAmount, double dAAU, int iTime) {
         hop = new Hop(sName, dAAU);
         name = sName;

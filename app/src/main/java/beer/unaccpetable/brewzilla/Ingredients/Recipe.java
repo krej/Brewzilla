@@ -46,14 +46,17 @@ public class Recipe extends ListableObject {
     public ArrayList<FermentableAddition> fermentables;
 
 
+    public Recipe() {}
+
     public void Recipe(String sName) {
         name = sName;
     }
 
-    public void Recipe(String sName, String sID) {
-        Recipe(sName);
-        id = sID;
+    public Recipe(String sName, String sStyle) {
+        name = sName;
+        style = sStyle;
     }
+
 
     public void Save() {
         super.Save();

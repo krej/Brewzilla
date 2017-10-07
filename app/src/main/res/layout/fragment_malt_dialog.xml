@@ -12,16 +12,11 @@
         android:textAlignment="center"
         android:textSize="24sp" />
 
-    <EditText
-        android:id="@+id/name"
-        android:inputType="text"
+    <Spinner
+        android:id="@+id/fermentableSelector"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="@string/malt_name" />
+        android:layout_height="wrap_content" />
+
     <EditText
         android:id="@+id/weight"
         android:inputType="numberDecimal"
@@ -43,6 +38,7 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
+        android:enabled="false"
         android:hint="@string/ppg"/>
     <EditText
         android:id="@+id/color"
@@ -54,5 +50,17 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
-        android:hint="@string/color"/>
+        android:hint="@string/color"
+        android:enabled="false"/>
+    <EditText
+        android:id="@+id/fermentableID"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif"
+        android:visibility="gone"/>
 </LinearLayout>

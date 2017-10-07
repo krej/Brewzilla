@@ -1,10 +1,12 @@
 package beer.unaccpetable.brewzilla.Ingredients;
 
+import beer.unaccpetable.brewzilla.Tools.ListableObject;
+
 /**
  * Created by zak on 11/16/2016.
  */
 
-public class Yeast extends Ingredient {
+public class Yeast extends ListableObject {
     public String lab;
     public double attenuation;
 
@@ -12,5 +14,10 @@ public class Yeast extends Ingredient {
         name = sProduct;
         lab = sLab;
         attenuation = dAttenuation;
+    }
+
+
+    public String toString() {
+        return lab + " " + name;
     }
 }

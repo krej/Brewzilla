@@ -12,16 +12,11 @@
         android:textAlignment="center"
         android:textSize="24sp" />
 
-    <EditText
-        android:id="@+id/name"
-        android:inputType="text"
+    <Spinner
+        android:id="@+id/yeastSelector"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="@string/yeast_name" />
+        android:layout_height="wrap_content" />
+
     <EditText
         android:id="@+id/lab"
         android:inputType="text"
@@ -32,7 +27,8 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
-        android:hint="@string/lab"/>
+        android:hint="@string/lab"
+        android:enabled="false"/>
     <EditText
         android:id="@+id/attenuation"
         android:inputType="numberDecimal"
@@ -43,5 +39,18 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
-        android:hint="@string/attenuation"/>
+        android:hint="@string/attenuation"
+        android:enabled="false"/>
+
+    <EditText
+        android:id="@+id/yeastID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="16dp"
+        android:hint="@string/yeast_name"
+        android:inputType="text"
+        android:visibility="gone" />
 </LinearLayout>
