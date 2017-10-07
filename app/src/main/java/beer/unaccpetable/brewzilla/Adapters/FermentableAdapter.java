@@ -31,7 +31,7 @@ public class FermentableAdapter extends Adapter {
     }
 
     @Override
-    protected boolean AddItem(Dialog d, boolean bExisting) {
+    protected boolean AddItem(Dialog d, boolean bExisting, String sExtraInfo) {
 
         EditText name = (EditText) d.findViewById(R.id.name);
         EditText weight = (EditText) d.findViewById(R.id.weight);

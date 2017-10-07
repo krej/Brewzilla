@@ -1,6 +1,8 @@
 package beer.unaccpetable.brewzilla.Tools;
 
 import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -23,7 +25,21 @@ public class ListableObject {
             sRecipeURL += id;
         }
 
-        Network.WebRequest(Request.Method.POST, sRecipeURL, BuildRestData());
+        Network.WebRequest(Request.Method.POST, sRecipeURL, BuildRestData(),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // your response
+
+                    }
+                },
+                 new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String response = error.getMessage();
+                        response += "";
+                    }
+                });
     }
 
     protected byte[] BuildRestData() {
@@ -33,4 +49,5 @@ public class ListableObject {
         String json = gson.toJson(this);
         return json.getBytes();
     }
+
 }

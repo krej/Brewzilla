@@ -42,7 +42,7 @@ public class RecipeAdapter extends Adapter {
     }
 
     @Override
-    protected boolean AddItem(Dialog d, boolean bExisting) {
+    protected boolean AddItem(Dialog d, boolean bExisting, String sExtraInfo) {
         return false;
     }
 

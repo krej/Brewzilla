@@ -109,7 +109,7 @@ public class MainScreen extends AppCompatActivity
         //GsonBuilder gsonBuilder = new GsonBuilder();
 
         //Gson gson = gsonBuilder.create();
-        //Recipe r = gson.fromJson(json, Recipe.class);
+        //Recipe CurrentRecipe = gson.fromJson(json, Recipe.class);
         json = json.replace("[", "[\n");
         json = json.replace("]", "]\n");
         json = json.replace("},", "}\n");
@@ -142,7 +142,7 @@ public class MainScreen extends AppCompatActivity
         lstRecipes.setAdapter(m_RecipeAdapter);
         Recipe r = new Recipe();
         r.name = "test";
-        //m_RecipeAdapter.add(r);
+        //m_RecipeAdapter.add(CurrentRecipe);
     }
 
     @Override

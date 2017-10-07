@@ -30,7 +30,7 @@ public class YeastAdapter extends Adapter {
     }
 
     @Override
-    protected boolean AddItem(Dialog d, boolean bExisting) {
+    protected boolean AddItem(Dialog d, boolean bExisting, String sExtraInfo) {
         EditText name = (EditText) d.findViewById(R.id.name);
         EditText lab = (EditText) d.findViewById(R.id.lab);
         EditText att = (EditText) d.findViewById(R.id.attenuation);

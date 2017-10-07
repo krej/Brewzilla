@@ -73,4 +73,19 @@ public class Network {
         //Network.getInstance(c).addToRequestQueue(stringRequest);
     }
 
+    public static void WebRequest(int method, String url, final byte[] data, Response.Listener<String> listener, Response.ErrorListener errorListener) {
+        StringRequest request = new StringRequest(method, url, listener, errorListener) {
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                return data;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
+        Network.getInstance(mCtx).addToRequestQueue(request);
+    }
+
 }

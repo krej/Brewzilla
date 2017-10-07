@@ -23,6 +23,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+
 import beer.unaccpetable.brewzilla.Adapters.HopAdapter;
 import beer.unaccpetable.brewzilla.Adapters.FermentableAdapter;
 import beer.unaccpetable.brewzilla.Adapters.YeastAdapter;
@@ -47,7 +49,7 @@ public class RecipeEditor extends AppCompatActivity {
     private TextView txtIBU, txtOG, txtFG, txtABV, txtSRM;
     Toolbar toolbar;
 
-    private Recipe r;
+    public Recipe CurrentRecipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +111,10 @@ public class RecipeEditor extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.save_recipe:
-                if (r != null) {
-                    r.Save();
+                if (CurrentRecipe != null) {
+                    CurrentRecipe.ClearIngredients();
+                    PopulateRecipeIngredients();
+                    CurrentRecipe.Save();
                     return true;
                 }
         }
@@ -118,8 +122,16 @@ public class RecipeEditor extends AppCompatActivity {
         return true;
     }
 
+    private void PopulateRecipeIngredients() {
+        CurrentRecipe.PopulateHops(m_HopAdapter.Dataset());
+        CurrentRecipe.PopulateFermentables(m_MaltAdapter.Dataset());
+        CurrentRecipe.PopulateYeasts(m_YeastAdapter.Dataset());
+    }
+
     private void LoadFullRecipe(String id) {
-        String sRecipeURL = Tools.RestAPIURL() + "/recipe?id=" + id + "&include=fullrecipe";
+        /* Deployd bug: When there are more than 2 HopAdditions ( or Fermentable/Yeast ), it doesn't load in the Hop data after the second */
+        /* So I'm changing it to load in everything separately */
+        String sRecipeURL = Tools.RestAPIURL() + "/recipe?id=" + id; // + "&include=fullrecipe";
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, sRecipeURL, new Response.Listener<String>() {
 
@@ -127,22 +139,56 @@ public class RecipeEditor extends AppCompatActivity {
             public void onResponse(String response) {
                 GsonBuilder gsonBuilder = new GsonBuilder();
 
-                Gson gson = gsonBuilder.create();
-                r = gson.fromJson(response, Recipe.class);
+                final Gson gson = gsonBuilder.create();
+                CurrentRecipe = gson.fromJson(response, Recipe.class);
+                CurrentRecipe.Initiliaze();
 
-                for (HopAddition h : r.hops) {
-                    m_HopAdapter.add(h);
-                }
+                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/hopaddition?recipeID=" + CurrentRecipe.id + "&include=hop", null,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                // your response
+                                HopAddition[] hops = gson.fromJson(response, HopAddition[].class);
 
-                for (YeastAddition y :r.yeasts) {
-                    m_YeastAdapter.add(y);
-                }
+                                for (HopAddition h : hops) {
+                                    m_HopAdapter.add(h);
+                                    CurrentRecipe.hops.add(h);
+                                }
+                            }
+                        }, null); //No error checking! Woo!
 
-                for (FermentableAddition f : r.fermentables) {
-                    m_MaltAdapter.add(f);
-                }
+                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentableaddition?recipeID=" + CurrentRecipe.id + "&include=fermentable", null,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                // your response
+                                FermentableAddition[] fermentables = gson.fromJson(response, FermentableAddition[].class);
 
-                toolbar.setTitle(r.name);
+                                for (FermentableAddition f : fermentables) {
+                                    m_MaltAdapter.add(f);
+                                    CurrentRecipe.fermentables.add(f);
+                                }
+                            }
+                        }, null); //No error checking! Woo!
+
+                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/yeastaddition?recipeID=" + CurrentRecipe.id + "&include=yeast", null,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                // your response
+                                YeastAddition[] yeasts = gson.fromJson(response, YeastAddition[].class);
+
+                                for (YeastAddition y : yeasts) {
+                                    m_YeastAdapter.add(y);
+                                    CurrentRecipe.yeasts.add(y);
+                                }
+                            }
+                        }, null); //No error checking! Woo!
+
+
+
+
+                toolbar.setTitle(CurrentRecipe.name);
                 RefreshStats();
                 /*ArrayList<JSONObject> objs = Tools.GetJSONObjects(response);
                 for(int i = 0; i < objs.size(); i++) {

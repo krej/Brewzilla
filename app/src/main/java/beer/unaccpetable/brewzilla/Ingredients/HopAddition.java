@@ -15,6 +15,7 @@ import beer.unaccpetable.brewzilla.Tools.Tools;
  */
 
 public class HopAddition extends ListableObject {
+    @Expose
     public String hopID;
     @Expose
     public double amount;
@@ -23,6 +24,8 @@ public class HopAddition extends ListableObject {
     @Expose
     public int time;
     public Hop hop;
+    @Expose
+    public String recipeID;
 
     public HopAddition(String sName, double dAmount, double dAAU, int iTime) {
         hop = new Hop(sName, dAAU);

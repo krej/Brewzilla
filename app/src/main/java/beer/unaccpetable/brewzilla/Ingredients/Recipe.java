@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import beer.unaccpetable.brewzilla.Network;
@@ -40,9 +41,9 @@ public class Recipe extends ListableObject {
     public double srm;
     public double version;
     public String test;
-    public List<HopAddition> hops;
-    public List<YeastAddition> yeasts;
-    public List<FermentableAddition> fermentables;
+    public ArrayList<HopAddition> hops;
+    public ArrayList<YeastAddition> yeasts;
+    public ArrayList<FermentableAddition> fermentables;
 
 
     public void Recipe(String sName) {
@@ -71,4 +72,37 @@ public class Recipe extends ListableObject {
         }
     }
 
+    public void Initiliaze() {
+        if (hops == null) hops = new ArrayList<>();
+        if (fermentables == null) fermentables = new ArrayList<>();
+        if (yeasts == null) yeasts = new ArrayList<>();
+    }
+
+    /*
+    For Some reason I can't convert ArrayList<HopAddition> to ArrayList<ListableObject> so I need to clear and readd these...
+     */
+    public void ClearIngredients() {
+        hops.clear();
+        fermentables.clear();
+        yeasts.clear();
+    }
+
+    public void PopulateHops(ArrayList<ListableObject> hops) {
+        for (int i = 0; i < hops.size(); i++) {
+            HopAddition h = (HopAddition)hops.get(i);
+            this.hops.add(h);
+        }
+    }
+    public void PopulateFermentables(ArrayList<ListableObject> fermentables) {
+        for (int i = 0; i < fermentables.size(); i++) {
+            FermentableAddition h = (FermentableAddition) fermentables.get(i);
+            this.fermentables.add(h);
+        }
+    }
+    public void PopulateYeasts(ArrayList<ListableObject> yeasts) {
+        for (int i = 0; i < yeasts.size(); i++) {
+            YeastAddition h = (YeastAddition) yeasts.get(i);
+            this.yeasts.add(h);
+        }
+    }
 }

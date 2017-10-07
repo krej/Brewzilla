@@ -95,7 +95,7 @@ implements View.OnClickListener
         return (m_Dataset.size() == 1 && m_Dataset.get(0).name == "Empty");
     }
 
-    protected abstract boolean AddItem(Dialog d, boolean bExisting);
+    protected abstract boolean AddItem(Dialog d, boolean bExisting, String sExtraData);
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txtHeader;
@@ -176,8 +176,8 @@ implements View.OnClickListener
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (!AddItem(dialog, bExisting)) return;
                 RecipeEditor n = (RecipeEditor)c;
+                if (!AddItem(dialog, bExisting, n.CurrentRecipe.id)) return;
                 n.RefreshStats();
                 notifyDataSetChanged();
                 dialog.dismiss();

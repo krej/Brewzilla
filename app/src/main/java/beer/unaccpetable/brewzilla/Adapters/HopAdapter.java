@@ -5,6 +5,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+
 import beer.unaccpetable.brewzilla.Ingredients.HopAddition;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
@@ -33,7 +35,7 @@ public class HopAdapter extends Adapter {
     }
 
     @Override
-    protected boolean AddItem(Dialog d, boolean bExisting) {
+    protected boolean AddItem(Dialog d, boolean bExisting, String sExtraInfo) {
         EditText name = (EditText) d.findViewById(R.id.name);
         EditText amount = (EditText) d.findViewById(R.id.amount);
         EditText aau = (EditText) d.findViewById(R.id.aau);
@@ -44,10 +46,10 @@ public class HopAdapter extends Adapter {
         double dAAU = Tools.ParseDouble(aau.getText().toString());
         int iTime = Tools.ParseInt(time.getText().toString());
 
-        if (sName.length() == 0 || dAmount == 0 || dAAU == 0) {
+        /*if (sName.length() == 0 || dAmount == 0 || dAAU == 0) {
             InfoMissing(d.getContext());
             return false;
-        }
+        }*/
 
         if (bExisting) {
             HopAddition h =(HopAddition) GetClickedItem();
@@ -55,8 +57,13 @@ public class HopAdapter extends Adapter {
             h.amount = dAmount;
             h.hop.aau = dAAU;
             h.time = iTime;
+            h.recipeID = sExtraInfo;
         } else {
             HopAddition hop = new HopAddition(sName, dAmount, dAAU, iTime);
+            hop.recipeID = sExtraInfo;
+            //TODO: Hardcoded for now because theres no where to enter it
+            hop.hopID = "cd8e43ace1c3089d";
+            hop.type = "Suckin";
             add(hop);
         }
         return true;
@@ -81,4 +88,5 @@ public class HopAdapter extends Adapter {
         }
         return root;
     }
+
 }
