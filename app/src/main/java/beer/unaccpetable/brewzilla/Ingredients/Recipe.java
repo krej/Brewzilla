@@ -1,24 +1,11 @@
 package beer.unaccpetable.brewzilla.Ingredients;
 
 
-import android.content.Context;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import beer.unaccpetable.brewzilla.Network;
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
-import beer.unaccpetable.brewzilla.Tools.Tools;
 
 /**
  * Created by zak on 1/4/2017.

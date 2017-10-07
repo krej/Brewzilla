@@ -6,8 +6,6 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import beer.unaccpetable.brewzilla.Network;
-
 /**
  * Created by Megatron on 10/4/2017.
  */

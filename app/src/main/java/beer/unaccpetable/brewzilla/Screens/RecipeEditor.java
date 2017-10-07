@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla;
+package beer.unaccpetable.brewzilla.Screens;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -23,8 +23,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.ArrayList;
-
 import beer.unaccpetable.brewzilla.Adapters.HopAdapter;
 import beer.unaccpetable.brewzilla.Adapters.FermentableAdapter;
 import beer.unaccpetable.brewzilla.Adapters.YeastAdapter;
@@ -32,6 +30,8 @@ import beer.unaccpetable.brewzilla.Ingredients.FermentableAddition;
 import beer.unaccpetable.brewzilla.Ingredients.HopAddition;
 import beer.unaccpetable.brewzilla.Ingredients.Recipe;
 import beer.unaccpetable.brewzilla.Ingredients.YeastAddition;
+import beer.unaccpetable.brewzilla.Tools.Network;
+import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.Calculations;
 import beer.unaccpetable.brewzilla.Tools.Tools;
 

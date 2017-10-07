@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import beer.unaccpetable.brewzilla.Ingredients.Recipe;
-import beer.unaccpetable.brewzilla.RecipeEditor;
+import beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 
 /**
  * Created by zak on 1/8/2017.

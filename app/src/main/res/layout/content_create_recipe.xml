@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="beer.unaccpetable.brewzilla.RecipeEditor"
+    tools:context="beer.unaccpetable.brewzilla.Screens.RecipeEditor"
     tools:showIn="@layout/activity_create_recipe"
     android:id="@+id/nestedscrollview"
     android:clickable="true"

@@ -19,8 +19,7 @@ import java.util.ArrayList;
 
 import beer.unaccpetable.brewzilla.Ingredients.Fermentable;
 import beer.unaccpetable.brewzilla.Ingredients.FermentableAddition;
-import beer.unaccpetable.brewzilla.Ingredients.Hop;
-import beer.unaccpetable.brewzilla.Network;
+import beer.unaccpetable.brewzilla.Tools.Network;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
 import beer.unaccpetable.brewzilla.Tools.Tools;

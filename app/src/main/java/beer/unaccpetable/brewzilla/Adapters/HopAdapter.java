@@ -20,12 +20,10 @@ import java.util.Arrays;
 
 import beer.unaccpetable.brewzilla.Ingredients.Hop;
 import beer.unaccpetable.brewzilla.Ingredients.HopAddition;
-import beer.unaccpetable.brewzilla.Network;
+import beer.unaccpetable.brewzilla.Tools.Network;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
 import beer.unaccpetable.brewzilla.Tools.Tools;
-
-import static beer.unaccpetable.brewzilla.Ingredients.HopAddition.Types;
 
 /**
  * Created by zak on 11/16/2016.

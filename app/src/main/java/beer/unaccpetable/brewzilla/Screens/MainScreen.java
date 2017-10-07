@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla;
+package beer.unaccpetable.brewzilla.Screens;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -42,10 +42,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.util.zip.Inflater;
 
 import beer.unaccpetable.brewzilla.Adapters.RecipeAdapter;
 import beer.unaccpetable.brewzilla.Ingredients.Recipe;
+import beer.unaccpetable.brewzilla.Tools.Network;
+import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.Tools;
 
 public class MainScreen extends AppCompatActivity

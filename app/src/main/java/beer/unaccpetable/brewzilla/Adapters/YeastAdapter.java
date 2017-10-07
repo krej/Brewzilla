@@ -17,10 +17,9 @@ import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 
-import beer.unaccpetable.brewzilla.Ingredients.Fermentable;
 import beer.unaccpetable.brewzilla.Ingredients.Yeast;
 import beer.unaccpetable.brewzilla.Ingredients.YeastAddition;
-import beer.unaccpetable.brewzilla.Network;
+import beer.unaccpetable.brewzilla.Tools.Network;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
 import beer.unaccpetable.brewzilla.Tools.Tools;
