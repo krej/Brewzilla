@@ -24,10 +24,11 @@ public class HopAddition extends ListableObject {
     public int time;
     public Hop hop;
 
-    public HopAddition(String sName, double dAmount, double dAAU) {
+    public HopAddition(String sName, double dAmount, double dAAU, int iTime) {
         hop = new Hop(sName, dAAU);
         name = sName;
         amount = dAmount;
+        time = iTime;
     }
 
     public String name() {

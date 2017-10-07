@@ -54,8 +54,9 @@ public class HopAdapter extends Adapter {
             h.hop.name = sName;
             h.amount = dAmount;
             h.hop.aau = dAAU;
+            h.time = iTime;
         } else {
-            HopAddition hop = new HopAddition(sName, dAmount, dAAU);
+            HopAddition hop = new HopAddition(sName, dAmount, dAAU, iTime);
             add(hop);
         }
         return true;
