@@ -1,5 +1,7 @@
 package beer.unaccpetable.brewzilla.Ingredients;
 
+import com.google.gson.annotations.Expose;
+
 import org.json.JSONObject;
 
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
@@ -9,16 +11,12 @@ import beer.unaccpetable.brewzilla.Tools.ListableObject;
  */
 
 public class Hop extends ListableObject {
-    public double amount;
+    @Expose
     public double aau;
 
     public Hop(String sName, double dAAU) {
         name = sName;
         aau = dAAU;
-    }
-
-    public Hop(JSONObject o) {
-
     }
 
     public String toString() {

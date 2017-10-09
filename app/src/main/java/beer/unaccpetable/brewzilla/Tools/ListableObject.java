@@ -5,12 +5,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 
 /**
  * Created by Megatron on 10/4/2017.
  */
 
 public class ListableObject {
+    @Expose
     public String name = "Empty"; //Used to store 'Empty'
     public String id;
     //protected String ClassName = ""; //Used for the API to know what URL to request to. Could maybe be replaced with just getting the class name later.

@@ -176,9 +176,20 @@ implements View.OnClickListener
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                RecipeEditor n = (RecipeEditor)c;
-                if (!AddItem(dialog, bExisting, n.CurrentRecipe.id)) return;
-                n.RefreshStats();
+                RecipeEditor n = null;
+                boolean bRecipeEditor = false;
+                String sExtraInfo = "";
+                //TODO: Make better. I added it when working on the Ingredient Manager
+                if (c.getClass() == RecipeEditor.class) {
+                    n = (RecipeEditor) c;
+                    bRecipeEditor = true;
+                    sExtraInfo = n.CurrentRecipe.id;
+                }
+                if (!AddItem(dialog, bExisting, sExtraInfo)) return;
+
+                if (bRecipeEditor) {
+                    n.RefreshStats();
+                }
                 notifyDataSetChanged();
                 dialog.dismiss();
             }

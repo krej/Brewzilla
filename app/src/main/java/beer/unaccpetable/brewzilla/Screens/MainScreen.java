@@ -203,6 +203,8 @@ public class MainScreen extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
 
+        } else if (id == R.id.nav_ingredient_manager) {
+            intNextScreen = new Intent(this, IngredientManager.class);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

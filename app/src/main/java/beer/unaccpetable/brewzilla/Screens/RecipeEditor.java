@@ -23,7 +23,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import beer.unaccpetable.brewzilla.Adapters.HopAdapter;
+import beer.unaccpetable.brewzilla.Adapters.HopAdditionAdapter;
 import beer.unaccpetable.brewzilla.Adapters.FermentableAdapter;
 import beer.unaccpetable.brewzilla.Adapters.YeastAdapter;
 import beer.unaccpetable.brewzilla.Ingredients.FermentableAddition;
@@ -39,7 +39,7 @@ public class RecipeEditor extends AppCompatActivity {
 
     RecyclerView lstGrains, lstHops,lstYeasts;
     private RecyclerView.LayoutManager m_HopLayoutManager, m_YeastLayoutManager, m_MaltLayoutManager;
-    private HopAdapter m_HopAdapter = new HopAdapter(R.layout.hop_list, R.layout.fragment_hop_dialog);
+    private HopAdditionAdapter m_HopAdditionAdapter = new HopAdditionAdapter(R.layout.hop_list, R.layout.fragment_hop_dialog);
     private YeastAdapter m_YeastAdapter = new YeastAdapter(R.layout.yeast_list, R.layout.fragment_yeast_dialog);
     private FermentableAdapter m_MaltAdapter = new FermentableAdapter(R.layout.hop_list, R.layout.fragment_malt_dialog);
 
@@ -123,7 +123,7 @@ public class RecipeEditor extends AppCompatActivity {
     }
 
     private void PopulateRecipeIngredients() {
-        CurrentRecipe.PopulateHops(m_HopAdapter.Dataset());
+        CurrentRecipe.PopulateHops(m_HopAdditionAdapter.Dataset());
         CurrentRecipe.PopulateFermentables(m_MaltAdapter.Dataset());
         CurrentRecipe.PopulateYeasts(m_YeastAdapter.Dataset());
     }
@@ -151,7 +151,7 @@ public class RecipeEditor extends AppCompatActivity {
                                 HopAddition[] hops = gson.fromJson(response, HopAddition[].class);
 
                                 for (HopAddition h : hops) {
-                                    m_HopAdapter.add(h);
+                                    m_HopAdditionAdapter.add(h);
                                     CurrentRecipe.hops.add(h);
                                 }
                             }
@@ -222,7 +222,7 @@ public class RecipeEditor extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Test" + m_HopAdapter.clickedPosition(), Toast.LENGTH_LONG).show();
+                Toast.makeText(view.getContext(), "Test" + m_HopAdditionAdapter.clickedPosition(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -231,8 +231,8 @@ public class RecipeEditor extends AppCompatActivity {
         lstHops.setHasFixedSize(false);
         m_HopLayoutManager = new LinearLayoutManager(this);
         lstHops.setLayoutManager(m_HopLayoutManager);
-        lstHops.setAdapter(m_HopAdapter);
-        //m_HopAdapter.add(new Hop("Citra", 1.5, 13.65, 20));
+        lstHops.setAdapter(m_HopAdditionAdapter);
+        //m_HopAdditionAdapter.add(new Hop("Citra", 1.5, 13.65, 20));
     }
     private void SetUpYeastList() {
         lstYeasts.setHasFixedSize(false);
@@ -283,7 +283,7 @@ public class RecipeEditor extends AppCompatActivity {
         fabHop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_HopAdapter.AddItem(RecipeEditor.this, null);
+                m_HopAdditionAdapter.AddItem(RecipeEditor.this, null);
             }
         });
 
@@ -419,7 +419,7 @@ public class RecipeEditor extends AppCompatActivity {
     }
 
     public void RefreshStats() {
-        int dIBU = Calculations.CalculateIBU(m_HopAdapter, m_MaltAdapter);
+        int dIBU = Calculations.CalculateIBU(m_HopAdditionAdapter, m_MaltAdapter);
         double dOG = Calculations.CalculateOG(m_MaltAdapter);
         double dFG = Calculations.CalculateFG(m_MaltAdapter, m_YeastAdapter);
         double dABV = Calculations.CalculateABV(m_MaltAdapter, m_YeastAdapter);
@@ -491,7 +491,7 @@ public class RecipeEditor extends AppCompatActivity {
                     }
                     double aau = 666; //TODO: This needs to come from the Hop table
                     Hop h = new Hop(s, amt, aau);
-                    m_HopAdapter.add(h);
+                    m_HopAdditionAdapter.add(h);
                 }
 
             }

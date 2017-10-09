@@ -3,6 +3,7 @@
     package="beer.unaccpetable.brewzilla">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/beer"
@@ -28,6 +29,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="beer.unaccpetable.brewzilla.Screens.MainScreen" />
         </activity>
+        <activity
+            android:name=".Screens.IngredientManager"
+            android:label="@string/title_activity_ingredient_manager"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
