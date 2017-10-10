@@ -30,6 +30,19 @@
         android:hint="@string/lab"
         android:enabled="false"/>
     <EditText
+        android:id="@+id/name"
+        android:inputType="text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif"
+        android:hint="Name"
+        android:enabled="false"
+        android:visibility="gone"/>
+    <EditText
         android:id="@+id/attenuation"
         android:inputType="numberDecimal"
         android:layout_width="match_parent"

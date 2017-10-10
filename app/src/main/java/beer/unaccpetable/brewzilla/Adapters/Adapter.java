@@ -213,8 +213,8 @@ implements View.OnClickListener
         return m_Dataset.get(m_iClickedItem);
     }
 
-    /*public void clear() {
+    public void clear() {
         m_Dataset.clear();
-        add(new Ingredient());
-    }*/
+        add(new ListableObject());
+    }
 }

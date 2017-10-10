@@ -24,8 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import beer.unaccpetable.brewzilla.Adapters.HopAdditionAdapter;
-import beer.unaccpetable.brewzilla.Adapters.FermentableAdapter;
-import beer.unaccpetable.brewzilla.Adapters.YeastAdapter;
+import beer.unaccpetable.brewzilla.Adapters.FermentableAdditionAdapter;
+import beer.unaccpetable.brewzilla.Adapters.YeastAdditionAdapter;
 import beer.unaccpetable.brewzilla.Ingredients.FermentableAddition;
 import beer.unaccpetable.brewzilla.Ingredients.HopAddition;
 import beer.unaccpetable.brewzilla.Ingredients.Recipe;
@@ -40,8 +40,8 @@ public class RecipeEditor extends AppCompatActivity {
     RecyclerView lstGrains, lstHops,lstYeasts;
     private RecyclerView.LayoutManager m_HopLayoutManager, m_YeastLayoutManager, m_MaltLayoutManager;
     private HopAdditionAdapter m_HopAdditionAdapter = new HopAdditionAdapter(R.layout.hop_list, R.layout.fragment_hop_dialog);
-    private YeastAdapter m_YeastAdapter = new YeastAdapter(R.layout.yeast_list, R.layout.fragment_yeast_dialog);
-    private FermentableAdapter m_MaltAdapter = new FermentableAdapter(R.layout.hop_list, R.layout.fragment_malt_dialog);
+    private YeastAdditionAdapter m_YeastAdditionAdapter = new YeastAdditionAdapter(R.layout.yeast_list, R.layout.fragment_yeast_dialog);
+    private FermentableAdditionAdapter m_MaltAdapter = new FermentableAdditionAdapter(R.layout.hop_list, R.layout.fragment_malt_dialog);
 
     private Boolean bShowExtraFab = false;
     View fabGrain,fabHop, fabYeast;
@@ -125,11 +125,11 @@ public class RecipeEditor extends AppCompatActivity {
     private void PopulateRecipeIngredients() {
         CurrentRecipe.PopulateHops(m_HopAdditionAdapter.Dataset());
         CurrentRecipe.PopulateFermentables(m_MaltAdapter.Dataset());
-        CurrentRecipe.PopulateYeasts(m_YeastAdapter.Dataset());
+        CurrentRecipe.PopulateYeasts(m_YeastAdditionAdapter.Dataset());
     }
 
     private void LoadFullRecipe(String id) {
-        /* Deployd bug: When there are more than 2 HopAdditions ( or Fermentable/Yeast ), it doesn't load in the Hop data after the second */
+        /* Deployd bug: When there are more than 2 HopAdditions ( or Fermentables/Yeast ), it doesn't load in the Hop data after the second */
         /* So I'm changing it to load in everything separately */
         String sRecipeURL = Tools.RestAPIURL() + "/recipe?id=" + id; // + "&include=fullrecipe";
 
@@ -157,7 +157,7 @@ public class RecipeEditor extends AppCompatActivity {
                             }
                         }, null); //No error checking! Woo!
 
-                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentableaddition?recipeID=" + CurrentRecipe.id + "&include=fermentable", null,
+                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentableaddition?recipeID=" + CurrentRecipe.id + "&include=fermentables", null,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -179,7 +179,7 @@ public class RecipeEditor extends AppCompatActivity {
                                 YeastAddition[] yeasts = gson.fromJson(response, YeastAddition[].class);
 
                                 for (YeastAddition y : yeasts) {
-                                    m_YeastAdapter.add(y);
+                                    m_YeastAdditionAdapter.add(y);
                                     CurrentRecipe.yeasts.add(y);
                                 }
                             }
@@ -238,8 +238,8 @@ public class RecipeEditor extends AppCompatActivity {
         lstYeasts.setHasFixedSize(false);
         m_YeastLayoutManager = new LinearLayoutManager(this);
         lstYeasts.setLayoutManager(m_YeastLayoutManager);
-        lstYeasts.setAdapter(m_YeastAdapter);
-        //m_YeastAdapter.add(new Yeast("1056", "Wyeast", 75));
+        lstYeasts.setAdapter(m_YeastAdditionAdapter);
+        //m_YeastAdditionAdapter.add(new Yeast("1056", "Wyeast", 75));
     }
     private void SetUpFermentableList() {
         lstGrains.setHasFixedSize(false);
@@ -292,7 +292,7 @@ public class RecipeEditor extends AppCompatActivity {
         fabYeast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_YeastAdapter.AddItem(RecipeEditor.this, null);
+                m_YeastAdditionAdapter.AddItem(RecipeEditor.this, null);
             }
         });
     }
@@ -421,8 +421,8 @@ public class RecipeEditor extends AppCompatActivity {
     public void RefreshStats() {
         int dIBU = Calculations.CalculateIBU(m_HopAdditionAdapter, m_MaltAdapter);
         double dOG = Calculations.CalculateOG(m_MaltAdapter);
-        double dFG = Calculations.CalculateFG(m_MaltAdapter, m_YeastAdapter);
-        double dABV = Calculations.CalculateABV(m_MaltAdapter, m_YeastAdapter);
+        double dFG = Calculations.CalculateFG(m_MaltAdapter, m_YeastAdditionAdapter);
+        double dABV = Calculations.CalculateABV(m_MaltAdapter, m_YeastAdditionAdapter);
         int dSRM = Calculations.CalculateSRM(m_MaltAdapter);
 
         txtIBU.setText("IBUs: " + dIBU);

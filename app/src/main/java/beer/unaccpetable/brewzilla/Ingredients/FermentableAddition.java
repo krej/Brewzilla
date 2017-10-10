@@ -15,17 +15,17 @@ public class FermentableAddition extends ListableObject {
     public String use = "Mash"; //Hard coded to Mash for now because I dont know the purpose of this
     @Expose
     public double weight;
-    public Fermentable fermentable;
+    public Fermentables fermentables;
     @Expose
     public String recipeID;
 
     public FermentableAddition(String sName, double dWeight, double dPPG, int iColor) {
-        fermentable = new Fermentable(sName, dPPG, iColor);
+        fermentables = new Fermentables(sName, dPPG, iColor);
         name = sName;
         weight = dWeight;
     }
 
     public String name() {
-        return fermentable.name;
+        return fermentables.name;
     }
 }

@@ -1,31 +1,23 @@
 package beer.unaccpetable.brewzilla.Adapters;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.util.ArrayList;
-
-import beer.unaccpetable.brewzilla.Ingredients.Fermentable;
-import beer.unaccpetable.brewzilla.Ingredients.FermentableAddition;
-import beer.unaccpetable.brewzilla.Tools.Network;
+import beer.unaccpetable.brewzilla.Ingredients.Fermentables;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
 import beer.unaccpetable.brewzilla.Tools.Tools;
 
+import static android.text.InputType.TYPE_CLASS_TEXT;
+import static android.view.View.GONE;
+
 /**
- * Created by zak on 11/16/2016.
+ * Created by Megatron on 10/9/2017.
  */
 
 public class FermentableAdapter extends Adapter {
@@ -33,51 +25,84 @@ public class FermentableAdapter extends Adapter {
     public FermentableAdapter(int iLayout, int iDialogLayout) {
         super(iLayout, iDialogLayout);
     }
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (OnlyEmptyIngredientExists()) return;
 
-        FermentableAddition item = (FermentableAddition)m_Dataset.get(position);
+        Fermentables item = (Fermentables) m_Dataset.get(position);
 
-        holder.txtHeader.setText(item.fermentable.name);
-        holder.txtFooter.setText("Weight: " + item.weight + " lbs");
-        holder.txtThirdLine.setText("PPG: " + item.fermentable.ppg);
-        holder.txtFourthLine.setText(item.fermentable.color + " SRM");
+        holder.txtHeader.setText(item.name);
+        //holder.txtFooter.setText("AAU: " + item.aau);
     }
 
     @Override
-    protected boolean AddItem(Dialog d, boolean bExisting, String sExtraInfo) {
+    public void AddItem(final Context c, ListableObject i) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        //builder.setView(m_iDialogLayout);
+        final boolean bExisting = i != null;
 
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+
+        builder.setView(SetupDialog(c, i));
+        final AlertDialog dialog = builder.create();
+
+
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (AddItem(dialog, bExisting, ""))
+                    dialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    protected boolean AddItem(Dialog d, boolean bExisting, String sExtraData) {
         Spinner name = (Spinner) d.findViewById(R.id.fermentableSelector);
-        EditText weight = (EditText) d.findViewById(R.id.weight);
+        EditText txtName = (EditText) d.findViewById(R.id.weight); //reuse weight for name in the editor
         EditText ppg = (EditText) d.findViewById(R.id.ppg);
         EditText color = (EditText) d.findViewById(R.id.color);
+        EditText fermentableID = (EditText) d.findViewById(R.id.fermentableID);
 
-        Fermentable f = (Fermentable)name.getSelectedItem();
-        String sName = f.name;
-        double dWeight = Tools.ParseDouble(weight.getText().toString());
+        String sName = txtName.getText().toString();
         double dPPG = Tools.ParseDouble(ppg.getText().toString());
         int iColor = Tools.ParseInt(color.getText().toString());
+        String sID = fermentableID.getText().toString();
 
-        if (sName.length() == 0 || dWeight == 0 || dPPG == 0) {
+        if (sName.length() == 0 || dPPG == 0 || iColor == 0) {
             InfoMissing(d.getContext());
             return false;
         }
 
+        Fermentables fermentables;
+
         if (bExisting) {
-            FermentableAddition m = (FermentableAddition)GetClickedItem();
-            m.fermentable.name = sName;
-            m.weight = dWeight;
-            m.fermentable.ppg = dPPG;
-            m.fermentable.color = iColor;
-            m.fermentableID = f.id;
-            m.recipeID = sExtraInfo;
+            fermentables =(Fermentables) GetClickedItem();
+            fermentables.name = sName;
+            fermentables.ppg = dPPG;
+            fermentables.color = iColor;
+            fermentables.id = sID;
+            fermentables.type = "Dry Extract"; //hard code for now...
         } else {
-            FermentableAddition malt = new FermentableAddition(sName, dWeight, dPPG, iColor);
-            malt.fermentableID = f.id;
-            malt.recipeID = sExtraInfo;
-            add(malt);
+            fermentables = new Fermentables(sName, dPPG, iColor);
+            fermentables.id = sID;
+            fermentables.type = "Dry Extract";
+            add(fermentables);
         }
+
+        fermentables.Save();
+
         return true;
     }
 
@@ -85,71 +110,27 @@ public class FermentableAdapter extends Adapter {
     protected View SetupDialog(final Context c, ListableObject i) {
         View root = super.SetupDialog(c,i);
 
-        final FermentableAddition h = (FermentableAddition) i;
-        final EditText weight = (EditText) root.findViewById(R.id.weight);
-        final EditText ppg = (EditText) root.findViewById(R.id.ppg);
-        final EditText color = (EditText) root.findViewById(R.id.color);
-        final EditText fermentableID = (EditText) root.findViewById(R.id.fermentableID);
-        final Spinner snName = (Spinner) root.findViewById(R.id.fermentableSelector);
+        Spinner name = (Spinner) root.findViewById(R.id.fermentableSelector);
+        EditText txtName = (EditText) root.findViewById(R.id.weight); //reuse weight for name in the editor
+        EditText ppg = (EditText) root.findViewById(R.id.ppg);
+        EditText color = (EditText) root.findViewById(R.id.color);
+        EditText fermentableID = (EditText) root.findViewById(R.id.fermentableID);
 
-        Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentables", null, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                GsonBuilder gsonBuilder = new GsonBuilder();
-                final Gson gson = gsonBuilder.create();
-                Fermentable[] hops = gson.fromJson(response, Fermentable[].class);
+        name.setVisibility(GONE);
+        txtName.setInputType(TYPE_CLASS_TEXT);
+        ppg.setEnabled(true);
+        color.setEnabled(true);
 
-                ArrayList<Fermentable> items = new ArrayList<Fermentable>();
-                items.add(new Fermentable("Select a grain", -1, -1));
-                for (Fermentable h : hops) {
-                    items.add(h);
-                }
-                Fermentable[] sItems = items.toArray(new Fermentable[0]);
-                ArrayAdapter<Fermentable> aa = new ArrayAdapter<Fermentable>(c, android.R.layout.simple_spinner_dropdown_item, sItems);
-                snName.setAdapter(aa);
-                if (h != null) {
-                    int position = 0;
-                    for (Fermentable hp : items) {
-                        if (hp.name.equals(h.fermentable.name) && hp.color == h.fermentable.color && hp.ppg == h.fermentable.ppg) break;
-                        position++;
-                    }
+        Fermentables h = (Fermentables) i;
 
-                    snName.setSelection(position);
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Tools.ShowToast(c, "Error loading grain list", Toast.LENGTH_LONG);
-            }
-        });
-
-        snName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Fermentable h = (Fermentable)parent.getItemAtPosition(position);
-                if (h.name != "Select a grain") {
-
-                    ppg.setText(String.valueOf(h.ppg));
-                    color.setText(String.valueOf(h.color));
-                    fermentableID.setText(h.id);
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        if (i != null) {
-
-            weight.setText(String.valueOf(h.weight));
-            ppg.setText(String.valueOf(h.fermentable.ppg));
-            color.setText(String.valueOf(h.fermentable.color));
+        if (h != null ) {
+            fermentableID.setText(h.id);
+            txtName.setText(h.name);
+            ppg.setText(String.valueOf(h.ppg));
+            color.setText(String.valueOf(h.color));
         }
+
         return root;
     }
+
 }
