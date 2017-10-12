@@ -27,7 +27,7 @@ import com.google.gson.GsonBuilder;
 import beer.unaccpetable.brewzilla.Adapters.FermentableAdapter;
 import beer.unaccpetable.brewzilla.Adapters.HopAdapter;
 import beer.unaccpetable.brewzilla.Adapters.YeastAdapter;
-import beer.unaccpetable.brewzilla.Ingredients.Fermentables;
+import beer.unaccpetable.brewzilla.Ingredients.Fermentable;
 import beer.unaccpetable.brewzilla.Ingredients.Hop;
 import beer.unaccpetable.brewzilla.Ingredients.Yeast;
 import beer.unaccpetable.brewzilla.R;
@@ -208,16 +208,16 @@ public class IngredientManager extends AppCompatActivity {
 
         private void LoadHops() {
             m_HopAdapter.clear();
-            Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentables", null,
+            Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentable", null,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
 
                             GsonBuilder gsonBuilder = new GsonBuilder();
                             Gson gson = gsonBuilder.create();
-                            Fermentables[] hops = gson.fromJson(response, Fermentables[].class);
+                            Fermentable[] hops = gson.fromJson(response, Fermentable[].class);
 
-                            for (Fermentables h : hops) {
+                            for (Fermentable h : hops) {
                                 m_HopAdapter.add(h);
                             }
                         }

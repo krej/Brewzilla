@@ -8,7 +8,7 @@ import beer.unaccpetable.brewzilla.Tools.ListableObject;
  * Created by zak on 11/16/2016.
  */
 
-public class Fermentables extends ListableObject {
+public class Fermentable extends ListableObject {
     @Expose
     public double ppg;
     @Expose
@@ -16,7 +16,7 @@ public class Fermentables extends ListableObject {
     @Expose
     public String type;
 
-    public Fermentables(String sName, double dPPG, int iColor) {
+    public Fermentable(String sName, double dPPG, int iColor) {
         name = sName;
         ppg = dPPG;
         color = iColor;

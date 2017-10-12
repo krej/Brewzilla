@@ -45,7 +45,7 @@ public class Calculations {
 
         for ( int i = 0; i < malts.size(); i++) {
             FermentableAddition m = (FermentableAddition)malts.get(i);
-            dPPGCalc += m.fermentables.ppg * m.weight;
+            dPPGCalc += m.fermentable.ppg * m.weight;
         }
 
         dPPGCalc *= KitEfficiency;
@@ -88,7 +88,7 @@ public class Calculations {
         double dSRM = 0;
         for (int i = 0; i < malts.size(); i++ ) {
             FermentableAddition m = (FermentableAddition)malts.Dataset().get(i);
-            dSRM += m.fermentables.color * m.weight;
+            dSRM += m.fermentable.color * m.weight;
         }
 
         dSRM = 1.4922 * (Math.pow(dSRM/dIntoFermenterVolume, 0.69));

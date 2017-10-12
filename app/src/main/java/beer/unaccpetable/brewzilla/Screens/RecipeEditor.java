@@ -129,7 +129,7 @@ public class RecipeEditor extends AppCompatActivity {
     }
 
     private void LoadFullRecipe(String id) {
-        /* Deployd bug: When there are more than 2 HopAdditions ( or Fermentables/Yeast ), it doesn't load in the Hop data after the second */
+        /* Deployd bug: When there are more than 2 HopAdditions ( or Fermentable/Yeast ), it doesn't load in the Hop data after the second */
         /* So I'm changing it to load in everything separately */
         String sRecipeURL = Tools.RestAPIURL() + "/recipe?id=" + id; // + "&include=fullrecipe";
 
@@ -157,7 +157,7 @@ public class RecipeEditor extends AppCompatActivity {
                             }
                         }, null); //No error checking! Woo!
 
-                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentableaddition?recipeID=" + CurrentRecipe.id + "&include=fermentables", null,
+                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentableaddition?recipeID=" + CurrentRecipe.id + "&include=fermentable", null,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {

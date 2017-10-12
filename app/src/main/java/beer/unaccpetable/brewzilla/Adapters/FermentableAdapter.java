@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import beer.unaccpetable.brewzilla.Ingredients.Fermentables;
+import beer.unaccpetable.brewzilla.Ingredients.Fermentable;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
 import beer.unaccpetable.brewzilla.Tools.Tools;
@@ -30,7 +30,7 @@ public class FermentableAdapter extends Adapter {
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (OnlyEmptyIngredientExists()) return;
 
-        Fermentables item = (Fermentables) m_Dataset.get(position);
+        Fermentable item = (Fermentable) m_Dataset.get(position);
 
         holder.txtHeader.setText(item.name);
         //holder.txtFooter.setText("AAU: " + item.aau);
@@ -85,17 +85,17 @@ public class FermentableAdapter extends Adapter {
             return false;
         }
 
-        Fermentables fermentables;
+        Fermentable fermentables;
 
         if (bExisting) {
-            fermentables =(Fermentables) GetClickedItem();
+            fermentables =(Fermentable) GetClickedItem();
             fermentables.name = sName;
             fermentables.ppg = dPPG;
             fermentables.color = iColor;
             fermentables.id = sID;
             fermentables.type = "Dry Extract"; //hard code for now...
         } else {
-            fermentables = new Fermentables(sName, dPPG, iColor);
+            fermentables = new Fermentable(sName, dPPG, iColor);
             fermentables.id = sID;
             fermentables.type = "Dry Extract";
             add(fermentables);
@@ -121,7 +121,7 @@ public class FermentableAdapter extends Adapter {
         ppg.setEnabled(true);
         color.setEnabled(true);
 
-        Fermentables h = (Fermentables) i;
+        Fermentable h = (Fermentable) i;
 
         if (h != null ) {
             fermentableID.setText(h.id);

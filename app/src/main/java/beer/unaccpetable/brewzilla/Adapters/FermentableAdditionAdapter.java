@@ -17,7 +17,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 
-import beer.unaccpetable.brewzilla.Ingredients.Fermentables;
+import beer.unaccpetable.brewzilla.Ingredients.Fermentable;
 import beer.unaccpetable.brewzilla.Ingredients.FermentableAddition;
 import beer.unaccpetable.brewzilla.Tools.Network;
 import beer.unaccpetable.brewzilla.R;
@@ -39,10 +39,10 @@ public class FermentableAdditionAdapter extends Adapter {
 
         FermentableAddition item = (FermentableAddition)m_Dataset.get(position);
 
-        holder.txtHeader.setText(item.fermentables.name);
+        holder.txtHeader.setText(item.fermentable.name);
         holder.txtFooter.setText("Weight: " + item.weight + " lbs");
-        holder.txtThirdLine.setText("PPG: " + item.fermentables.ppg);
-        holder.txtFourthLine.setText(item.fermentables.color + " SRM");
+        holder.txtThirdLine.setText("PPG: " + item.fermentable.ppg);
+        holder.txtFourthLine.setText(item.fermentable.color + " SRM");
     }
 
     @Override
@@ -53,7 +53,7 @@ public class FermentableAdditionAdapter extends Adapter {
         EditText ppg = (EditText) d.findViewById(R.id.ppg);
         EditText color = (EditText) d.findViewById(R.id.color);
 
-        Fermentables f = (Fermentables)name.getSelectedItem();
+        Fermentable f = (Fermentable)name.getSelectedItem();
         String sName = f.name;
         double dWeight = Tools.ParseDouble(weight.getText().toString());
         double dPPG = Tools.ParseDouble(ppg.getText().toString());
@@ -66,10 +66,10 @@ public class FermentableAdditionAdapter extends Adapter {
 
         if (bExisting) {
             FermentableAddition m = (FermentableAddition)GetClickedItem();
-            m.fermentables.name = sName;
+            m.fermentable.name = sName;
             m.weight = dWeight;
-            m.fermentables.ppg = dPPG;
-            m.fermentables.color = iColor;
+            m.fermentable.ppg = dPPG;
+            m.fermentable.color = iColor;
             m.fermentableID = f.id;
             m.recipeID = sExtraInfo;
         } else {
@@ -92,25 +92,25 @@ public class FermentableAdditionAdapter extends Adapter {
         final EditText fermentableID = (EditText) root.findViewById(R.id.fermentableID);
         final Spinner snName = (Spinner) root.findViewById(R.id.fermentableSelector);
 
-        Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentables", null, new Response.Listener<String>() {
+        Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentable", null, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 final Gson gson = gsonBuilder.create();
-                Fermentables[] hops = gson.fromJson(response, Fermentables[].class);
+                Fermentable[] hops = gson.fromJson(response, Fermentable[].class);
 
-                ArrayList<Fermentables> items = new ArrayList<Fermentables>();
-                items.add(new Fermentables("Select a grain", -1, -1));
-                for (Fermentables h : hops) {
+                ArrayList<Fermentable> items = new ArrayList<Fermentable>();
+                items.add(new Fermentable("Select a grain", -1, -1));
+                for (Fermentable h : hops) {
                     items.add(h);
                 }
-                Fermentables[] sItems = items.toArray(new Fermentables[0]);
-                ArrayAdapter<Fermentables> aa = new ArrayAdapter<Fermentables>(c, android.R.layout.simple_spinner_dropdown_item, sItems);
+                Fermentable[] sItems = items.toArray(new Fermentable[0]);
+                ArrayAdapter<Fermentable> aa = new ArrayAdapter<Fermentable>(c, android.R.layout.simple_spinner_dropdown_item, sItems);
                 snName.setAdapter(aa);
                 if (h != null) {
                     int position = 0;
-                    for (Fermentables hp : items) {
-                        if (hp.name.equals(h.fermentables.name) && hp.color == h.fermentables.color && hp.ppg == h.fermentables.ppg) break;
+                    for (Fermentable hp : items) {
+                        if (hp.name.equals(h.fermentable.name) && hp.color == h.fermentable.color && hp.ppg == h.fermentable.ppg) break;
                         position++;
                     }
 
@@ -128,7 +128,7 @@ public class FermentableAdditionAdapter extends Adapter {
         snName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Fermentables h = (Fermentables)parent.getItemAtPosition(position);
+                Fermentable h = (Fermentable)parent.getItemAtPosition(position);
                 if (h.name != "Select a grain") {
 
                     ppg.setText(String.valueOf(h.ppg));
@@ -147,8 +147,8 @@ public class FermentableAdditionAdapter extends Adapter {
         if (i != null) {
 
             weight.setText(String.valueOf(h.weight));
-            ppg.setText(String.valueOf(h.fermentables.ppg));
-            color.setText(String.valueOf(h.fermentables.color));
+            ppg.setText(String.valueOf(h.fermentable.ppg));
+            color.setText(String.valueOf(h.fermentable.color));
         }
         return root;
     }
