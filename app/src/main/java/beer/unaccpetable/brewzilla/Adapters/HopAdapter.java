@@ -8,12 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import org.w3c.dom.Text;
-
-import beer.unaccpetable.brewzilla.Ingredients.Hop;
-import beer.unaccpetable.brewzilla.Ingredients.HopAddition;
+import beer.unaccpetable.brewzilla.Models.Hop;
 import beer.unaccpetable.brewzilla.R;
-import beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
 import beer.unaccpetable.brewzilla.Tools.Tools;
 
@@ -91,10 +87,10 @@ public class HopAdapter extends Adapter {
             hop =(Hop) GetClickedItem();
             hop.name = sName;
             hop.aau = dAAU;
-            hop.id = sID;
+            hop.idString = sID;
         } else {
             hop = new Hop(sName, dAAU);
-            hop.id = sID;
+            hop.idString = sID;
             add(hop);
         }
 
@@ -118,6 +114,7 @@ public class HopAdapter extends Adapter {
         //Rearrange the HopAddition screen for Hops. I'm not sure if I want to keep it like this but its easy for now
         snName.setVisibility(View.GONE);
         amount.setInputType(TYPE_CLASS_TEXT); //used for Name
+        amount.setHint("Name");
         aau.setEnabled(true);
         time.setVisibility(View.GONE);
         snType.setVisibility(View.GONE);
@@ -125,7 +122,7 @@ public class HopAdapter extends Adapter {
         Hop h = (Hop)i;
 
         if (h != null ) {
-            hopID.setText(h.id);
+            hopID.setText(h.idString);
             amount.setText(h.name);
             aau.setText(String.valueOf(h.aau));
         }

@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Ingredients;
+package beer.unaccpetable.brewzilla.Models;
 
 import com.google.gson.annotations.Expose;
 
@@ -15,9 +15,8 @@ public class FermentableAddition extends ListableObject {
     public String use = "Mash"; //Hard coded to Mash for now because I dont know the purpose of this
     @Expose
     public double weight;
-    public Fermentable fermentable;
     @Expose
-    public String recipeID;
+    public Fermentable fermentable;
 
     public FermentableAddition(String sName, double dWeight, double dPPG, int iColor) {
         fermentable = new Fermentable(sName, dPPG, iColor);

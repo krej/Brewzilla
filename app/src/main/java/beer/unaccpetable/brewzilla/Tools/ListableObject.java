@@ -14,15 +14,15 @@ import com.google.gson.annotations.Expose;
 public class ListableObject {
     @Expose
     public String name = "Empty"; //Used to store 'Empty'
-    public String id;
+    public String idString;
     //protected String ClassName = ""; //Used for the API to know what URL to request to. Could maybe be replaced with just getting the class name later.
 
     public void Save() {
 
         //String sRecipeURL = Tools.RestAPIURL() + "/" + ClassName.toLowerCase() + "/";// "/recipe/";
         String sRecipeURL = Tools.RestAPIURL() + "/" + this.getClass().getSimpleName().toLowerCase() + "/";// "/recipe/";
-        if ( id != null && id.length() > 0 ) {
-            sRecipeURL += id;
+        if ( idString != null && idString.length() > 0 ) {
+            sRecipeURL += idString;
         }
 
         Network.WebRequest(Request.Method.POST, sRecipeURL, BuildRestData(),

@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Ingredients;
+package beer.unaccpetable.brewzilla.Models;
 
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
 

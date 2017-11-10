@@ -17,8 +17,8 @@ import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 
-import beer.unaccpetable.brewzilla.Ingredients.Fermentable;
-import beer.unaccpetable.brewzilla.Ingredients.FermentableAddition;
+import beer.unaccpetable.brewzilla.Models.Fermentable;
+import beer.unaccpetable.brewzilla.Models.FermentableAddition;
 import beer.unaccpetable.brewzilla.Tools.Network;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
@@ -70,12 +70,12 @@ public class FermentableAdditionAdapter extends Adapter {
             m.weight = dWeight;
             m.fermentable.ppg = dPPG;
             m.fermentable.color = iColor;
-            m.fermentableID = f.id;
-            m.recipeID = sExtraInfo;
+            m.fermentableID = f.idString;
+            //m.recipeID = sExtraInfo;
         } else {
             FermentableAddition malt = new FermentableAddition(sName, dWeight, dPPG, iColor);
-            malt.fermentableID = f.id;
-            malt.recipeID = sExtraInfo;
+            malt.fermentableID = f.idString;
+            //malt.recipeID = sExtraInfo;
             add(malt);
         }
         return true;
@@ -133,7 +133,7 @@ public class FermentableAdditionAdapter extends Adapter {
 
                     ppg.setText(String.valueOf(h.ppg));
                     color.setText(String.valueOf(h.color));
-                    fermentableID.setText(h.id);
+                    fermentableID.setText(h.idString);
                 }
 
             }

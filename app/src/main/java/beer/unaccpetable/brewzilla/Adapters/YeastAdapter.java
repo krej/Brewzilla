@@ -5,22 +5,33 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
-import beer.unaccpetable.brewzilla.Ingredients.Hop;
-import beer.unaccpetable.brewzilla.Ingredients.Yeast;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.ArrayList;
+
+import beer.unaccpetable.brewzilla.Models.Yeast;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
+import beer.unaccpetable.brewzilla.Tools.Network;
 import beer.unaccpetable.brewzilla.Tools.Tools;
-
-import static android.text.InputType.TYPE_CLASS_TEXT;
 
 /**
  * Created by Megatron on 10/9/2017.
  */
 
 public class YeastAdapter extends Adapter {
+
+    public boolean IngredientManagerMode = false;
 
     public YeastAdapter(int iLayout, int iDialogLayout) {
         super(iLayout, iDialogLayout);
@@ -92,10 +103,10 @@ public class YeastAdapter extends Adapter {
             yeast.name = sName;
             yeast.lab = sLab;
             yeast.attenuation = attenuation;
-            yeast.id = sID;
+            yeast.idString = sID;
         } else {
             yeast = new Yeast(sName, sLab, attenuation);
-            yeast.id = sID;
+            yeast.idString = sID;
             add(yeast);
         }
 
@@ -108,6 +119,7 @@ public class YeastAdapter extends Adapter {
     protected View SetupDialog(final Context c, ListableObject i) {
         View root = super.SetupDialog(c,i);
 
+        final Yeast h = (Yeast)i;
 
         final Spinner snName = (Spinner) root.findViewById(R.id.yeastSelector);
         final EditText lab = (EditText) root.findViewById(R.id.lab);
@@ -115,19 +127,72 @@ public class YeastAdapter extends Adapter {
         final EditText yeastID = (EditText) root.findViewById(R.id.yeastID);
         final EditText name = (EditText) root.findViewById(R.id.name);
 
+        Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/yeast", null, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                final Gson gson = gsonBuilder.create();
+                Yeast[] yeasts = gson.fromJson(response, Yeast[].class);
+
+                ArrayList<Yeast> items = new ArrayList<Yeast>();
+                items.add(new Yeast("Select a yeast", "", -1));
+                for (Yeast h : yeasts) {
+                    items.add(h);
+                }
+                Yeast[] sItems = items.toArray(new Yeast[0]);
+                ArrayAdapter<Yeast> aa = new ArrayAdapter<Yeast>(c, android.R.layout.simple_spinner_dropdown_item, sItems);
+                snName.setAdapter(aa);
+                if (h != null) {
+                    int position = 0;
+                    for (Yeast hp : items) {
+                        if (hp.name.equals(h.name) && hp.lab.equals(h.lab) && hp.attenuation == h.attenuation) break;
+                        position++;
+                    }
+
+                    snName.setSelection(position);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Tools.ShowToast(c, "Error loading yeast list", Toast.LENGTH_LONG);
+            }
+        });
+
+        snName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Yeast h = (Yeast)parent.getItemAtPosition(position);
+                if (h.name != "Select a grain") {
+
+                    lab.setText(String.valueOf(h.lab));
+                    att.setText(String.valueOf(h.attenuation));
+                    yeastID.setText(h.idString);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         //Rearrange the HopAddition screen for Hops. I'm not sure if I want to keep it like this but its easy for now
-        snName.setVisibility(View.GONE);
+        if (IngredientManagerMode)
+            snName.setVisibility(View.GONE);
         lab.setEnabled(true);
         name.setEnabled(true);
         name.setVisibility(View.VISIBLE);
         att.setEnabled(true);
 
-        Yeast h = (Yeast)i;
+        Yeast h1 = (Yeast)i;
 
-        if (h != null ) {
-            yeastID.setText(h.id);
-            lab.setText(h.lab);
-            name.setText(h.name);
+        if (h1 != null ) {
+            yeastID.setText(h1.idString);
+            lab.setText(h1.lab);
+            name.setText(h1.name);
             att.setText(String.valueOf(h.attenuation));
         }
 

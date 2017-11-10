@@ -2,6 +2,8 @@ package beer.unaccpetable.brewzilla.Screens;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -23,13 +25,16 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+
+import beer.unaccpetable.brewzilla.Adapters.Adapter;
 import beer.unaccpetable.brewzilla.Adapters.HopAdditionAdapter;
 import beer.unaccpetable.brewzilla.Adapters.FermentableAdditionAdapter;
+import beer.unaccpetable.brewzilla.Adapters.YeastAdapter;
 import beer.unaccpetable.brewzilla.Adapters.YeastAdditionAdapter;
-import beer.unaccpetable.brewzilla.Ingredients.FermentableAddition;
-import beer.unaccpetable.brewzilla.Ingredients.HopAddition;
-import beer.unaccpetable.brewzilla.Ingredients.Recipe;
-import beer.unaccpetable.brewzilla.Ingredients.YeastAddition;
+import beer.unaccpetable.brewzilla.Models.Recipe;
+import beer.unaccpetable.brewzilla.Models.YeastAddition;
+import beer.unaccpetable.brewzilla.Tools.ListableObject;
 import beer.unaccpetable.brewzilla.Tools.Network;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.Calculations;
@@ -40,7 +45,8 @@ public class RecipeEditor extends AppCompatActivity {
     RecyclerView lstGrains, lstHops,lstYeasts;
     private RecyclerView.LayoutManager m_HopLayoutManager, m_YeastLayoutManager, m_MaltLayoutManager;
     private HopAdditionAdapter m_HopAdditionAdapter = new HopAdditionAdapter(R.layout.hop_list, R.layout.fragment_hop_dialog);
-    private YeastAdditionAdapter m_YeastAdditionAdapter = new YeastAdditionAdapter(R.layout.yeast_list, R.layout.fragment_yeast_dialog);
+    //private YeastAdditionAdapter m_YeastAdditionAdapter = new YeastAdditionAdapter(R.layout.yeast_list, R.layout.fragment_yeast_dialog);
+    private YeastAdapter m_YeastAdapter = new YeastAdapter(R.layout.yeast_list, R.layout.fragment_yeast_dialog);
     private FermentableAdditionAdapter m_MaltAdapter = new FermentableAdditionAdapter(R.layout.hop_list, R.layout.fragment_malt_dialog);
 
     private Boolean bShowExtraFab = false;
@@ -125,13 +131,13 @@ public class RecipeEditor extends AppCompatActivity {
     private void PopulateRecipeIngredients() {
         CurrentRecipe.PopulateHops(m_HopAdditionAdapter.Dataset());
         CurrentRecipe.PopulateFermentables(m_MaltAdapter.Dataset());
-        CurrentRecipe.PopulateYeasts(m_YeastAdditionAdapter.Dataset());
+        CurrentRecipe.PopulateYeasts(m_YeastAdapter.Dataset());
     }
 
     private void LoadFullRecipe(String id) {
         /* Deployd bug: When there are more than 2 HopAdditions ( or Fermentable/Yeast ), it doesn't load in the Hop data after the second */
         /* So I'm changing it to load in everything separately */
-        String sRecipeURL = Tools.RestAPIURL() + "/recipe?id=" + id; // + "&include=fullrecipe";
+        String sRecipeURL = Tools.RestAPIURL() + "/recipe/" + id; // + "&include=fullrecipe";
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, sRecipeURL, new Response.Listener<String>() {
 
@@ -141,9 +147,14 @@ public class RecipeEditor extends AppCompatActivity {
 
                 final Gson gson = gsonBuilder.create();
                 CurrentRecipe = gson.fromJson(response, Recipe.class);
-                CurrentRecipe.Initiliaze();
+                CurrentRecipe.Initiliaze(); //TODO: Is this needed?
 
-                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/hopaddition?recipeID=" + CurrentRecipe.id + "&include=hop", null,
+                PopulateAdditions(CurrentRecipe.hops, m_HopAdditionAdapter);
+                PopulateAdditions(CurrentRecipe.fermentables, m_MaltAdapter);
+                PopulateAdditions(CurrentRecipe.yeasts, m_YeastAdapter);
+                //PopulateAdditions(CurrentRecipe.adjuncts, m_AdjunctAdapter);
+/*
+                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/hopaddition?recipeID=" + CurrentRecipe.idString + "&include=hop", null,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -154,10 +165,12 @@ public class RecipeEditor extends AppCompatActivity {
                                     m_HopAdditionAdapter.add(h);
                                     CurrentRecipe.hops.add(h);
                                 }
+
+                                RefreshStats();
                             }
                         }, null); //No error checking! Woo!
 
-                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentableaddition?recipeID=" + CurrentRecipe.id + "&include=fermentable", null,
+                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentableaddition?recipeID=" + CurrentRecipe.idString + "&include=fermentable", null,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -168,10 +181,12 @@ public class RecipeEditor extends AppCompatActivity {
                                     m_MaltAdapter.add(f);
                                     CurrentRecipe.fermentables.add(f);
                                 }
+
+                                RefreshStats();
                             }
                         }, null); //No error checking! Woo!
 
-                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/yeastaddition?recipeID=" + CurrentRecipe.id + "&include=yeast", null,
+                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/yeastaddition?recipeID=" + CurrentRecipe.idString + "&include=yeast", null,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -182,31 +197,33 @@ public class RecipeEditor extends AppCompatActivity {
                                     m_YeastAdditionAdapter.add(y);
                                     CurrentRecipe.yeasts.add(y);
                                 }
+
+                                RefreshStats();
                             }
                         }, null); //No error checking! Woo!
-
+*/
 
 
 
                 toolbar.setTitle(CurrentRecipe.name);
-                RefreshStats();
+                //RefreshStats();
                 /*ArrayList<JSONObject> objs = Tools.GetJSONObjects(response);
                 for(int i = 0; i < objs.size(); i++) {
                     JSONObject o = (JSONObject)objs.get(i);
                     String s = "Error";
-                    String id = null;
+                    String idString = null;
                     try {
                         s = o.getString("name");
-                        id = o.getString("id");
+                        idString = o.getString("idString");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     m_CurrentRecipe = new Recipe();
                     m_CurrentRecipe.Name = s;
-                    m_CurrentRecipe.id = id;
+                    m_CurrentRecipe.idString = idString;
                     toolbar.setTitle(m_CurrentRecipe.Name);
                 }
-                LoadHops(m_CurrentRecipe.id);*/
+                LoadHops(m_CurrentRecipe.idString);*/
             }
         }, new Response.ErrorListener() {
             @Override
@@ -215,6 +232,12 @@ public class RecipeEditor extends AppCompatActivity {
         });
 
         Network.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    private <T> void PopulateAdditions(ArrayList<T> additions, Adapter adp) {
+        for (int i = 0; i < additions.size(); i++) {
+            adp.add((ListableObject) additions.get(i));
+        }
     }
 
     private void SetRecyclerViewClickEvents() {
@@ -238,7 +261,7 @@ public class RecipeEditor extends AppCompatActivity {
         lstYeasts.setHasFixedSize(false);
         m_YeastLayoutManager = new LinearLayoutManager(this);
         lstYeasts.setLayoutManager(m_YeastLayoutManager);
-        lstYeasts.setAdapter(m_YeastAdditionAdapter);
+        lstYeasts.setAdapter(m_YeastAdapter);
         //m_YeastAdditionAdapter.add(new Yeast("1056", "Wyeast", 75));
     }
     private void SetUpFermentableList() {
@@ -292,13 +315,13 @@ public class RecipeEditor extends AppCompatActivity {
         fabYeast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_YeastAdditionAdapter.AddItem(RecipeEditor.this, null);
+                m_YeastAdapter.AddItem(RecipeEditor.this, null);
             }
         });
     }
 
     private void SetExtraFABHideEvents() {/*
-        View screen = (View)findViewById(R.id.coord);
+        View screen = (View)findViewById(R.idString.coord);
         screen.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View arg0, MotionEvent arg1) {
@@ -311,7 +334,7 @@ public class RecipeEditor extends AppCompatActivity {
             }
         });
 
-        View toolbar = (View)findViewById(R.id.nestedscrollview);
+        View toolbar = (View)findViewById(R.idString.nestedscrollview);
         toolbar.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View arg0, MotionEvent arg1) {
@@ -378,7 +401,7 @@ public class RecipeEditor extends AppCompatActivity {
         fabYeast.setVisibility(View.VISIBLE);
         anim.start();
 
-        //FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
+        //FloatingActionButton fab = (FloatingActionButton)findViewById(R.idString.fab);
         //fab.setImageIcon("@android:drawable/ic_input_add");
 
     }
@@ -419,10 +442,10 @@ public class RecipeEditor extends AppCompatActivity {
     }
 
     public void RefreshStats() {
-        int dIBU = Calculations.CalculateIBU(m_HopAdditionAdapter, m_MaltAdapter);
-        double dOG = Calculations.CalculateOG(m_MaltAdapter);
-        double dFG = Calculations.CalculateFG(m_MaltAdapter, m_YeastAdditionAdapter);
-        double dABV = Calculations.CalculateABV(m_MaltAdapter, m_YeastAdditionAdapter);
+        /*int dIBU = Calculations.CalculateIBU(m_HopAdditionAdapter, m_MaltAdapter);
+        double dOG = Calculations.round(Calculations.CalculateOG(m_MaltAdapter), 5);
+        double dFG = Calculations.round(Calculations.CalculateFG(m_MaltAdapter, m_YeastAdapter),5);
+        double dABV = Calculations.round(Calculations.CalculateABV(m_MaltAdapter, m_YeastAdapter), 3);
         int dSRM = Calculations.CalculateSRM(m_MaltAdapter);
 
         txtIBU.setText("IBUs: " + dIBU);
@@ -430,78 +453,16 @@ public class RecipeEditor extends AppCompatActivity {
         txtFG.setText("FG: " + dFG);
         txtABV.setText("ABV: " + dABV + "%");
         txtSRM.setText("SRM: " + dSRM);
+
+        View SRMCircle = findViewById(R.id.srmColor);
+        if (CurrentRecipe != null) {
+            CurrentRecipe.recipeStats.ibu = dIBU;
+            CurrentRecipe.recipeStats.og = dOG;
+            CurrentRecipe.recipeStats.fg = dFG;
+            CurrentRecipe.recipeStats.abv = dABV;
+            CurrentRecipe.recipeStats.srm = dSRM;
+
+        }
+        SRMCircle.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(Calculations.GetSRMColor(dSRM))));*/
     }
-
-    /*private void LoadRecipe(String id) {
-        String sRecipeURL = Tools.RestAPIURL() + "/recipe?id=" + id;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, sRecipeURL, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-
-                ArrayList<JSONObject> objs = Tools.GetJSONObjects(response);
-                for(int i = 0; i < objs.size(); i++) {
-                    JSONObject o = (JSONObject)objs.get(i);
-                    String s = "Error";
-                    String id = null;
-                    try {
-                        s = o.getString("name");
-                        id = o.getString("id");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    m_CurrentRecipe = new Recipe();
-                    m_CurrentRecipe.name = s;
-                    m_CurrentRecipe.id = id;
-                    toolbar.setTitle(m_CurrentRecipe.name);
-                }
-                LoadHops(m_CurrentRecipe.id);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        });
-
-        Network.getInstance(this).addToRequestQueue(stringRequest);
-    }*/
-
-    /*private void LoadHops(String RecipeID) {
-        String sRecipeURL = Tools.RestAPIURL() + "/hopaddition?recipeID=" + RecipeID;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, sRecipeURL, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-
-                ArrayList<JSONObject> objs = Tools.GetJSONObjects(response);
-                for(int i = 0; i < objs.size(); i++) {
-                    JSONObject o = (JSONObject)objs.get(i);
-                    String s = "no name..."; //object.getString("name");
-                    double amt = 0;
-                    String type = "";
-                    int time = 0;
-                    try {
-                        amt = o.getDouble("amount");
-                        type = o.getString("type");
-                        time = o.getInt("time");
-                    } catch (JSONException ex) {
-
-                    }
-                    double aau = 666; //TODO: This needs to come from the Hop table
-                    Hop h = new Hop(s, amt, aau);
-                    m_HopAdditionAdapter.add(h);
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_LONG);
-            }
-        });
-
-        Network.getInstance(this).addToRequestQueue(stringRequest);
-    }*/
 }

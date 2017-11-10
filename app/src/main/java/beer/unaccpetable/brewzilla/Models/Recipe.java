@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Ingredients;
+package beer.unaccpetable.brewzilla.Models;
 
 
 import com.google.gson.annotations.Expose;
@@ -17,20 +17,27 @@ public class Recipe extends ListableObject {
     @Expose
     public String description;
     @Expose
-    public double abv;
+    public RecipeStatistics recipeStats;
     @Expose
-    public double ibu;
+    public RecipeParameters recipeParameters;
     @Expose
-    public double fg;
-    @Expose
-    public double og;
-    @Expose
-    public double srm;
     public double version;
-    public String test;
+    @Expose
+    public String parentRecipe;
+    @Expose
+    public String clonedFrom;
+    @Expose
+    public String hidden;
+    @Expose
     public ArrayList<HopAddition> hops;
-    public ArrayList<YeastAddition> yeasts;
+    @Expose
+    public ArrayList<Yeast> yeasts;
+    @Expose
     public ArrayList<FermentableAddition> fermentables;
+    @Expose
+    public ArrayList<AdjunctAddition> adjuncts;
+    @Expose
+    public String styleID;
 
 
     public Recipe() {}
@@ -47,7 +54,7 @@ public class Recipe extends ListableObject {
 
     public void Save() {
         super.Save();
-
+/*
         for (HopAddition h : hops) {
             h.Save();
         }
@@ -59,7 +66,7 @@ public class Recipe extends ListableObject {
         //Yeasts currently only saves the yeastID which can't be saved.
         for (YeastAddition y : yeasts) {
             y.Save();
-        }
+        }*/
     }
 
     public void Initiliaze() {
@@ -91,7 +98,7 @@ public class Recipe extends ListableObject {
     }
     public void PopulateYeasts(ArrayList<ListableObject> yeasts) {
         for (int i = 0; i < yeasts.size(); i++) {
-            YeastAddition h = (YeastAddition) yeasts.get(i);
+            Yeast h = (Yeast) yeasts.get(i);
             this.yeasts.add(h);
         }
     }

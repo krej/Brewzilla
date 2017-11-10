@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import beer.unaccpetable.brewzilla.Ingredients.Fermentable;
+import beer.unaccpetable.brewzilla.Models.Fermentable;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
 import beer.unaccpetable.brewzilla.Tools.Tools;
@@ -92,11 +92,11 @@ public class FermentableAdapter extends Adapter {
             fermentables.name = sName;
             fermentables.ppg = dPPG;
             fermentables.color = iColor;
-            fermentables.id = sID;
+            fermentables.idString = sID;
             fermentables.type = "Dry Extract"; //hard code for now...
         } else {
             fermentables = new Fermentable(sName, dPPG, iColor);
-            fermentables.id = sID;
+            fermentables.idString = sID;
             fermentables.type = "Dry Extract";
             add(fermentables);
         }
@@ -124,7 +124,7 @@ public class FermentableAdapter extends Adapter {
         Fermentable h = (Fermentable) i;
 
         if (h != null ) {
-            fermentableID.setText(h.id);
+            fermentableID.setText(h.idString);
             txtName.setText(h.name);
             ppg.setText(String.valueOf(h.ppg));
             color.setText(String.valueOf(h.color));

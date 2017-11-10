@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Ingredients;
+package beer.unaccpetable.brewzilla.Models;
 
 import com.google.gson.annotations.Expose;
 
@@ -7,6 +7,9 @@ import beer.unaccpetable.brewzilla.Tools.ListableObject;
 /**
  * Created by Megatron on 9/25/2017.
  */
+
+//TODO: Delete!!!
+
 
 public class YeastAddition extends ListableObject {
     @Expose

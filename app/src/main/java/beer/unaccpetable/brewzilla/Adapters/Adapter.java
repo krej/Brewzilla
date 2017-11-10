@@ -183,7 +183,6 @@ implements View.OnClickListener
                 if (c.getClass() == RecipeEditor.class) {
                     n = (RecipeEditor) c;
                     bRecipeEditor = true;
-                    sExtraInfo = n.CurrentRecipe.id;
                 }
                 if (!AddItem(dialog, bExisting, sExtraInfo)) return;
 

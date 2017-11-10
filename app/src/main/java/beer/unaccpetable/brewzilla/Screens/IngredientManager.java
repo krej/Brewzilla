@@ -18,18 +18,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import beer.unaccpetable.brewzilla.Adapters.FermentableAdapter;
 import beer.unaccpetable.brewzilla.Adapters.HopAdapter;
 import beer.unaccpetable.brewzilla.Adapters.YeastAdapter;
-import beer.unaccpetable.brewzilla.Ingredients.Fermentable;
-import beer.unaccpetable.brewzilla.Ingredients.Hop;
-import beer.unaccpetable.brewzilla.Ingredients.Yeast;
+import beer.unaccpetable.brewzilla.Models.Fermentable;
+import beer.unaccpetable.brewzilla.Models.Hop;
+import beer.unaccpetable.brewzilla.Models.Yeast;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.Network;
 import beer.unaccpetable.brewzilla.Tools.Tools;
@@ -167,7 +169,13 @@ public class IngredientManager extends AppCompatActivity {
                                 m_HopAdapter.add(h);
                             }
                         }
-                    }, null);
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            //mTextView.setText("That didn't work " + error.getMessage());
+                            Tools.ShowToast(lstHops.getContext(), "Failed to load hops", Toast.LENGTH_LONG);
+                        }
+                    });
         }
 
         public void AddHop() {
@@ -254,6 +262,8 @@ public class IngredientManager extends AppCompatActivity {
             m_LayoutManager = new LinearLayoutManager(container.getContext());
             lstHops.setLayoutManager(m_LayoutManager);
             lstHops.setAdapter(m_HopAdapter);
+
+            m_HopAdapter.IngredientManagerMode = true;
 
             LoadHops();
 

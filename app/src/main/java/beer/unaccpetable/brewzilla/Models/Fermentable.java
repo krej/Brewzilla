@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Ingredients;
+package beer.unaccpetable.brewzilla.Models;
 
 import com.google.gson.annotations.Expose;
 
@@ -15,6 +15,8 @@ public class Fermentable extends ListableObject {
     public int color;
     @Expose
     public String type;
+    @Expose
+    public String maltster;
 
     public Fermentable(String sName, double dPPG, int iColor) {
         name = sName;

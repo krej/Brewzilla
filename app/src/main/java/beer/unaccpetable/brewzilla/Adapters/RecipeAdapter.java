@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import beer.unaccpetable.brewzilla.Ingredients.Recipe;
+import beer.unaccpetable.brewzilla.Models.Recipe;
 import beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 
 /**
@@ -55,12 +55,12 @@ public class RecipeAdapter extends Adapter {
         public ViewHolderR(View v) {
             super(v);
 
-            /*txtHeader = (TextView) v.findViewById(R.id.firstLine);
+            /*txtHeader = (TextView) v.findViewById(R.idString.firstLine);
             try {
-                txtFooter = (TextView) v.findViewById(R.id.secondLine);
+                txtFooter = (TextView) v.findViewById(R.idString.secondLine);
 
-                txtThirdLine = (TextView) v.findViewById(R.id.thirdLine);
-                txtFourthLine = (TextView) v.findViewById(R.id.fourthLine);
+                txtThirdLine = (TextView) v.findViewById(R.idString.thirdLine);
+                txtFourthLine = (TextView) v.findViewById(R.idString.fourthLine);
             } finally {
 
             }*/
@@ -81,7 +81,7 @@ public class RecipeAdapter extends Adapter {
 
     private void LoadRecipe(Recipe r, View v) {
         Intent intent = new Intent(v.getContext(), RecipeEditor.class);
-        intent.putExtra("RecipeID", r.id);
+        intent.putExtra("RecipeID", r.idString);
         v.getContext().startActivity(intent);
     }
 }

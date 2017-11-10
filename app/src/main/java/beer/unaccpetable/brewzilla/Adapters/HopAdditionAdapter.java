@@ -18,8 +18,8 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import beer.unaccpetable.brewzilla.Ingredients.Hop;
-import beer.unaccpetable.brewzilla.Ingredients.HopAddition;
+import beer.unaccpetable.brewzilla.Models.Hop;
+import beer.unaccpetable.brewzilla.Models.HopAddition;
 import beer.unaccpetable.brewzilla.Tools.Network;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
@@ -73,13 +73,13 @@ public class HopAdditionAdapter extends Adapter {
             hopAddition.amount = dAmount;
             hopAddition.hop.aau = dAAU;
             hopAddition.time = iTime;
-            hopAddition.recipeID = sExtraInfo;
-            hopAddition.hopID = h.id;
+            //hopAddition.recipeID = sExtraInfo;
+            hopAddition.hopID = h.idString;
             hopAddition.type = sType;
         } else {
             HopAddition hop = new HopAddition(sName, dAmount, dAAU, iTime);
-            hop.recipeID = sExtraInfo;
-            hop.hopID = h.id;
+            //hop.recipeID = sExtraInfo;
+            hop.hopID = h.idString;
             hop.type = sType;
             add(hop);
         }
@@ -139,7 +139,7 @@ public class HopAdditionAdapter extends Adapter {
                 if (h.name != "Select a hop") {
 
                     aau.setText(String.valueOf(h.aau));
-                    hopID.setText(h.id);
+                    hopID.setText(h.idString);
                 }
 
             }
@@ -156,7 +156,7 @@ public class HopAdditionAdapter extends Adapter {
 
         if (i != null) {
 
-            hopID.setText(h.hop.id);
+            hopID.setText(h.hop.idString);
             amount.setText(String.valueOf(h.amount));
             aau.setText(String.valueOf(h.hop.aau));
             time.setText(String.valueOf(h.time));

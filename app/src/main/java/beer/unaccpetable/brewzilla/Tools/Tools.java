@@ -10,9 +10,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.List;
-
-import beer.unaccpetable.brewzilla.Ingredients.Recipe;
 
 /**
  * Created by zak on 11/16/2016.
@@ -33,11 +30,38 @@ public class Tools {
         Toast t = Toast.makeText(c, text, length);
         t.show();
     }
+    public static DatabaseServer Server = DatabaseServer.BeerNet;
+
+    enum DatabaseServer {
+        Desktop {
+            public String toString() {
+                return "http://192.168.1.11:50421/beernet";
+            }
+        },
+
+        Deployd {
+            public String toString() {
+                return "http://rest.unacceptable.beer:2403";
+            }
+        },
+
+        BeerNet {
+            public String toString() {
+                return "http://rest.unacceptable.beer:5123/beernet";
+            }
+        }
+
+    }
 
     //TODO: I don't really like having these here but they work for now...
     public static String RestAPIURL() {
-        return "http://rest.unacceptable.beer:2403";
+        /*if (UseTestServer)
+            return "http://192.168.1.11:50421/beernet";
+
+        return "http://rest.unacceptable.beer:2403";*/
+        return Server.toString();
     }
+
 
     public static String SanitizeDeploydJSON(String response) {
         String json = response;

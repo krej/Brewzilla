@@ -1,8 +1,6 @@
-package beer.unaccpetable.brewzilla.Ingredients;
+package beer.unaccpetable.brewzilla.Models;
 
 import com.google.gson.annotations.Expose;
-
-import org.json.JSONObject;
 
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
 

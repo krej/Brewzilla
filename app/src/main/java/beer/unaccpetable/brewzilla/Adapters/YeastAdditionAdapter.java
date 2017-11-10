@@ -17,8 +17,8 @@ import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 
-import beer.unaccpetable.brewzilla.Ingredients.Yeast;
-import beer.unaccpetable.brewzilla.Ingredients.YeastAddition;
+import beer.unaccpetable.brewzilla.Models.Yeast;
+import beer.unaccpetable.brewzilla.Models.YeastAddition;
 import beer.unaccpetable.brewzilla.Tools.Network;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
@@ -130,7 +130,7 @@ public class YeastAdditionAdapter extends Adapter {
 
                     lab.setText(String.valueOf(h.lab));
                     att.setText(String.valueOf(h.attenuation));
-                    yeastID.setText(h.id);
+                    yeastID.setText(h.idString);
                 }
 
             }

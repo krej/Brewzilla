@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Ingredients;
+package beer.unaccpetable.brewzilla.Models;
 
 import com.google.gson.annotations.Expose;
 
@@ -17,9 +17,8 @@ public class HopAddition extends ListableObject {
     public String type;
     @Expose
     public int time;
-    public Hop hop;
     @Expose
-    public String recipeID;
+    public Hop hop;
 
     public static String[] Types = {"Boil", "Dry Hop", "Whirlpool"};
 

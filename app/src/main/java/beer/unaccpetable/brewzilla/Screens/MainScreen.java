@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -40,11 +41,12 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 
 import beer.unaccpetable.brewzilla.Adapters.RecipeAdapter;
-import beer.unaccpetable.brewzilla.Ingredients.Recipe;
+import beer.unaccpetable.brewzilla.Models.Recipe;
 import beer.unaccpetable.brewzilla.Tools.Network;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Tools.Tools;
@@ -102,16 +104,29 @@ public class MainScreen extends AppCompatActivity
             @Override
             public void onResponse(String response) {
                 //mTextView.setText("Respone is :" + response);// + response.substring(0, 500));
-                SetRecipeList(response);
+                //SetRecipeList(response);
+                LoadRecipes(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //mTextView.setText("That didn't work " + error.getMessage());
+                Tools.ShowToast(getApplicationContext(), "Failed to load recipes", Toast.LENGTH_LONG);
             }
         });
 
         Network.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    private void LoadRecipes(String response) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+
+        final Gson gson = gsonBuilder.create();
+        Recipe[] recipes = gson.fromJson(response, Recipe[].class);
+
+        for (Recipe r : recipes) {
+            m_RecipeAdapter.add(r);
+        }
     }
 
     private void SetRecipeList(String json) {
@@ -130,10 +145,10 @@ public class MainScreen extends AppCompatActivity
                     if (line.equals("[") || line.equals("]")) continue;
                     JSONObject object = new JSONObject(line);
                     String s = object.getString("name");
-                    String id = object.getString("id");
+                    String id = object.getString("idString");
                     Recipe r = new Recipe();
                     r.name = s;
-                    r.id = id;
+                    r.idString = id;
                     m_RecipeAdapter.add(r);
                 }
             } catch (JSONException ex) {
@@ -249,7 +264,9 @@ public class MainScreen extends AppCompatActivity
                 Recipe r = new Recipe(name.getText().toString(), style.getText().toString());
                 GsonBuilder gsonBuilder = new GsonBuilder();
 
-                final Gson gson = gsonBuilder.create();
+
+
+                /*final Gson gson = gsonBuilder.create();
                 String json = gson.toJson(r);
                 Network.WebRequest(Request.Method.POST, Tools.RestAPIURL() + "/recipe", json.getBytes(),
                         new Response.Listener<String>() {
@@ -258,13 +275,17 @@ public class MainScreen extends AppCompatActivity
                                 // your response
                                 Recipe r2 = gson.fromJson(response, Recipe.class);
                                 Intent i = new Intent(c, RecipeEditor.class);
-                                i.putExtra("RecipeID", r2.id);
+                                i.putExtra("RecipeID", r2.idString);
 
                                 startActivity(i);
                             }
                         }, null);
-
+*/
+                Intent i = new Intent(c, RecipeEditor.class);
+                //i.putExtra("RecipeID", r.idString);
+                i.putExtra("Recipe", (Serializable) r);
                 dialog.dismiss();
+
 
             }
         });
