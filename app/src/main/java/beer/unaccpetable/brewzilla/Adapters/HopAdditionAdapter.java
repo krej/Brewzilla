@@ -56,6 +56,12 @@ public class HopAdditionAdapter extends Adapter {
         EditText time = (EditText) d.findViewById(R.id.time);
 
         Hop h = (Hop)name.getSelectedItem();
+
+        if (h == null) {
+            Tools.ShowToast(d.getContext(), "Error talking to server.", Toast.LENGTH_LONG);
+            return false; //give up
+        }
+
         String sName = h.name;
         double dAmount = Tools.ParseDouble(amount.getText().toString());
         double dAAU = Tools.ParseDouble(aau.getText().toString());

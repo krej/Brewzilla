@@ -3,6 +3,7 @@ package beer.unaccpetable.brewzilla.Models;
 
 import com.google.gson.annotations.Expose;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import beer.unaccpetable.brewzilla.Tools.ListableObject;
@@ -11,7 +12,7 @@ import beer.unaccpetable.brewzilla.Tools.ListableObject;
  * Created by zak on 1/4/2017.
  */
 
-public class Recipe extends ListableObject {
+public class Recipe extends ListableObject implements Serializable { //6.5.2018 - I implemented Serializable to be able to pass it through intents. That worked but i'm not sure if it broke anything else
     @Expose
     public String style;
     @Expose

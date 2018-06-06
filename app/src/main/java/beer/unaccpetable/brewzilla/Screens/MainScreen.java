@@ -87,7 +87,7 @@ public class MainScreen extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         lstRecipes = (RecyclerView) findViewById(R.id.listRecipe);
-        SetUpHopList();
+        SetUpRecipeList();
 
         mTextView = (TextView) findViewById(R.id.mainscreen_text);
 
@@ -159,7 +159,7 @@ public class MainScreen extends AppCompatActivity
         }
     }
 
-    private void SetUpHopList() {
+    private void SetUpRecipeList() {
         lstRecipes.setHasFixedSize(false);
         m_RecipeLayoutManager = new LinearLayoutManager(this);
         lstRecipes.setLayoutManager(m_RecipeLayoutManager);
@@ -260,8 +260,10 @@ public class MainScreen extends AppCompatActivity
             public void onClick(View v) {
                 EditText name = (EditText) dialog.findViewById(R.id.txtNewRecipeName);
                 EditText style = (EditText) dialog.findViewById(R.id.txtNewRecipeStyle);
+                String sName = name.getText().toString();
+                String sStyle = style.getText().toString();
 
-                Recipe r = new Recipe(name.getText().toString(), style.getText().toString());
+                //Recipe r = new Recipe(sName, style.getText().toString());
                 GsonBuilder gsonBuilder = new GsonBuilder();
 
 
@@ -282,8 +284,10 @@ public class MainScreen extends AppCompatActivity
                         }, null);
 */
                 Intent i = new Intent(c, RecipeEditor.class);
-                //i.putExtra("RecipeID", r.idString);
-                i.putExtra("Recipe", (Serializable) r);
+                //i.putExtra("Recipe", r);
+                i.putExtra("name", sName);
+                i.putExtra("style", sStyle);
+                startActivity(i);
                 dialog.dismiss();
 
 

@@ -54,6 +54,12 @@ public class FermentableAdditionAdapter extends Adapter {
         EditText color = (EditText) d.findViewById(R.id.color);
 
         Fermentable f = (Fermentable)name.getSelectedItem();
+
+        if (f == null) {
+            Tools.ShowToast(d.getContext(), "Error talking to server", Toast.LENGTH_SHORT);
+            return false;
+        }
+
         String sName = f.name;
         double dWeight = Tools.ParseDouble(weight.getText().toString());
         double dPPG = Tools.ParseDouble(ppg.getText().toString());

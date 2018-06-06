@@ -71,7 +71,8 @@ public class RecipeAdapter extends Adapter {
                     //and then possibly see if I can do a RaiseEvent thing to tell the RecipeEditor class to refresh the stats
                     //Toast.makeText(v.getContext(), "Test" + getLayoutPosition(), Toast.LENGTH_LONG).show();
                     m_iClickedItem = getLayoutPosition();
-                    LoadRecipe((Recipe)m_Dataset.get(m_iClickedItem), v);
+                    if (size() > 0)
+                        LoadRecipe((Recipe)m_Dataset.get(m_iClickedItem), v);
 
                     //AddItem(v.getContext(), m_Dataset.get(m_iClickedItem));
                 }

@@ -95,10 +95,15 @@ public class RecipeEditor extends AppCompatActivity {
         SetUpFermentableList();
 
         String sID = getIntent().getStringExtra("RecipeID");
+        //Recipe r = (Recipe) getIntent().getSerializableExtra("Recipe"); //For some reason this comes in as name = "Empty". i dont know why its not getting it correctly
+        String sRecipeName = getIntent().getStringExtra("name");
+        String sRecipeStyle = getIntent().getStringExtra("style"); // not sure where to use this yet...
         if (sID != null && sID.length() > 0) {
             //LoadRecipe(sID);
             LoadFullRecipe(sID);
 //            return;
+        } else if (sRecipeName != null && sRecipeName.length() > 0) {
+            toolbar.setTitle(sRecipeName);
         } else {
             toolbar.setTitle("Create Recipe");
         }
