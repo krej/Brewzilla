@@ -109,6 +109,8 @@ public class RecipeEditor extends AppCompatActivity {
         }
 
         RefreshStats();
+
+
     }
 
     @Override
