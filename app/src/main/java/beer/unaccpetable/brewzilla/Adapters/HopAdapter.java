@@ -10,8 +10,10 @@ import android.widget.Spinner;
 
 import beer.unaccpetable.brewzilla.Models.Hop;
 import beer.unaccpetable.brewzilla.R;
-import beer.unaccpetable.brewzilla.Tools.ListableObject;
-import beer.unaccpetable.brewzilla.Tools.Tools;
+
+import com.unacceptable.unacceptabletools.Adapters.Adapter;
+import com.unacceptable.unacceptabletools.Models.ListableObject;
+import com.unacceptable.unacceptabletools.Tools.Tools;
 
 import static android.text.InputType.TYPE_CLASS_TEXT;
 

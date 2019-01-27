@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Adapters;
+package com.unacceptable.unacceptabletools.Adapters;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,9 +13,10 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import beer.unaccpetable.brewzilla.Screens.RecipeEditor;
-import beer.unaccpetable.brewzilla.R;
-import beer.unaccpetable.brewzilla.Tools.ListableObject;
+//import beer.unaccpetable.brewzilla.Screens.RecipeEditor;
+//import beer.unaccpetable.brewzilla.R;
+import com.unacceptable.unacceptabletools.R;
+import com.unacceptable.unacceptabletools.Models.ListableObject;
 
 /**
  * Created by zak on 11/16/2016.
@@ -176,18 +177,19 @@ implements View.OnClickListener
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                RecipeEditor n = null;
+                //TODO: 1/27/19 - I moved this Adapter class to the shared Module so it can no longer access RecipeEditor... I'm fine with this... Brewzilla can override the adapter if needed
+                //RecipeEditor n = null;
                 boolean bRecipeEditor = false;
                 String sExtraInfo = "";
                 //TODO: Make better. I added it when working on the Ingredient Manager
-                if (c.getClass() == RecipeEditor.class) {
+                /*if (c.getClass() == RecipeEditor.class) {
                     n = (RecipeEditor) c;
                     bRecipeEditor = true;
-                }
+                }*/
                 if (!AddItem(dialog, bExisting, sExtraInfo)) return;
 
                 if (bRecipeEditor) {
-                    n.RefreshStats();
+                    //n.RefreshStats();
                 }
                 notifyDataSetChanged();
                 dialog.dismiss();

@@ -10,11 +10,13 @@ import android.widget.Spinner;
 
 import beer.unaccpetable.brewzilla.Models.Fermentable;
 import beer.unaccpetable.brewzilla.R;
-import beer.unaccpetable.brewzilla.Tools.ListableObject;
-import beer.unaccpetable.brewzilla.Tools.Tools;
+
+import com.unacceptable.unacceptabletools.Adapters.Adapter;
+import com.unacceptable.unacceptabletools.Models.ListableObject;
 
 import static android.text.InputType.TYPE_CLASS_TEXT;
 import static android.view.View.GONE;
+import com.unacceptable.unacceptabletools.Tools.Tools;
 
 /**
  * Created by Megatron on 10/9/2017.

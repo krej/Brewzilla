@@ -3,7 +3,7 @@ package beer.unaccpetable.brewzilla.Tools;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import beer.unaccpetable.brewzilla.Adapters.Adapter;
+import com.unacceptable.unacceptabletools.Adapters.Adapter;
 import beer.unaccpetable.brewzilla.Models.FermentableAddition;
 import beer.unaccpetable.brewzilla.Models.HopAddition;
 import beer.unaccpetable.brewzilla.Models.YeastAddition;

@@ -41,7 +41,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -49,9 +48,10 @@ import java.util.Map;
 
 import beer.unaccpetable.brewzilla.Adapters.RecipeAdapter;
 import beer.unaccpetable.brewzilla.Models.Recipe;
-import beer.unaccpetable.brewzilla.Tools.Network;
+import com.unacceptable.unacceptabletools.Tools.Tools;
+import com.unacceptable.unacceptabletools.Tools.Network;
+
 import beer.unaccpetable.brewzilla.R;
-import beer.unaccpetable.brewzilla.Tools.Tools;
 
 public class MainScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -119,8 +119,8 @@ public class MainScreen extends AppCompatActivity
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                String token = "xxx"; //TODO: Save this somewhere
-                params.put("Authorization", "bearer " + token);
+
+                params.put("Authorization", "bearer " + Tools.APIToken);
                 return params;
             }
         };

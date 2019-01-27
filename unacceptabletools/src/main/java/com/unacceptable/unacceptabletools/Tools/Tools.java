@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Tools;
+package com.unacceptable.unacceptabletools.Tools;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -30,6 +30,10 @@ public class Tools {
         Toast t = Toast.makeText(c, text, length);
         t.show();
     }
+
+    //TODO: Save this somewhere
+    public static String APIToken = "xxx";
+
     public static DatabaseServer Server = DatabaseServer.BeerNet;
 
     enum DatabaseServer {

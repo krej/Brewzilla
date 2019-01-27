@@ -2,8 +2,6 @@ package beer.unaccpetable.brewzilla.Screens;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -25,23 +23,20 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.unacceptable.unacceptabletools.Tools.Network;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import beer.unaccpetable.brewzilla.Adapters.Adapter;
+import com.unacceptable.unacceptabletools.Adapters.Adapter;
 import beer.unaccpetable.brewzilla.Adapters.HopAdditionAdapter;
 import beer.unaccpetable.brewzilla.Adapters.FermentableAdditionAdapter;
 import beer.unaccpetable.brewzilla.Adapters.YeastAdapter;
-import beer.unaccpetable.brewzilla.Adapters.YeastAdditionAdapter;
 import beer.unaccpetable.brewzilla.Models.Recipe;
-import beer.unaccpetable.brewzilla.Models.YeastAddition;
-import beer.unaccpetable.brewzilla.Tools.ListableObject;
-import beer.unaccpetable.brewzilla.Tools.Network;
+import com.unacceptable.unacceptabletools.Models.ListableObject;
 import beer.unaccpetable.brewzilla.R;
-import beer.unaccpetable.brewzilla.Tools.Calculations;
-import beer.unaccpetable.brewzilla.Tools.Tools;
+import com.unacceptable.unacceptabletools.Tools.Tools;
 
 public class RecipeEditor extends AppCompatActivity {
 
@@ -243,8 +238,7 @@ public class RecipeEditor extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                String token = "xxx"; //TODO: Save this somewhere
-                params.put("Authorization", "bearer " + token);
+                params.put("Authorization", "bearer " + Tools.APIToken);
                 return params;
             }
         };

@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Tools;
+package com.unacceptable.unacceptabletools.Tools;
 
 import android.content.Context;
 

@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Tools;
+package com.unacceptable.unacceptabletools.Models;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -6,6 +6,8 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
+import com.unacceptable.unacceptabletools.Tools.Network;
+import com.unacceptable.unacceptabletools.Tools.Tools;
 
 /**
  * Created by Megatron on 10/4/2017.
