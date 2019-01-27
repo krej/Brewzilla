@@ -18,6 +18,7 @@ import android.view.ViewAnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -26,6 +27,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import beer.unaccpetable.brewzilla.Adapters.Adapter;
 import beer.unaccpetable.brewzilla.Adapters.HopAdditionAdapter;
@@ -236,7 +239,15 @@ public class RecipeEditor extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String token = "xxx"; //TODO: Save this somewhere
+                params.put("Authorization", "bearer " + token);
+                return params;
+            }
+        };
 
         Network.getInstance(this).addToRequestQueue(stringRequest);
     }

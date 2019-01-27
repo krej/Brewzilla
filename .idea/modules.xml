@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Brewzilla.iml" filepath="$PROJECT_DIR$/Brewzilla.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/unacceptabletools/unacceptabletools.iml" filepath="$PROJECT_DIR$/unacceptabletools/unacceptabletools.iml" />
     </modules>
   </component>
 </project>

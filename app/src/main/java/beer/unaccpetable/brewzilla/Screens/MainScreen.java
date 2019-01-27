@@ -44,6 +44,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import beer.unaccpetable.brewzilla.Adapters.RecipeAdapter;
 import beer.unaccpetable.brewzilla.Models.Recipe;
@@ -113,7 +115,15 @@ public class MainScreen extends AppCompatActivity
                 //mTextView.setText("That didn't work " + error.getMessage());
                 Tools.ShowToast(getApplicationContext(), "Failed to load recipes", Toast.LENGTH_LONG);
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String token = "xxx"; //TODO: Save this somewhere
+                params.put("Authorization", "bearer " + token);
+                return params;
+            }
+        };
 
         Network.getInstance(this).addToRequestQueue(stringRequest);
     }
