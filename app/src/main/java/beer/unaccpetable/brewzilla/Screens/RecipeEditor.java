@@ -238,7 +238,7 @@ public class RecipeEditor extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Authorization", "bearer " + Tools.GetAPIToken(getApplicationContext()));
+                params.put("Authorization", "bearer " + Tools.GetAPIToken());
                 return params;
             }
         };

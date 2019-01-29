@@ -10,6 +10,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by zak on 1/12/2017.
  */
@@ -66,6 +69,14 @@ public class Network {
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
             }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+
+                params.put("Authorization", "bearer " + Tools.GetAPIToken());
+                return params;
+            }
         };
 
         Network.getInstance(mCtx).addToRequestQueue(stringRequest);
@@ -83,6 +94,14 @@ public class Network {
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+
+                params.put("Authorization", "bearer " + Tools.GetAPIToken());
+                return params;
             }
         };
         Network.getInstance(mCtx).addToRequestQueue(request);

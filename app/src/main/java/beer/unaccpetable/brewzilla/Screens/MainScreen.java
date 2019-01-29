@@ -86,6 +86,9 @@ public class MainScreen extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        if (!Tools.LoadSharedPrefs(getApplicationContext())) {
+            Tools.ShowToast(getApplicationContext(), "Failed to load preferences", Toast.LENGTH_SHORT);
+        }
         if (!LoginTokenExists()) return;
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -100,7 +103,7 @@ public class MainScreen extends AppCompatActivity
     }
 
     private Boolean LoginTokenExists() {
-        if (Tools.GetAPIToken(getApplicationContext()).length() > 0) return true;
+        if (Tools.GetAPIToken().length() > 0) return true;
 
         LaunchSignInScreen();
         return false;
@@ -137,7 +140,7 @@ public class MainScreen extends AppCompatActivity
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
 
-                params.put("Authorization", "bearer " + Tools.GetAPIToken(getApplicationContext()));
+                params.put("Authorization", "bearer " + Tools.GetAPIToken());
                 return params;
             }
         };

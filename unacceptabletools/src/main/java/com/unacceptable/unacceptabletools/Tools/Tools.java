@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 public class Tools {
 
+    public static SharedPreferences m_sharedPrefs;
+
     public static double ParseDouble(String d) {
         if (d.length() == 0 ) return 0;
         return Double.parseDouble(d);
@@ -33,12 +35,14 @@ public class Tools {
         t.show();
     }
 
-    public static String GetAPIToken(Context ctx) {
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences("Prefs", Context.MODE_PRIVATE);
-
-
-        String APIToken = sharedPreferences.getString("APIToken", "");
+    public static String GetAPIToken() {
+        String APIToken = m_sharedPrefs.getString("APIToken", "");
         return APIToken;
+    }
+
+    public static boolean LoadSharedPrefs(Context ctx) {
+        m_sharedPrefs = ctx.getSharedPreferences("Prefs", Context.MODE_PRIVATE);
+        return m_sharedPrefs != null;
     }
 
 
