@@ -1,6 +1,8 @@
 package com.unacceptable.unacceptabletools.Tools;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -31,15 +33,21 @@ public class Tools {
         t.show();
     }
 
-    //TODO: Save this somewhere
-    public static String APIToken = "xxx";
+    public static String GetAPIToken(Context ctx) {
+        SharedPreferences sharedPreferences = ctx.getSharedPreferences("Prefs", Context.MODE_PRIVATE);
+
+
+        String APIToken = sharedPreferences.getString("APIToken", "");
+        return APIToken;
+    }
+
 
     public static DatabaseServer Server = DatabaseServer.BeerNet;
 
     enum DatabaseServer {
         Desktop {
             public String toString() {
-                return "http://192.168.1.11:50421/beernet";
+                return "http://localhost:50421/beernet";
             }
         },
 
