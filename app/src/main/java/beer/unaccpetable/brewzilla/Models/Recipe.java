@@ -6,7 +6,7 @@ import com.google.gson.annotations.Expose;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.unacceptable.unacceptabletools.Models.ListableObject;
+import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
 /**
  * Created by zak on 1/4/2017.

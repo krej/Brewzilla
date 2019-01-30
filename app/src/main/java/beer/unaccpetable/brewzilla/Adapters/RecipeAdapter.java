@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.unacceptable.unacceptabletools.Adapters.Adapter;
+import com.unacceptable.unacceptablelibrary.Adapters.Adapter;
 
 import beer.unaccpetable.brewzilla.Models.Recipe;
 import beer.unaccpetable.brewzilla.Screens.RecipeEditor;

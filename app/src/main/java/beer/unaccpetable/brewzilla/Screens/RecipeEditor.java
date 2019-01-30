@@ -23,20 +23,20 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.unacceptable.unacceptabletools.Tools.Network;
+import com.unacceptable.unacceptablelibrary.Tools.Network;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.unacceptable.unacceptabletools.Adapters.Adapter;
+import com.unacceptable.unacceptablelibrary.Adapters.Adapter;
 import beer.unaccpetable.brewzilla.Adapters.HopAdditionAdapter;
 import beer.unaccpetable.brewzilla.Adapters.FermentableAdditionAdapter;
 import beer.unaccpetable.brewzilla.Adapters.YeastAdapter;
 import beer.unaccpetable.brewzilla.Models.Recipe;
-import com.unacceptable.unacceptabletools.Models.ListableObject;
+import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 import beer.unaccpetable.brewzilla.R;
-import com.unacceptable.unacceptabletools.Tools.Tools;
+import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 public class RecipeEditor extends AppCompatActivity {
 

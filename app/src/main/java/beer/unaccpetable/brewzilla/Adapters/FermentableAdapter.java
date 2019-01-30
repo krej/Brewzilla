@@ -11,12 +11,12 @@ import android.widget.Spinner;
 import beer.unaccpetable.brewzilla.Models.Fermentable;
 import beer.unaccpetable.brewzilla.R;
 
-import com.unacceptable.unacceptabletools.Adapters.Adapter;
-import com.unacceptable.unacceptabletools.Models.ListableObject;
+import com.unacceptable.unacceptablelibrary.Adapters.Adapter;
+import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
 import static android.text.InputType.TYPE_CLASS_TEXT;
 import static android.view.View.GONE;
-import com.unacceptable.unacceptabletools.Tools.Tools;
+import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 /**
  * Created by Megatron on 10/9/2017.

@@ -49,8 +49,8 @@ import java.util.Map;
 
 import beer.unaccpetable.brewzilla.Adapters.RecipeAdapter;
 import beer.unaccpetable.brewzilla.Models.Recipe;
-import com.unacceptable.unacceptabletools.Tools.Tools;
-import com.unacceptable.unacceptabletools.Tools.Network;
+import com.unacceptable.unacceptablelibrary.Tools.Tools;
+import com.unacceptable.unacceptablelibrary.Tools.Network;
 
 import beer.unaccpetable.brewzilla.R;
 
@@ -110,7 +110,7 @@ public class MainScreen extends AppCompatActivity
     }
 
     private void LaunchSignInScreen() {
-        Intent i = new Intent(getApplicationContext(), com.unacceptable.unacceptabletools.Screens.LoginActivity.class);
+        Intent i = new Intent(getApplicationContext(), com.unacceptable.unacceptablelibrary.Screens.LoginActivity.class);
         startActivity(i);
     }
 

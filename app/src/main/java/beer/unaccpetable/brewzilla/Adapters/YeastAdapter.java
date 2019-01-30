@@ -16,15 +16,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.unacceptable.unacceptabletools.Adapters.Adapter;
-import com.unacceptable.unacceptabletools.Tools.Network;
+import com.unacceptable.unacceptablelibrary.Adapters.Adapter;
+import com.unacceptable.unacceptablelibrary.Tools.Network;
 
 import java.util.ArrayList;
 
 import beer.unaccpetable.brewzilla.Models.Yeast;
 import beer.unaccpetable.brewzilla.R;
-import com.unacceptable.unacceptabletools.Models.ListableObject;
-import com.unacceptable.unacceptabletools.Tools.Tools;
+import com.unacceptable.unacceptablelibrary.Models.ListableObject;
+import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 /**
  * Created by Megatron on 10/9/2017.

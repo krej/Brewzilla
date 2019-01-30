@@ -25,7 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.unacceptable.unacceptabletools.Tools.Network;
+import com.unacceptable.unacceptablelibrary.Tools.Network;
 
 import beer.unaccpetable.brewzilla.Adapters.FermentableAdapter;
 import beer.unaccpetable.brewzilla.Adapters.HopAdapter;
@@ -34,7 +34,7 @@ import beer.unaccpetable.brewzilla.Models.Fermentable;
 import beer.unaccpetable.brewzilla.Models.Hop;
 import beer.unaccpetable.brewzilla.Models.Yeast;
 import beer.unaccpetable.brewzilla.R;
-import com.unacceptable.unacceptabletools.Tools.Tools;
+import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 public class IngredientManager extends AppCompatActivity {
 

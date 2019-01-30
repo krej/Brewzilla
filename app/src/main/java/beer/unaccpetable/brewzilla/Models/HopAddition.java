@@ -2,7 +2,7 @@ package beer.unaccpetable.brewzilla.Models;
 
 import com.google.gson.annotations.Expose;
 
-import com.unacceptable.unacceptabletools.Models.ListableObject;
+import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
 /**
  * Created by Megatron on 9/25/2017.
