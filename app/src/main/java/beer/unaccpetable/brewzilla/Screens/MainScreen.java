@@ -87,9 +87,10 @@ public class MainScreen extends AppCompatActivity
         toggle.syncState();
 
         if (!Tools.LoadSharedPrefs(getApplicationContext())) {
-            Tools.ShowToast(getApplicationContext(), "Failed to load preferences", Toast.LENGTH_SHORT);
+
         }
-        if (!LoginTokenExists()) return;
+
+        if (!Tools.LoginTokenExists(this)) return;
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -102,17 +103,9 @@ public class MainScreen extends AppCompatActivity
         GetRecipes();
     }
 
-    private Boolean LoginTokenExists() {
-        if (Tools.GetAPIToken().length() > 0) return true;
 
-        LaunchSignInScreen();
-        return false;
-    }
 
-    private void LaunchSignInScreen() {
-        Intent i = new Intent(getApplicationContext(), com.unacceptable.unacceptablelibrary.Screens.LoginActivity.class);
-        startActivity(i);
-    }
+
 
     private void GetRecipes() {
 
@@ -255,7 +248,7 @@ public class MainScreen extends AppCompatActivity
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.remove("APIToken");
             editor.commit();
-            LaunchSignInScreen();
+            Tools.LaunchSignInScreen(this);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
