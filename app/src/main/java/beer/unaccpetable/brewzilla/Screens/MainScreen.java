@@ -86,7 +86,7 @@ public class MainScreen extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        if (!Tools.LoadSharedPrefs(getApplicationContext())) {
+        if (!Tools.LoadSharedPrefs(getApplicationContext(), "beernet")) {
 
         }
 
