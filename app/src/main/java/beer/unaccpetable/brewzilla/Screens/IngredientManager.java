@@ -34,6 +34,8 @@ import beer.unaccpetable.brewzilla.Models.Fermentable;
 import beer.unaccpetable.brewzilla.Models.Hop;
 import beer.unaccpetable.brewzilla.Models.Yeast;
 import beer.unaccpetable.brewzilla.R;
+
+import com.unacceptable.unacceptablelibrary.Tools.Preferences;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 public class IngredientManager extends AppCompatActivity {
@@ -156,7 +158,7 @@ public class IngredientManager extends AppCompatActivity {
 
         private void LoadHops() {
             m_HopAdapter.clear();
-            Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/hop", null,
+            Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/hop", null,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -216,7 +218,7 @@ public class IngredientManager extends AppCompatActivity {
 
         private void LoadHops() {
             m_HopAdapter.clear();
-            Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentable", null,
+            Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/fermentable", null,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -273,7 +275,7 @@ public class IngredientManager extends AppCompatActivity {
         private void LoadHops() {
             m_HopAdapter.clear();
 
-            Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/yeast", null,
+            Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/yeast", null,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {

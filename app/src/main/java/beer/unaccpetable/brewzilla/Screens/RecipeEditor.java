@@ -23,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 import com.unacceptable.unacceptablelibrary.Tools.Network;
 
 import java.util.ArrayList;
@@ -36,9 +37,13 @@ import beer.unaccpetable.brewzilla.Adapters.YeastAdapter;
 import beer.unaccpetable.brewzilla.Models.Recipe;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 import beer.unaccpetable.brewzilla.R;
+import beer.unaccpetable.brewzilla.Repositories.IRepository;
+import beer.unaccpetable.brewzilla.Repositories.Repository;
+
+import com.unacceptable.unacceptablelibrary.Tools.Preferences;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
-public class RecipeEditor extends AppCompatActivity {
+public class RecipeEditor extends BaseActivity {
 
     RecyclerView lstGrains, lstHops,lstYeasts;
     private RecyclerView.LayoutManager m_HopLayoutManager, m_YeastLayoutManager, m_MaltLayoutManager;
@@ -54,6 +59,8 @@ public class RecipeEditor extends AppCompatActivity {
     Toolbar toolbar;
 
     public Recipe CurrentRecipe;
+
+    private IRepository m_repo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +98,8 @@ public class RecipeEditor extends AppCompatActivity {
         SetUpHopList();
         SetUpYeastList();
         SetUpFermentableList();
+
+        m_repo = new Repository();
 
         String sID = getIntent().getStringExtra("RecipeID");
         //Recipe r = (Recipe) getIntent().getSerializableExtra("Recipe"); //For some reason this comes in as name = "Empty". i dont know why its not getting it correctly
@@ -140,112 +149,29 @@ public class RecipeEditor extends AppCompatActivity {
     }
 
     private void LoadFullRecipe(String id) {
-        /* Deployd bug: When there are more than 2 HopAdditions ( or Fermentable/Yeast ), it doesn't load in the Hop data after the second */
-        /* So I'm changing it to load in everything separately */
-        String sRecipeURL = Tools.RestAPIURL() + "/recipe/" + id; // + "&include=fullrecipe";
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, sRecipeURL, new Response.Listener<String>() {
-
+        m_repo.LoadRecipe(id, new RepositoryCallback() {
             @Override
-            public void onResponse(String response) {
+            public void onSuccess(String t) {
                 GsonBuilder gsonBuilder = new GsonBuilder();
 
                 final Gson gson = gsonBuilder.create();
-                CurrentRecipe = gson.fromJson(response, Recipe.class);
+                CurrentRecipe = gson.fromJson(t, Recipe.class);
                 CurrentRecipe.Initiliaze(); //TODO: Is this needed?
 
                 PopulateAdditions(CurrentRecipe.hops, m_HopAdditionAdapter);
                 PopulateAdditions(CurrentRecipe.fermentables, m_MaltAdapter);
                 PopulateAdditions(CurrentRecipe.yeasts, m_YeastAdapter);
                 //PopulateAdditions(CurrentRecipe.adjuncts, m_AdjunctAdapter);
-/*
-                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/hopaddition?recipeID=" + CurrentRecipe.idString + "&include=hop", null,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                // your response
-                                HopAddition[] hops = gson.fromJson(response, HopAddition[].class);
-
-                                for (HopAddition h : hops) {
-                                    m_HopAdditionAdapter.add(h);
-                                    CurrentRecipe.hops.add(h);
-                                }
-
-                                RefreshStats();
-                            }
-                        }, null); //No error checking! Woo!
-
-                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentableaddition?recipeID=" + CurrentRecipe.idString + "&include=fermentable", null,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                // your response
-                                FermentableAddition[] fermentables = gson.fromJson(response, FermentableAddition[].class);
-
-                                for (FermentableAddition f : fermentables) {
-                                    m_MaltAdapter.add(f);
-                                    CurrentRecipe.fermentables.add(f);
-                                }
-
-                                RefreshStats();
-                            }
-                        }, null); //No error checking! Woo!
-
-                Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/yeastaddition?recipeID=" + CurrentRecipe.idString + "&include=yeast", null,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                // your response
-                                YeastAddition[] yeasts = gson.fromJson(response, YeastAddition[].class);
-
-                                for (YeastAddition y : yeasts) {
-                                    m_YeastAdditionAdapter.add(y);
-                                    CurrentRecipe.yeasts.add(y);
-                                }
-
-                                RefreshStats();
-                            }
-                        }, null); //No error checking! Woo!
-*/
-
-
-
                 toolbar.setTitle(CurrentRecipe.name);
-                //RefreshStats();
-                /*ArrayList<JSONObject> objs = Tools.GetJSONObjects(response);
-                for(int i = 0; i < objs.size(); i++) {
-                    JSONObject o = (JSONObject)objs.get(i);
-                    String s = "Error";
-                    String idString = null;
-                    try {
-                        s = o.getString("name");
-                        idString = o.getString("idString");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    m_CurrentRecipe = new Recipe();
-                    m_CurrentRecipe.Name = s;
-                    m_CurrentRecipe.idString = idString;
-                    toolbar.setTitle(m_CurrentRecipe.Name);
-                }
-                LoadHops(m_CurrentRecipe.idString);*/
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("Authorization", "bearer " + Tools.GetAPIToken());
-                return params;
-            }
-        };
 
-        Network.getInstance(this).addToRequestQueue(stringRequest);
+            @Override
+            public void onError(VolleyError error) {
+                Tools.ShowToast(getApplicationContext(), Tools.ParseVolleyError(error), Toast.LENGTH_LONG);
+            }
+        });
     }
-
+    
     private <T> void PopulateAdditions(ArrayList<T> additions, Adapter adp) {
         for (int i = 0; i < additions.size(); i++) {
             adp.add((ListableObject) additions.get(i));

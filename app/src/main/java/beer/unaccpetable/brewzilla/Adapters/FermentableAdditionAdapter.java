@@ -23,6 +23,7 @@ import beer.unaccpetable.brewzilla.Models.Fermentable;
 import beer.unaccpetable.brewzilla.Models.FermentableAddition;
 import beer.unaccpetable.brewzilla.R;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
+import com.unacceptable.unacceptablelibrary.Tools.Preferences;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 /**
@@ -99,7 +100,7 @@ public class FermentableAdditionAdapter extends Adapter {
         final EditText fermentableID = (EditText) root.findViewById(R.id.fermentableID);
         final Spinner snName = (Spinner) root.findViewById(R.id.fermentableSelector);
 
-        Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/fermentable", null, new Response.Listener<String>() {
+        Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/fermentable", null, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 GsonBuilder gsonBuilder = new GsonBuilder();

@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/../...iml" filepath="$PROJECT_DIR$/../...iml" />
       <module fileurl="file://$PROJECT_DIR$/Brewzilla.iml" filepath="$PROJECT_DIR$/Brewzilla.iml" />
       <module fileurl="file://$PROJECT_DIR$/../UnacceptableLibrary/Library/Library.iml" filepath="$PROJECT_DIR$/../UnacceptableLibrary/Library/Library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../Megatron.iml" filepath="$PROJECT_DIR$/../../../Megatron.iml" />
       <module fileurl="file://$PROJECT_DIR$/../UnacceptableLibrary/UnacceptableLibrary.iml" filepath="$PROJECT_DIR$/../UnacceptableLibrary/UnacceptableLibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

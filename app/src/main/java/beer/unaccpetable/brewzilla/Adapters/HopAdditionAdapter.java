@@ -24,6 +24,7 @@ import beer.unaccpetable.brewzilla.Models.Hop;
 import beer.unaccpetable.brewzilla.Models.HopAddition;
 import beer.unaccpetable.brewzilla.R;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
+import com.unacceptable.unacceptablelibrary.Tools.Preferences;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 /**
@@ -106,7 +107,7 @@ public class HopAdditionAdapter extends Adapter {
         final EditText aau = (EditText) root.findViewById(R.id.aau);
         final EditText time = (EditText) root.findViewById(R.id.time);
 
-        Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/hop", null, new Response.Listener<String>() {
+        Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/hop", null, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 GsonBuilder gsonBuilder = new GsonBuilder();

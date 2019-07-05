@@ -49,18 +49,24 @@ import java.util.Map;
 
 import beer.unaccpetable.brewzilla.Adapters.RecipeAdapter;
 import beer.unaccpetable.brewzilla.Models.Recipe;
+
+import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
+import com.unacceptable.unacceptablelibrary.Tools.Preferences;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 import com.unacceptable.unacceptablelibrary.Tools.Network;
 
 import beer.unaccpetable.brewzilla.R;
+import beer.unaccpetable.brewzilla.Repositories.IRepository;
+import beer.unaccpetable.brewzilla.Repositories.Repository;
 
-public class MainScreen extends AppCompatActivity
+public class MainScreen extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView.LayoutManager m_RecipeLayoutManager;
     private RecyclerView lstRecipes;
     private RecipeAdapter m_RecipeAdapter = new RecipeAdapter(R.layout.recipe_list, 0);
-    private String m_sRestAPIURL = Tools.RestAPIURL();
+    private IRepository m_repo;
+    //private String m_sRestAPIURL = Preferences.BeerNetAPIURL();
 
     TextView mTextView;
 
@@ -86,11 +92,8 @@ public class MainScreen extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        if (!Tools.LoadSharedPrefs(getApplicationContext(), "beernet")) {
 
-        }
-
-        if (!Tools.LoginTokenExists(this)) return;
+        m_repo = new Repository();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -103,42 +106,20 @@ public class MainScreen extends AppCompatActivity
         GetRecipes();
     }
 
-
-
-
-
     private void GetRecipes() {
 
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String sRecipeURL = m_sRestAPIURL + "/recipe";
-
-
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, sRecipeURL, new Response.Listener<String>() {
+        m_repo.LoadRecipeList(new RepositoryCallback() {
+            @Override
+            public void onSuccess(String t) {
+                LoadRecipes(t);
+            }
 
             @Override
-            public void onResponse(String response) {
-                //mTextView.setText("Respone is :" + response);// + response.substring(0, 500));
-                //SetRecipeList(response);
-                LoadRecipes(response);
+            public void onError(VolleyError error) {
+                Tools.ShowToast(getApplicationContext(), Tools.ParseVolleyError(error), Toast.LENGTH_LONG);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                //mTextView.setText("That didn't work " + error.getMessage());
-                Tools.ShowToast(getApplicationContext(), "Failed to load recipes", Toast.LENGTH_LONG);
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
+        });
 
-                params.put("Authorization", "bearer " + Tools.GetAPIToken());
-                return params;
-            }
-        };
-
-        Network.getInstance(this).addToRequestQueue(stringRequest);
     }
 
     private void LoadRecipes(String response) {
@@ -218,6 +199,8 @@ public class MainScreen extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -248,7 +231,7 @@ public class MainScreen extends AppCompatActivity
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.remove("APIToken");
             editor.commit();
-            Tools.LaunchSignInScreen(this);
+            Tools.LaunchSignInScreen(this, MainScreen.class);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -328,7 +311,7 @@ public class MainScreen extends AppCompatActivity
 
     public void AddRecipe(View v) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String sRecipeURL = m_sRestAPIURL + "/recipe";
+        String sRecipeURL = Preferences.BeerNetAPIURL() + "/recipe";
         JSONObject o = new JSONObject();
         StringRequest r = null;
         try {

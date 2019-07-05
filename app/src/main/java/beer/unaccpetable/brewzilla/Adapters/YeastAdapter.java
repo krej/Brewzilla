@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import beer.unaccpetable.brewzilla.Models.Yeast;
 import beer.unaccpetable.brewzilla.R;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
+import com.unacceptable.unacceptablelibrary.Tools.Preferences;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 /**
@@ -128,7 +129,7 @@ public class YeastAdapter extends Adapter {
         final EditText yeastID = (EditText) root.findViewById(R.id.yeastID);
         final EditText name = (EditText) root.findViewById(R.id.name);
 
-        Network.WebRequest(Request.Method.GET, Tools.RestAPIURL() + "/yeast", null, new Response.Listener<String>() {
+        Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/yeast", null, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 GsonBuilder gsonBuilder = new GsonBuilder();
