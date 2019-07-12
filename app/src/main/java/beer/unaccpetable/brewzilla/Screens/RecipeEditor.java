@@ -171,7 +171,7 @@ public class RecipeEditor extends BaseActivity {
             }
         });
     }
-    
+
     private <T> void PopulateAdditions(ArrayList<T> additions, Adapter adp) {
         for (int i = 0; i < additions.size(); i++) {
             adp.add((ListableObject) additions.get(i));

@@ -41,7 +41,9 @@ public class Recipe extends ListableObject implements Serializable { //6.5.2018 
     public String styleID;
 
 
-    public Recipe() {}
+    public Recipe() {
+        Initiliaze();
+    }
 
     public void Recipe(String sName) {
         name = sName;
@@ -52,28 +54,11 @@ public class Recipe extends ListableObject implements Serializable { //6.5.2018 
         style = sStyle;
     }
 
-
-    public void Save() {
-        super.Save();
-/*
-        for (HopAddition h : hops) {
-            h.Save();
-        }
-
-        for (FermentableAddition f : fermentables) {
-            f.Save();
-        }
-
-        //Yeasts currently only saves the yeastID which can't be saved.
-        for (YeastAddition y : yeasts) {
-            y.Save();
-        }*/
-    }
-
     public void Initiliaze() {
         if (hops == null) hops = new ArrayList<>();
         if (fermentables == null) fermentables = new ArrayList<>();
         if (yeasts == null) yeasts = new ArrayList<>();
+        recipeStats = new RecipeStatistics();
     }
 
     /*

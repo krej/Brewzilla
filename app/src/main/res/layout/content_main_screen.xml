@@ -5,12 +5,8 @@
     android:id="@+id/content_main_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="beer.unaccpetable.brewzilla.Screens.MainScreen"
+    tools:context="beer.unaccpetable.brewzilla.Screens.MainScreen.MainScreen"
     tools:showIn="@layout/app_bar_main_screen">
 
     <LinearLayout
@@ -22,8 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/mainscreen_text"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="21dp"
             android:id="@+id/listRecipe" >
 
         </android.support.v7.widget.RecyclerView>

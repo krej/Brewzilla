@@ -15,6 +15,11 @@
             android:icon="@drawable/ic_menu_manage"
             android:title="Ingredient Manager" />
         <item
+            android:id="@+id/nav_import_beerxml"
+            android:icon="@drawable/ic_menu_share"
+            android:title="@string/import_beerxml"
+        />
+        <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="Tools" />

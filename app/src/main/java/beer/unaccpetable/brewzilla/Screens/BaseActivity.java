@@ -9,6 +9,8 @@ import com.unacceptable.unacceptablelibrary.Tools.Network;
 import com.unacceptable.unacceptablelibrary.Tools.Preferences;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
+import beer.unaccpetable.brewzilla.Screens.MainScreen.MainScreen;
+
 public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +21,7 @@ public class BaseActivity extends AppCompatActivity {
 
 
     private boolean InitialAppSetup() {
+        Network.getInstance(getApplicationContext());
         Preferences.getInstance(getApplicationContext(), "beernet");
 
         if (!Preferences.ServerSettingExists()) {
@@ -30,7 +33,6 @@ public class BaseActivity extends AppCompatActivity {
         }
 
         if (!Tools.LoginTokenExists(this, MainScreen.class)) return false;
-        Network.getInstance(this.getApplicationContext());
         return true;
     }
 }

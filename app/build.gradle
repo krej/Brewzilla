@@ -50,4 +50,5 @@ dependencies {
     api 'com.google.code.gson:gson:2.4'
 //    api project(path: ':unacceptabletools')
     implementation project(':..:UnacceptableLibrary:Library')
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }

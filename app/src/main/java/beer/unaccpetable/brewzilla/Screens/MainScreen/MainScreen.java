@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Screens;
+package beer.unaccpetable.brewzilla.Screens.MainScreen;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,7 +16,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,28 +43,31 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
-import beer.unaccpetable.brewzilla.Adapters.RecipeAdapter;
 import beer.unaccpetable.brewzilla.Models.Recipe;
 
+import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
 import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 import com.unacceptable.unacceptablelibrary.Tools.Preferences;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
-import com.unacceptable.unacceptablelibrary.Tools.Network;
 
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Repositories.IRepository;
 import beer.unaccpetable.brewzilla.Repositories.Repository;
+import beer.unaccpetable.brewzilla.Screens.BaseActivity;
+import beer.unaccpetable.brewzilla.Screens.ImportBeerXML;
+import beer.unaccpetable.brewzilla.Screens.IngredientManager;
+import beer.unaccpetable.brewzilla.Screens.RecipeEditor;
+import beer.unaccpetable.brewzilla.Screens.SettingsActivity;
 
 public class MainScreen extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MainScreenController.View {
 
-    private RecyclerView.LayoutManager m_RecipeLayoutManager;
+    //private RecyclerView.LayoutManager m_RecipeLayoutManager;
     private RecyclerView lstRecipes;
-    private RecipeAdapter m_RecipeAdapter = new RecipeAdapter(R.layout.recipe_list, 0);
-    private IRepository m_repo;
+    private NewAdapter m_Adapter;
+    //private RecipeAdapter m_RecipeAdapter = new RecipeAdapter(R.layout.recipe_list, 0);
+    private MainScreenController m_Controller;
     //private String m_sRestAPIURL = Preferences.BeerNetAPIURL();
 
     TextView mTextView;
@@ -74,10 +76,10 @@ public class MainScreen extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,92 +88,26 @@ public class MainScreen extends BaseActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        m_Controller = new MainScreenController(new Repository());
+        m_Controller.attachView(this);
 
-        m_repo = new Repository();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView =  findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        lstRecipes = (RecyclerView) findViewById(R.id.listRecipe);
-        SetUpRecipeList();
+        lstRecipes = findViewById(R.id.listRecipe);
+        m_Adapter = Tools.setupRecyclerView(lstRecipes, getApplicationContext(), R.layout.one_line_list, 0, false, new RecipeListAdapterViewControl(this), true);
 
-        mTextView = (TextView) findViewById(R.id.mainscreen_text);
+        mTextView = findViewById(R.id.mainscreen_text);
 
-        GetRecipes();
+        m_Controller.LoadRecipes();
     }
 
-    private void GetRecipes() {
-
-        m_repo.LoadRecipeList(new RepositoryCallback() {
-            @Override
-            public void onSuccess(String t) {
-                LoadRecipes(t);
-            }
-
-            @Override
-            public void onError(VolleyError error) {
-                Tools.ShowToast(getApplicationContext(), Tools.ParseVolleyError(error), Toast.LENGTH_LONG);
-            }
-        });
-
-    }
-
-    private void LoadRecipes(String response) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-
-        final Gson gson = gsonBuilder.create();
-        Recipe[] recipes = gson.fromJson(response, Recipe[].class);
-
-        for (Recipe r : recipes) {
-            m_RecipeAdapter.add(r);
-        }
-    }
-
-    private void SetRecipeList(String json) {
-        //GsonBuilder gsonBuilder = new GsonBuilder();
-
-        //Gson gson = gsonBuilder.create();
-        //Recipe CurrentRecipe = gson.fromJson(json, Recipe.class);
-        json = json.replace("[", "[\n");
-        json = json.replace("]", "]\n");
-        json = json.replace("},", "}\n");
-        //m_RecipeAdapter.clear();
-        try (StringReader sr = new StringReader(json); BufferedReader in = new BufferedReader(sr)) {
-            String line;
-            try {
-                while ((line = in.readLine()) != null) {
-                    if (line.equals("[") || line.equals("]")) continue;
-                    JSONObject object = new JSONObject(line);
-                    String s = object.getString("name");
-                    String id = object.getString("idString");
-                    Recipe r = new Recipe();
-                    r.name = s;
-                    r.idString = id;
-                    m_RecipeAdapter.add(r);
-                }
-            } catch (JSONException ex) {
-
-            }
-        } catch(IOException e) {
-
-        }
-    }
-
-    private void SetUpRecipeList() {
-        lstRecipes.setHasFixedSize(false);
-        m_RecipeLayoutManager = new LinearLayoutManager(this);
-        lstRecipes.setLayoutManager(m_RecipeLayoutManager);
-        lstRecipes.setAdapter(m_RecipeAdapter);
-        Recipe r = new Recipe();
-        r.name = "test";
-        //m_RecipeAdapter.add(CurrentRecipe);
-    }
 
     @Override
     public void onBackPressed() {
@@ -232,6 +168,9 @@ public class MainScreen extends BaseActivity
             editor.remove("APIToken");
             editor.commit();
             Tools.LaunchSignInScreen(this, MainScreen.class);
+        }else if (id == R.id.nav_import_beerxml) {
+            intNextScreen = new Intent(this, ImportBeerXML.class);
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -275,33 +214,8 @@ public class MainScreen extends BaseActivity
                 String sName = name.getText().toString();
                 String sStyle = style.getText().toString();
 
-                //Recipe r = new Recipe(sName, style.getText().toString());
-                GsonBuilder gsonBuilder = new GsonBuilder();
-
-
-
-                /*final Gson gson = gsonBuilder.create();
-                String json = gson.toJson(r);
-                Network.WebRequest(Request.Method.POST, Tools.RestAPIURL() + "/recipe", json.getBytes(),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                // your response
-                                Recipe r2 = gson.fromJson(response, Recipe.class);
-                                Intent i = new Intent(c, RecipeEditor.class);
-                                i.putExtra("RecipeID", r2.idString);
-
-                                startActivity(i);
-                            }
-                        }, null);
-*/
-                Intent i = new Intent(c, RecipeEditor.class);
-                //i.putExtra("Recipe", r);
-                i.putExtra("name", sName);
-                i.putExtra("style", sStyle);
-                startActivity(i);
                 dialog.dismiss();
-
+                m_Controller.CreateNewRecipe(sName, sStyle);
 
             }
         });
@@ -309,56 +223,24 @@ public class MainScreen extends BaseActivity
         return "";
     }
 
-    public void AddRecipe(View v) {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String sRecipeURL = Preferences.BeerNetAPIURL() + "/recipe";
-        JSONObject o = new JSONObject();
-        StringRequest r = null;
-        try {
-            o.put("name", "hello!!!");
-            final String s = o.toString();
+    @Override
+    public void PopulateRecipeList(Recipe[] r) {
+        m_Adapter.clear();
 
-            r = new StringRequest(Request.Method.POST, sRecipeURL, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    GetRecipes();
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    String s = error.getMessage();
-mTextView.setText("Error!" + error.getMessage());
-                }
-            }) {
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
-
-                @Override
-                public byte[] getBody() throws AuthFailureError {
-                    try {
-                        return s == null ? null : s.getBytes("utf-8");
-                    } catch ( UnsupportedEncodingException ex) {
-                        VolleyLog.wtf("Unsupportshit");
-                        return null;
-                    }
-                }
-
-                @Override
-                protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                    String responseString = "";
-                    if (response != null) {
-                        responseString = String.valueOf(response.statusCode);
-                    }
-                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
-                }
-            };
-
-        } catch (JSONException e) {
-
+        for (Recipe recipe : r) {
+            m_Adapter.add(recipe);
         }
+    }
 
-        queue.add(r);
+    @Override
+    public void ShowToast(String sMessage) {
+        Tools.ShowToast(getApplicationContext(), sMessage, Toast.LENGTH_LONG);
+    }
+
+    @Override
+    public void OpenRecipe(String sIDString) {
+        Intent i = new Intent(getApplicationContext(), RecipeEditor.class);
+        i.putExtra("RecipeID", sIDString);
+        startActivity(i);
     }
 }
