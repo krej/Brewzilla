@@ -19,6 +19,11 @@ import beer.unaccpetable.brewzilla.R;
 
 public class YeastAdditionAdapterViewControl extends BaseAdapterViewControl {
     private ArrayList<Yeast> m_Yeasts;
+    private RecipeEditorController m_Controller;
+
+    public YeastAdditionAdapterViewControl(RecipeEditorController controller) {
+        m_Controller = controller;
+    }
 
     @Override
     public void SetupDialog(View root, ListableObject i) {
@@ -112,6 +117,8 @@ public class YeastAdditionAdapterViewControl extends BaseAdapterViewControl {
             //yeast.recipeID = sExtraInfo;
             m_Adapter.add(yeast);
         }
+
+        m_Controller.RecipeUpdated();
         return true;
     }
 

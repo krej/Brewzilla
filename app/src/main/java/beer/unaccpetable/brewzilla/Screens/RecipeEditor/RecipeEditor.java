@@ -64,7 +64,6 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         setSupportActionBar(toolbar);
 
         FindUIElements();
-        SetupLists();
 
         fabHop.setImageResource(R.drawable.ic_hop);
         fabGrain.setImageResource(R.drawable.ic_grain);
@@ -79,6 +78,8 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         m_Controller = new RecipeEditorController(new Repository());
         m_Controller.attachView(this);
 
+        SetupLists();
+
         String sID = getIntent().getStringExtra("RecipeID");
 
         /*
@@ -90,9 +91,9 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     }
 
     private void SetupLists() {
-        m_vcHop = new HopAdditionAdapterViewControl();
-        m_vcFermentable = new FermentableAdditionAdapterViewControl();
-        m_vcYeasts = new YeastAdditionAdapterViewControl();
+        m_vcHop = new HopAdditionAdapterViewControl(m_Controller);
+        m_vcFermentable = new FermentableAdditionAdapterViewControl(m_Controller);
+        m_vcYeasts = new YeastAdditionAdapterViewControl(m_Controller);
 
         m_HopAdapter = Tools.setupRecyclerView(lstHops, getApplicationContext(), R.layout.hop_list, R.layout.fragment_hop_dialog, false, m_vcHop, true);
         m_YeastAdapter = Tools.setupRecyclerView(lstYeasts, getApplicationContext(), R.layout.yeast_list, R.layout.fragment_yeast_dialog, false, m_vcYeasts, true);
@@ -391,5 +392,12 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     @Override
     public void PopulateFermentableDialog(ArrayList<Fermentable> fermentables) {
         m_vcFermentable.PopulateList(fermentables);
+    }
+
+    @Override
+    public void GetIngredients() {
+        m_Controller.SetHops(m_HopAdapter.Dataset());
+        m_Controller.SetFermentables(m_FermentableAdapter.Dataset());
+        m_Controller.SetYeasts(m_YeastAdapter.Dataset());
     }
 }

@@ -20,6 +20,11 @@ import beer.unaccpetable.brewzilla.R;
 
 public class FermentableAdditionAdapterViewControl extends BaseAdapterViewControl {
     private ArrayList<Fermentable> m_Fermentables;
+    private RecipeEditorController m_Controller;
+
+    public FermentableAdditionAdapterViewControl(RecipeEditorController controller) {
+        m_Controller = controller;
+    }
 
     @Override
     public void SetupDialog(View root, ListableObject i) {
@@ -121,6 +126,7 @@ public class FermentableAdditionAdapterViewControl extends BaseAdapterViewContro
             //malt.recipeID = sExtraInfo;
             m_Adapter.add(malt);
         }
+        m_Controller.RecipeUpdated();
         return true;
     }
 

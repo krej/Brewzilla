@@ -21,6 +21,11 @@ import beer.unaccpetable.brewzilla.R;
 
 public class HopAdditionAdapterViewControl extends BaseAdapterViewControl {
     private ArrayList<Hop> m_Hops;
+    private RecipeEditorController m_Controller;
+
+    public HopAdditionAdapterViewControl(RecipeEditorController controller) {
+        m_Controller = controller;
+    }
 
     @Override
     public void SetupDialog(View root, ListableObject i) {
@@ -131,6 +136,8 @@ public class HopAdditionAdapterViewControl extends BaseAdapterViewControl {
             hop.type = sType;
             m_Adapter.add(hop);
         }
+
+        m_Controller.RecipeUpdated();
         return true;
     }
 

@@ -17,4 +17,16 @@ public class RecipeStatistics {
     public double og;
     @Expose
     public double srm;
+
+    public RecipeStatistics() {
+        Initialize();
+    }
+
+    public void Initialize() {
+        abv = 0;
+        ibu = 0;
+        fg = 0;
+        og = 0;
+        srm = 0;
+    }
 }

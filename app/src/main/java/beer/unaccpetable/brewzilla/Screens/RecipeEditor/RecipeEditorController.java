@@ -2,6 +2,7 @@ package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 
 import com.android.volley.VolleyError;
 import com.unacceptable.unacceptablelibrary.Logic.BaseLogic;
+import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
@@ -56,6 +57,33 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         }
     }
 
+    public void RecipeUpdated() {
+        view.GetIngredients();
+        CurrentRecipe.recipeStats.Initialize();
+        CurrentRecipe.Save();
+    }
+
+    public void SetHops(ArrayList<ListableObject> dataset) {
+        CurrentRecipe.hops.clear();
+        for (ListableObject i : dataset) {
+            CurrentRecipe.hops.add((HopAddition)i);
+        }
+    }
+
+    public void SetFermentables(ArrayList<ListableObject> dataset) {
+        CurrentRecipe.fermentables.clear();
+        for (ListableObject i : dataset) {
+            CurrentRecipe.fermentables.add((FermentableAddition) i);
+        }
+    }
+
+    public void SetYeasts(ArrayList<ListableObject> dataset) {
+        CurrentRecipe.yeasts.clear();
+        for (ListableObject i : dataset) {
+            CurrentRecipe.yeasts.add((Yeast)i);
+        }
+    }
+
     public interface View {
         void ShowToast(String sMessage);
         void SetTitle(String sTitle);
@@ -69,5 +97,6 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         void PopulateHopDialog(ArrayList<Hop> hops);
 
         void PopulateFermentableDialog(ArrayList<Fermentable> fermentables);
+        void GetIngredients();
     }
 }
