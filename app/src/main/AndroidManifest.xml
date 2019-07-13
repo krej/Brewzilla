@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Screens.RecipeEditor"
+            android:name=".Screens.RecipeEditor.RecipeEditor"
             android:label="@string/title_activity_create_recipe"
             android:parentActivityName=".Screens.MainScreen.MainScreen"
             android:theme="@style/AppTheme.NoActionBar">

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="beer.unaccpetable.brewzilla.Screens.RecipeEditor"
+    tools:context="beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditor"
     android:id="@+id/coord"
     android:clickable="true"
     android:focusable="true"
@@ -51,31 +51,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:focusable="true"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="80dp"
-        android:layout_marginRight="16dp"
-        app:srcCompat="@android:drawable/ic_input_add"
+        android:layout_marginEnd="16dp"
         android:id="@+id/fabGrain"
         app:backgroundTint="?attr/actionModeSplitBackground" />
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabHop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="140dp"
-        android:layout_marginRight="16dp"
-        app:srcCompat="@android:drawable/ic_input_add"
-        android:id="@+id/fabHop" />
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="?attr/actionModeSplitBackground"/>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabYeast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="200dp"
-        android:layout_marginRight="16dp"
-        app:srcCompat="@android:drawable/ic_input_add"
-        android:id="@+id/fabYeast" />
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="?attr/actionModeSplitBackground"/>
 
 </android.support.design.widget.CoordinatorLayout>

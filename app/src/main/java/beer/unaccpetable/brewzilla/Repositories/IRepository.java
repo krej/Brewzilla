@@ -7,5 +7,6 @@ import beer.unaccpetable.brewzilla.Models.Recipe;
 public interface IRepository {
     void LoadRecipeList(RepositoryCallback callback);
     void LoadRecipe(String sRecipeID, RepositoryCallback callback);
+    void LoadRecipeWithAllIngredients(String sRecipeID, RepositoryCallback callback);
     void SaveRecipe(String sRecipeID, Recipe r, RepositoryCallback callback);
 }

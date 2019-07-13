@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="beer.unaccpetable.brewzilla.Screens.RecipeEditor">
+    tools:context="beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditor">
     <item
         android:id="@+id/save_recipe"
         android:orderInCategory="100"

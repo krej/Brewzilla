@@ -12,7 +12,7 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 import beer.unaccpetable.brewzilla.R;
-import beer.unaccpetable.brewzilla.Screens.RecipeEditor;
+import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditor;
 
 public class RecipeListAdapterViewControl extends BaseAdapterViewControl {
 

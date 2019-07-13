@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,52 +22,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-
 import beer.unaccpetable.brewzilla.Models.Recipe;
 
 import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
-import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
-import com.unacceptable.unacceptablelibrary.Tools.Preferences;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 import beer.unaccpetable.brewzilla.R;
-import beer.unaccpetable.brewzilla.Repositories.IRepository;
 import beer.unaccpetable.brewzilla.Repositories.Repository;
 import beer.unaccpetable.brewzilla.Screens.BaseActivity;
 import beer.unaccpetable.brewzilla.Screens.ImportBeerXML;
 import beer.unaccpetable.brewzilla.Screens.IngredientManager;
-import beer.unaccpetable.brewzilla.Screens.RecipeEditor;
+import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditor;
 import beer.unaccpetable.brewzilla.Screens.SettingsActivity;
 
 public class MainScreen extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, MainScreenController.View {
 
-    //private RecyclerView.LayoutManager m_RecipeLayoutManager;
     private RecyclerView lstRecipes;
     private NewAdapter m_Adapter;
-    //private RecipeAdapter m_RecipeAdapter = new RecipeAdapter(R.layout.recipe_list, 0);
     private MainScreenController m_Controller;
-    //private String m_sRestAPIURL = Preferences.BeerNetAPIURL();
 
     TextView mTextView;
 

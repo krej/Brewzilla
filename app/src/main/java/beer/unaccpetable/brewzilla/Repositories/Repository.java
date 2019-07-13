@@ -19,6 +19,11 @@ public class Repository implements IRepository {
     }
 
     @Override
+    public void LoadRecipeWithAllIngredients(String sRecipeID, RepositoryCallback callback) {
+        Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/recipe/getWithIngredients/" + sRecipeID, null, callback, true, true);
+    }
+
+    @Override
     public void SaveRecipe(String sRecipeID, Recipe r, RepositoryCallback callback) {
         Network.WebRequest(Request.Method.POST, Preferences.BeerNetAPIURL() + "/recipe/" + sRecipeID, r.BuildRestData(), callback, true, false);
     }
