@@ -2,6 +2,8 @@ package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +32,7 @@ import beer.unaccpetable.brewzilla.Models.Yeast;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Repositories.Repository;
 import beer.unaccpetable.brewzilla.Screens.BaseActivity;
+import beer.unaccpetable.brewzilla.Tools.Calculations;
 
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
@@ -42,14 +45,9 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     HopAdditionAdapterViewControl m_vcHop;
     FermentableAdditionAdapterViewControl m_vcFermentable;
     YeastAdditionAdapterViewControl m_vcYeasts;
-    //private RecyclerView.LayoutManager m_HopLayoutManager, m_YeastLayoutManager, m_MaltLayoutManager;
-    //private HopAdditionAdapter m_HopAdditionAdapter = new HopAdditionAdapter(R.layout.hop_list, R.layout.fragment_hop_dialog);
-    //private YeastAdditionAdapter m_YeastAdditionAdapter = new YeastAdditionAdapter(R.layout.yeast_list, R.layout.fragment_yeast_dialog);
-    //private YeastAdapter m_YeastAdapter = new YeastAdapter(R.layout.yeast_list, R.layout.fragment_yeast_dialog);
-    //private FermentableAdditionAdapter m_MaltAdapter = new FermentableAdditionAdapter(R.layout.hop_list, R.layout.fragment_malt_dialog);
 
     private Boolean bShowExtraFab = false;
-    FloatingActionButton fabGrain,fabHop, fabYeast;
+    FloatingActionButton fabGrain,fabHop, fabYeast, fabSRM;
 
     private TextView txtIBU, txtOG, txtFG, txtABV, txtSRM;
     Toolbar toolbar;
@@ -59,7 +57,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_recipe);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
@@ -71,8 +69,6 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SetExtraFABHideEvents();
-
         SetButtonClickEvents();
 
         m_Controller = new RecipeEditorController(new Repository());
@@ -81,11 +77,6 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         SetupLists();
 
         String sID = getIntent().getStringExtra("RecipeID");
-
-        /*
-
-        RefreshStats();
-*/
 
         m_Controller.LoadRecipe(sID);
     }
@@ -113,6 +104,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         txtFG = findViewById(R.id.txtFG);
         txtABV = findViewById(R.id.txtABV);
         txtSRM = findViewById(R.id.txtSRM);
+        fabSRM = findViewById(R.id.srmColor);
 
         fabGrain = findViewById(R.id.fabGrain);
         fabGrain.setVisibility(View.INVISIBLE);
@@ -125,7 +117,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_create_recipe, menu);
+        //inflater.inflate(R.menu.menu_create_recipe, menu);
         return true;
     }
 
@@ -133,13 +125,6 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.save_recipe:
-                //TODO: Do I need a save button anymore? Since the stats are calcualted on the server it probably needs to save automatically.
-                /*if (CurrentRecipe != null) {
-                    CurrentRecipe.ClearIngredients();
-                    PopulateRecipeIngredients();
-                    CurrentRecipe.Save();
-                    return true;
-                }*/
         }
 
         return true;
@@ -159,9 +144,6 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*AddToList(valGrains, "Test");
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
 
                 if (!bShowExtraFab ) {
                     ShowExtraFAB();
@@ -203,70 +185,6 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         });
     }
 
-    private void SetExtraFABHideEvents() {/*
-        View screen = (View)findViewById(R.idString.coord);
-        screen.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-
-                if (bShowExtraFab) {
-                    HideExtraFAB();
-                    bShowExtraFab = false;
-                }
-                return true;
-            }
-        });
-
-        View toolbar = (View)findViewById(R.idString.nestedscrollview);
-        toolbar.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                if (bShowExtraFab) {
-                    HideExtraFAB();
-                    bShowExtraFab = false;
-                }
-                return true;
-            }
-        });*/
-/*
-        lstGrains.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            @CallSuper
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                //super.onTouch(arg1);
-
-                if (bShowExtraFab) {
-                    HideExtraFAB();
-                    bShowExtraFab = false;
-                }
-                return true;
-            }
-        });
-*/
-
-        /*
-        lstHops.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                if (bShowExtraFab) {
-                    HideExtraFAB();
-                    bShowExtraFab = false;
-                }
-                return true;
-            }
-        });
-        lstYeasts.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                //super.onTouch(arg0, arg1);
-                if (bShowExtraFab) {
-                    HideExtraFAB();
-                    bShowExtraFab = false;
-                }
-                return true;
-            }
-        });*/
-    }
 
     private void ShowExtraFAB() {
         int cx = fabGrain.getWidth() / 2;
@@ -324,31 +242,6 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         anim.start();
     }
 
-    public void RefreshStats() {
-        /*int dIBU = Calculations.CalculateIBU(m_HopAdditionAdapter, m_MaltAdapter);
-        double dOG = Calculations.round(Calculations.CalculateOG(m_MaltAdapter), 5);
-        double dFG = Calculations.round(Calculations.CalculateFG(m_MaltAdapter, m_YeastAdapter),5);
-        double dABV = Calculations.round(Calculations.CalculateABV(m_MaltAdapter, m_YeastAdapter), 3);
-        int dSRM = Calculations.CalculateSRM(m_MaltAdapter);
-
-        txtIBU.setText("IBUs: " + dIBU);
-        txtOG.setText("OG: " + dOG);
-        txtFG.setText("FG: " + dFG);
-        txtABV.setText("ABV: " + dABV + "%");
-        txtSRM.setText("SRM: " + dSRM);
-
-        View SRMCircle = findViewById(R.id.srmColor);
-        if (CurrentRecipe != null) {
-            CurrentRecipe.recipeStats.ibu = dIBU;
-            CurrentRecipe.recipeStats.og = dOG;
-            CurrentRecipe.recipeStats.fg = dFG;
-            CurrentRecipe.recipeStats.abv = dABV;
-            CurrentRecipe.recipeStats.srm = dSRM;
-
-        }
-        SRMCircle.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(Calculations.GetSRMColor(dSRM))));*/
-    }
-
     @Override
     public void ShowToast(String sMessage) {
         Tools.ShowToast(getApplicationContext(), sMessage, Toast.LENGTH_LONG);
@@ -360,8 +253,13 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     }
 
     @Override
-    public void PopulateStats(RecipeStatistics recipeStats) {
-
+    public void PopulateStats(RecipeStatistics stats) {
+        txtIBU.setText("IBUs: " + stats.getFormattedIBU());
+        txtOG.setText("OG: " + stats.getFormattedOG());
+        txtFG.setText("FG: " + stats.getFormattedFG());
+        txtABV.setText("ABV: " + stats.getFormatredAbv() + "%");
+        txtSRM.setText("SRM: " + stats.getFormattedSRM());
+        fabSRM.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(Calculations.GetSRMColor((int)stats.srm))));
     }
 
     @Override
@@ -400,4 +298,5 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         m_Controller.SetFermentables(m_FermentableAdapter.Dataset());
         m_Controller.SetYeasts(m_YeastAdapter.Dataset());
     }
+
 }

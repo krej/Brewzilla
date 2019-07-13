@@ -14,6 +14,7 @@ import beer.unaccpetable.brewzilla.Models.Hop;
 import beer.unaccpetable.brewzilla.Models.HopAddition;
 import beer.unaccpetable.brewzilla.Models.Recipe;
 import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
+import beer.unaccpetable.brewzilla.Models.Responses.RecipeStatsResponse;
 import beer.unaccpetable.brewzilla.Models.Yeast;
 import beer.unaccpetable.brewzilla.Repositories.IRepository;
 
@@ -44,6 +45,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
                     view.PopulateHopDialog(r.Hops);
                     view.PopulateFermentableDialog(r.Fermentables);
                     view.PopulateYeastDialog(r.Yeasts);
+
                 }
 
                 @Override
@@ -59,8 +61,19 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
     public void RecipeUpdated() {
         view.GetIngredients();
-        CurrentRecipe.recipeStats.Initialize();
-        CurrentRecipe.Save();
+
+        m_repo.SaveRecipe(CurrentRecipe.idString, CurrentRecipe, new RepositoryCallback() {
+            @Override
+            public void onSuccess(String t) {
+                RecipeStatsResponse response = Tools.convertJsonResponseToObject(t, RecipeStatsResponse.class);
+                view.PopulateStats(response.recipeStats);
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
     }
 
     public void SetHops(ArrayList<ListableObject> dataset) {
