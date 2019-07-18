@@ -1,5 +1,7 @@
 package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 
+import android.support.design.widget.TabLayout;
+
 import com.android.volley.VolleyError;
 import com.unacceptable.unacceptablelibrary.Logic.BaseLogic;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
@@ -97,6 +99,14 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         }
     }
 
+    public void TabSelected(TabLayout.Tab tab) {
+        if (tab.getText().equals("RECIPE")) {
+            view.SwitchToRecipeView();
+        } else {
+            view.SwitchToMashView();
+        }
+    }
+
     public interface View {
         void ShowToast(String sMessage);
         void SetTitle(String sTitle);
@@ -111,5 +121,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
         void PopulateFermentableDialog(ArrayList<Fermentable> fermentables);
         void GetIngredients();
+        void SwitchToMashView();
+        void SwitchToRecipeView();
     }
 }

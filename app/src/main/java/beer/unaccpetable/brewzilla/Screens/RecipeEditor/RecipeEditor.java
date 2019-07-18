@@ -3,18 +3,26 @@ package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.res.ColorStateList;
+import android.gesture.Gesture;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabItem;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
 
@@ -38,6 +46,10 @@ import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 public class RecipeEditor extends BaseActivity implements RecipeEditorController.View {
 
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
     private RecipeEditorController m_Controller;
 
     RecyclerView lstGrains, lstHops,lstYeasts;
@@ -48,10 +60,14 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
     private Boolean bShowExtraFab = false;
     FloatingActionButton fabGrain,fabHop, fabYeast, fabSRM;
+    FloatingActionButton fabMain;
 
     private TextView txtIBU, txtOG, txtFG, txtABV, txtSRM;
     Toolbar toolbar;
 
+    private ViewFlipper m_ViewFlipper;
+    TabLayout m_TabLayout;
+    TabItem m_tabRecipe, m_tabMash;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +95,27 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         String sID = getIntent().getStringExtra("RecipeID");
 
         m_Controller.LoadRecipe(sID);
+    }
+
+    public void SwitchToMashView() {
+        m_ViewFlipper.setInAnimation(getApplicationContext(), R.anim.slide_in_left);
+        m_ViewFlipper.setOutAnimation(getApplicationContext(), R.anim.slide_out_left);
+        m_ViewFlipper.setDisplayedChild(m_ViewFlipper.indexOfChild(findViewById(R.id.mashView)));
+        /*fabYeast.setVisibility(View.GONE);
+        fabHop.setVisibility(View.GONE);
+        fabGrain.setVisibility(View.GONE);*/
+        HideExtraFAB();
+        fabMain.setVisibility(View.GONE);
+        bShowExtraFab = false;
+    }
+
+    public void SwitchToRecipeView() {
+
+        m_ViewFlipper.setInAnimation(getApplicationContext(), R.anim.slide_in_right);
+        m_ViewFlipper.setOutAnimation(getApplicationContext(), R.anim.slide_out_right);
+        m_ViewFlipper.setDisplayedChild(m_ViewFlipper.indexOfChild(findViewById(R.id.recipeView)));
+        fabMain.setVisibility(View.VISIBLE);
+        fabMain.setImageResource(android.R.drawable.ic_input_add);
     }
 
     private void SetupLists() {
@@ -112,6 +149,13 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         fabHop.setVisibility(View.INVISIBLE);
         fabYeast = findViewById(R.id.fabYeast);
         fabYeast.setVisibility(View.INVISIBLE);
+
+        m_ViewFlipper = findViewById(R.id.recipeEditorViewFlipper);
+
+        m_TabLayout = findViewById(R.id.tabRecipeEditor);
+        m_tabMash = findViewById(R.id.tabMash);
+        m_tabRecipe = findViewById(R.id.tabRecipe);
+        fabMain = findViewById(R.id.fab);
     }
 
     @Override
@@ -140,17 +184,17 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
     private void SetButtonClickEvents() {
         //Main FAB
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        //final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fabMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 if (!bShowExtraFab ) {
                     ShowExtraFAB();
-                    fab.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+                    fabMain.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
                 } else {
                     HideExtraFAB();
-                    fab.setImageResource(android.R.drawable.ic_input_add);
+                    fabMain.setImageResource(android.R.drawable.ic_input_add);
                 }
                 bShowExtraFab = !bShowExtraFab;
 
@@ -181,6 +225,23 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
             @Override
             public void onClick(View view) {
                 m_YeastAdapter.showAddItemDialog(view.getContext(), null);
+            }
+        });
+
+        m_TabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                m_Controller.TabSelected(tab);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
     }
@@ -298,5 +359,6 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         m_Controller.SetFermentables(m_FermentableAdapter.Dataset());
         m_Controller.SetYeasts(m_YeastAdapter.Dataset());
     }
+
 
 }

@@ -19,122 +19,179 @@
         android:layout_height="match_parent"
         android:id="@+id/recipe">
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/recipeStats"
-            app:cardElevation="4dp"
-            app:contentPadding="10dp"
-            android:layout_margin="5dp">
 
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabRecipeEditor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabRecipe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recipe"/>
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabMash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mash"/>
+
+        </android.support.design.widget.TabLayout>
+
+        <ViewFlipper
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/recipeEditorViewFlipper">
+
+            <!--<include layout="@layout/content_view_recipe"/>
+            <include layout="@layout/content_recipe_mash"/>-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <RelativeLayout
+                android:orientation="vertical"
+                android:id="@+id/recipeView">
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="0">
+                    android:layout_height="wrap_content"
+                    android:id="@+id/recipeStats"
+                    app:cardElevation="4dp"
+                    app:contentPadding="10dp"
+                    android:layout_margin="5dp">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:orientation="vertical"
-                        android:weightSum="0">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/txtIBUs"
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="IBUs:"/>
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:weightSum="0">
 
-                        <TextView
-                            android:id="@+id/txtOG"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="TextView"/>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0"
+                                android:orientation="vertical"
+                                android:weightSum="0">
 
-                        <TextView
-                            android:id="@+id/txtFG"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="TextView"/>
+                                <TextView
+                                    android:id="@+id/txtIBUs"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="IBUs:"/>
 
-                        <TextView
-                            android:id="@+id/txtABV"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="TextView"/>
+                                <TextView
+                                    android:id="@+id/txtOG"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="TextView"/>
 
-                        <TextView
-                            android:id="@+id/txtSRM"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="TextView"/>
+                                <TextView
+                                    android:id="@+id/txtFG"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="TextView"/>
+
+                                <TextView
+                                    android:id="@+id/txtABV"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="TextView"/>
+
+                                <TextView
+                                    android:id="@+id/txtSRM"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="TextView"/>
+
+                            </LinearLayout>
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:id="@+id/srmColor"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right|end"
+                                android:layout_weight="0"
+                                android:clickable="false"
+                                android:layout_alignParentRight="true"
+                                app:fabSize="mini"/>
+
+
+                        </RelativeLayout>
 
                     </LinearLayout>
 
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/srmColor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right|end"
-                        android:layout_weight="0"
-                        android:clickable="false"
-                        android:layout_alignParentRight="true"
-                        app:fabSize="mini"/>
+                </android.support.v7.widget.CardView>
 
+                <TextView
+                    android:text="Fermentables"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtGrains"
+                    android:textSize="24sp"
+                    android:textStyle="normal|bold"
+                    android:textAlignment="center" />
 
-                </RelativeLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/listGrains" />
+
+                <TextView
+                    android:text="Hops"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtHops"
+                    android:textStyle="normal|bold"
+                    android:textSize="24sp"
+                    android:textAlignment="center" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/listHops" />
+
+                <TextView
+                    android:text="Yeasts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtYeasts"
+                    android:textStyle="normal|bold"
+                    android:textAlignment="center"
+                    android:textSize="24sp" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/listYeast" />
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/mashView">
 
-        </android.support.v7.widget.CardView>
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    app:contentPadding="10dp"
+                    android:layout_margin="5dp">
 
-        <TextView
-            android:text="Fermentables"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtGrains"
-            android:textSize="24sp"
-            android:textStyle="normal|bold"
-            android:textAlignment="center" />
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="here i shall put some mash stuff!"/>
+                </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/listGrains" />
+            </LinearLayout>
+        </ViewFlipper>
 
-        <TextView
-            android:text="Hops"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtHops"
-            android:textStyle="normal|bold"
-            android:textSize="24sp"
-            android:textAlignment="center" />
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/listHops" />
-
-        <TextView
-            android:text="Yeasts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtYeasts"
-            android:textStyle="normal|bold"
-            android:textAlignment="center"
-            android:textSize="24sp" />
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/listYeast" />
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

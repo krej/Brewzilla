@@ -198,4 +198,6 @@
     <string name="pref_server">Server to connect to</string>
     <string name="title_activity_import_beer_xml">Import BeerXML</string>
     <string name="import_beerxml">Import BeerXML</string>
+    <string name="recipe">RECIPE</string>
+    <string name="mash">MASH</string>
 </resources>
