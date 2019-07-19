@@ -18,6 +18,10 @@ public class RecipeStatistics {
     public double og;
     @Expose
     public double srm;
+    @Expose
+    public double initialStrikeWaterTemp;
+    @Expose
+    public double initialStrikeWaterVolume;
 
     public RecipeStatistics() {
         Initialize();
@@ -29,6 +33,8 @@ public class RecipeStatistics {
         fg = 0;
         og = 0;
         srm = 0;
+        initialStrikeWaterTemp = 70;
+        initialStrikeWaterVolume = 0;
     }
 
     public String getFormatredAbv() {
@@ -49,5 +55,13 @@ public class RecipeStatistics {
 
     public String getFormattedSRM() {
         return Tools.RoundString(srm, 2);
+    }
+
+    public String getFormattedStrikeWaterTemp() {
+        return Tools.RoundString(initialStrikeWaterTemp, 2);
+    }
+
+    public String getFormattedStrikeWaterVolume() {
+        return Tools.RoundString(initialStrikeWaterVolume, 2);
     }
 }

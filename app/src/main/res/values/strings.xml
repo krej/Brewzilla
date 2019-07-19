@@ -200,4 +200,22 @@
     <string name="import_beerxml">Import BeerXML</string>
     <string name="recipe">RECIPE</string>
     <string name="mash">MASH</string>
+    <string name="mash_grist_ratio">Mash Grist/Water Ratio</string>
+    <string name="mashStrikeTemp">Mash Water Strike Temperature: </string>
+    <string name="tempDegreeSymbol">°</string>
+    <string name="mashStrikeVolume">Mash Water Strike Volume: </string>
+    <string name="mashTargetTemp">Mash Target Temp: </string>
+    <string name="lblInitialMash">Initial Mash</string>
+    <string name="initialMashTemp">Initial Mash Temp: </string>
+    <string name="degreesF">°F</string>
+    <string-array name="gristRatioNames">
+        <item>Very Thick</item>
+        <item>Thick</item>
+        <item>Thin</item>
+    </string-array>
+    <string-array name="gristRatioValues">
+        <item>1.25</item>
+        <item>1.5</item>
+        <item>2.0</item>
+    </string-array>
 </resources>

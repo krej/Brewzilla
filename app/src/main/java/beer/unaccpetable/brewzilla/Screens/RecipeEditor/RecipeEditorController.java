@@ -15,6 +15,7 @@ import beer.unaccpetable.brewzilla.Models.FermentableAddition;
 import beer.unaccpetable.brewzilla.Models.Hop;
 import beer.unaccpetable.brewzilla.Models.HopAddition;
 import beer.unaccpetable.brewzilla.Models.Recipe;
+import beer.unaccpetable.brewzilla.Models.RecipeParameters;
 import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
 import beer.unaccpetable.brewzilla.Models.Responses.RecipeStatsResponse;
 import beer.unaccpetable.brewzilla.Models.Yeast;
@@ -40,6 +41,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
                     view.SetTitle(CurrentRecipe.name);
                     view.PopulateStats(CurrentRecipe.recipeStats);
+                    view.PopulateParameters(CurrentRecipe.recipeParameters);
                     view.PopulateHops(CurrentRecipe.hops);
                     view.PopulateYeasts(CurrentRecipe.yeasts);
                     view.PopulateFermentables(CurrentRecipe.fermentables);
@@ -107,6 +109,16 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         }
     }
 
+    public void setGristRatio(double dValue) {
+        CurrentRecipe.recipeParameters.gristRatio = dValue;
+        RecipeUpdated();
+    }
+
+    public void SetInitialMashTemp(double dTemp) {
+        CurrentRecipe.recipeParameters.initialMashTemp = dTemp;
+        RecipeUpdated();
+    }
+
     public interface View {
         void ShowToast(String sMessage);
         void SetTitle(String sTitle);
@@ -123,5 +135,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         void GetIngredients();
         void SwitchToMashView();
         void SwitchToRecipeView();
+
+        void PopulateParameters(RecipeParameters recipeParameters);
     }
 }

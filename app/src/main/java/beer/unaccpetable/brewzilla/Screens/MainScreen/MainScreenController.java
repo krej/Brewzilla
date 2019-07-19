@@ -41,6 +41,7 @@ public class MainScreenController extends BaseLogic<MainScreenController.View> {
         r.name = sName;
         r.style = sStyle;
         r.recipeStats.Initialize();
+        r.recipeParameters.Initialize();
 
         m_repo.SaveRecipe("", r, new RepositoryCallback() {
             @Override

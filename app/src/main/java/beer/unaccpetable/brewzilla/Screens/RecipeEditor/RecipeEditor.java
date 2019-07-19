@@ -12,6 +12,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,7 +21,11 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -35,6 +41,7 @@ import beer.unaccpetable.brewzilla.Models.HopAddition;
 
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
+import beer.unaccpetable.brewzilla.Models.RecipeParameters;
 import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
 import beer.unaccpetable.brewzilla.Models.Yeast;
 import beer.unaccpetable.brewzilla.R;
@@ -52,6 +59,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
     private RecipeEditorController m_Controller;
 
+    /********** Recipe Editor tab *************/
     RecyclerView lstGrains, lstHops,lstYeasts;
     NewAdapter m_HopAdapter, m_YeastAdapter, m_FermentableAdapter, m_AdjunctAdapter;
     HopAdditionAdapterViewControl m_vcHop;
@@ -68,6 +76,12 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     private ViewFlipper m_ViewFlipper;
     TabLayout m_TabLayout;
     TabItem m_tabRecipe, m_tabMash;
+
+    /******** Mash tab *************/
+    Spinner m_spGristRatio;
+    EditText m_txtInitialMashTemp;
+    TextView m_lblInitialStrikeTemp;
+    TextView m_lblInitialStrikeVolume;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +100,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SetButtonClickEvents();
+        SetupRecipeParamaterListeners();
 
         m_Controller = new RecipeEditorController(new Repository());
         m_Controller.attachView(this);
@@ -95,6 +110,43 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         String sID = getIntent().getStringExtra("RecipeID");
 
         m_Controller.LoadRecipe(sID);
+    }
+
+    private void SetupRecipeParamaterListeners() {
+        m_spGristRatio.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String[] gristValues = getResources().getStringArray(R.array.gristRatioValues);
+                double dValue = Tools.ParseDouble(gristValues[position]);
+
+                m_Controller.setGristRatio(dValue);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        m_txtInitialMashTemp.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                double dTemp = Tools.ParseDouble(s.toString());
+                m_Controller.SetInitialMashTemp(dTemp);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     public void SwitchToMashView() {
@@ -118,6 +170,16 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         fabMain.setImageResource(android.R.drawable.ic_input_add);
     }
 
+    @Override
+    public void PopulateParameters(RecipeParameters recipeParameters) {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.gristRatioValues, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //m_spGristRatio.setAdapter(adapter);
+        int spinnerPosition = adapter.getPosition(String.valueOf(recipeParameters.gristRatio));
+        m_spGristRatio.setSelection(spinnerPosition);
+        m_txtInitialMashTemp.setText(String.valueOf(recipeParameters.initialMashTemp));
+    }
+
     private void SetupLists() {
         m_vcHop = new HopAdditionAdapterViewControl(m_Controller);
         m_vcFermentable = new FermentableAdditionAdapterViewControl(m_Controller);
@@ -131,6 +193,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     }
 
     private void FindUIElements() {
+        //Recipe Tab
         lstGrains = findViewById(R.id.listGrains);
         lstHops = findViewById(R.id.listHops);
         lstYeasts = findViewById(R.id.listYeast);
@@ -156,6 +219,12 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         m_tabMash = findViewById(R.id.tabMash);
         m_tabRecipe = findViewById(R.id.tabRecipe);
         fabMain = findViewById(R.id.fab);
+
+        //Mash Tab
+        m_spGristRatio = findViewById(R.id.spinGristRatio);
+        m_txtInitialMashTemp = findViewById(R.id.txtInitialMashTemp);
+        m_lblInitialStrikeTemp = findViewById(R.id.mashStrikeTemp);
+        m_lblInitialStrikeVolume = findViewById(R.id.mashStrikeVolume);
     }
 
     @Override
@@ -315,12 +384,17 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
     @Override
     public void PopulateStats(RecipeStatistics stats) {
+        //recipe tab
         txtIBU.setText("IBUs: " + stats.getFormattedIBU());
         txtOG.setText("OG: " + stats.getFormattedOG());
         txtFG.setText("FG: " + stats.getFormattedFG());
         txtABV.setText("ABV: " + stats.getFormatredAbv() + "%");
         txtSRM.setText("SRM: " + stats.getFormattedSRM());
         fabSRM.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(Calculations.GetSRMColor((int)stats.srm))));
+
+        //mash tab
+        m_lblInitialStrikeTemp.setText(stats.getFormattedStrikeWaterTemp());
+        m_lblInitialStrikeVolume.setText(stats.getFormattedStrikeWaterVolume());
     }
 
     @Override

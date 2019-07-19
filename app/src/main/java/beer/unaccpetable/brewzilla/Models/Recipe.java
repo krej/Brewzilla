@@ -59,6 +59,7 @@ public class Recipe extends ListableObject implements Serializable { //6.5.2018 
         if (fermentables == null) fermentables = new ArrayList<>();
         if (yeasts == null) yeasts = new ArrayList<>();
         recipeStats = new RecipeStatistics();
+        recipeParameters = new RecipeParameters();
     }
 
     /*
