@@ -24,6 +24,7 @@ import beer.unaccpetable.brewzilla.Repositories.IRepository;
 public class RecipeEditorController extends BaseLogic<RecipeEditorController.View> {
 
     public Recipe CurrentRecipe;
+    private boolean bPopulatingScreen;
 
     private IRepository m_repo;
 
@@ -39,17 +40,18 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
                     RecipeEditorViewModel r = Tools.convertJsonResponseToObject(t, RecipeEditorViewModel.class);
                     CurrentRecipe = r.Recipe;
 
+                    bPopulatingScreen = true;
                     view.SetTitle(CurrentRecipe.name);
                     view.PopulateStats(CurrentRecipe.recipeStats);
-                    view.PopulateParameters(CurrentRecipe.recipeParameters);
                     view.PopulateHops(CurrentRecipe.hops);
                     view.PopulateYeasts(CurrentRecipe.yeasts);
                     view.PopulateFermentables(CurrentRecipe.fermentables);
+                    view.PopulateParameters(CurrentRecipe.recipeParameters);
 
                     view.PopulateHopDialog(r.Hops);
                     view.PopulateFermentableDialog(r.Fermentables);
                     view.PopulateYeastDialog(r.Yeasts);
-
+                    bPopulatingScreen = false;
                 }
 
                 @Override
@@ -64,6 +66,8 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
     }
 
     public void RecipeUpdated() {
+        if (bPopulatingScreen) return;
+
         view.GetIngredients();
 
         m_repo.SaveRecipe(CurrentRecipe.idString, CurrentRecipe, new RepositoryCallback() {
@@ -116,6 +120,11 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
     public void SetInitialMashTemp(double dTemp) {
         CurrentRecipe.recipeParameters.initialMashTemp = dTemp;
+        RecipeUpdated();
+    }
+
+    public void SetTargetMashTemp(double dTemp) {
+        CurrentRecipe.recipeParameters.targetMashTemp = dTemp;
         RecipeUpdated();
     }
 

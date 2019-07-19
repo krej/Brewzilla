@@ -53,11 +53,8 @@ import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 public class RecipeEditor extends BaseActivity implements RecipeEditorController.View {
 
-    private static final int SWIPE_MIN_DISTANCE = 120;
-    private static final int SWIPE_MAX_OFF_PATH = 250;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-
     private RecipeEditorController m_Controller;
+
 
     /********** Recipe Editor tab *************/
     RecyclerView lstGrains, lstHops,lstYeasts;
@@ -82,6 +79,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     EditText m_txtInitialMashTemp;
     TextView m_lblInitialStrikeTemp;
     TextView m_lblInitialStrikeVolume;
+    TextView m_txtTargetMashTemp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +145,24 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
             }
         });
+
+        m_txtTargetMashTemp.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                double dTemp = Tools.ParseDouble(s.toString());
+                m_Controller.SetTargetMashTemp(dTemp);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     public void SwitchToMashView() {
@@ -178,6 +194,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         int spinnerPosition = adapter.getPosition(String.valueOf(recipeParameters.gristRatio));
         m_spGristRatio.setSelection(spinnerPosition);
         m_txtInitialMashTemp.setText(String.valueOf(recipeParameters.initialMashTemp));
+        m_txtTargetMashTemp.setText(String.valueOf(recipeParameters.targetMashTemp));
     }
 
     private void SetupLists() {
@@ -225,6 +242,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         m_txtInitialMashTemp = findViewById(R.id.txtInitialMashTemp);
         m_lblInitialStrikeTemp = findViewById(R.id.mashStrikeTemp);
         m_lblInitialStrikeVolume = findViewById(R.id.mashStrikeVolume);
+        m_txtTargetMashTemp = findViewById(R.id.txtTargetMashTemp);
     }
 
     @Override
@@ -394,7 +412,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
         //mash tab
         m_lblInitialStrikeTemp.setText(stats.getFormattedStrikeWaterTemp());
-        m_lblInitialStrikeVolume.setText(stats.getFormattedStrikeWaterVolume());
+        m_lblInitialStrikeVolume.setText(stats.getFormattedStrikeWaterVolume() + " quarts");
     }
 
     @Override

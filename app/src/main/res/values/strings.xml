@@ -208,6 +208,7 @@
     <string name="lblInitialMash">Initial Mash</string>
     <string name="initialMashTemp">Initial Mash Temp: </string>
     <string name="degreesF">°F</string>
+    <string name="targetMashTemp">Target Mash Temp:</string>
     <string-array name="gristRatioNames">
         <item>Very Thick</item>
         <item>Thick</item>
