@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import com.android.volley.VolleyError;
 import com.unacceptable.unacceptablelibrary.Logic.BaseLogic;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
+import com.unacceptable.unacceptablelibrary.Models.Response;
 import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
@@ -128,6 +129,27 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         RecipeUpdated();
     }
 
+    public void CalcMashInfusion(String sCurrentTemp, String sTargetMashTemp, String sTotalWaterInMash, String sHLTTemp) {
+        if (bPopulatingScreen) return;
+
+        /*double dCurrentTemp = Tools.ParseDouble(sCurrentTemp);
+        double dTargetMashTemp = Tools.ParseDouble(sTargetMashTemp);
+        double dTotalWaterInMash = Tools.ParseDouble(sTotalWaterInMash);
+        double dHLTTemp = Tools.ParseDouble(sHLTTemp);*/
+
+        m_repo.MashInfusionCalculation(CurrentRecipe.idString, sCurrentTemp, sTargetMashTemp, sTotalWaterInMash, sHLTTemp, new RepositoryCallback() {
+            @Override
+            public void onSuccess(String t) {
+                view.MashInfusionShowWaterToAdd(t);
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
+    }
+
     public interface View {
         void ShowToast(String sMessage);
         void SetTitle(String sTitle);
@@ -146,5 +168,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         void SwitchToRecipeView();
 
         void PopulateParameters(RecipeParameters recipeParameters);
+
+        void MashInfusionShowWaterToAdd(String t);
     }
 }

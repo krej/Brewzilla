@@ -209,6 +209,12 @@
     <string name="initialMashTemp">Initial Mash Temp: </string>
     <string name="degreesF">°F</string>
     <string name="targetMashTemp">Target Mash Temp:</string>
+    <string name="current_temp_of_mash">Current Temp Of Mash:</string>
+    <string name="total_water_in_mash">Total Water Currently In Mash:</string>
+    <string name="hltTemp">Hot Liquor Tank Temp:</string>
+    <string name="water_to_add">Water To Add To Mash:</string>
+    <string name="quarts">quarts</string>
+    <string name="lblMashInfusion">Mash Infusion</string>
     <string-array name="gristRatioNames">
         <item>Very Thick</item>
         <item>Thick</item>

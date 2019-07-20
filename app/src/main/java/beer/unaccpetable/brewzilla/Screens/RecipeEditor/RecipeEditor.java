@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -21,10 +22,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,11 +78,16 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     TabItem m_tabRecipe, m_tabMash;
 
     /******** Mash tab *************/
+    //initial mash
     Spinner m_spGristRatio;
     EditText m_txtInitialMashTemp;
     TextView m_lblInitialStrikeTemp;
     TextView m_lblInitialStrikeVolume;
     TextView m_txtTargetMashTemp;
+    //mash infusion
+    EditText m_txtCurrentTempOfMash, m_txtTargetMashTempInfusion, m_txtTotalWaterInMash, m_txtHLTTemp;
+    TextView m_lblWaterToAdd;
+    LinearLayout m_llMashInfusionWaterToAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +114,15 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         SetupLists();
 
         String sID = getIntent().getStringExtra("RecipeID");
+
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        final NestedScrollView nsv = findViewById(R.id.nestedscrollview);
+        nsv.post(new Runnable() {
+            @Override
+            public void run() {
+                nsv.fullScroll(View.FOCUS_DOWN);
+            }
+        });
 
         m_Controller.LoadRecipe(sID);
     }
@@ -163,6 +180,33 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
             }
         });
+
+        TextWatcher twMashInfusion = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String sCurrentTemp = m_txtCurrentTempOfMash.getText().toString();
+                String sTargetMashTemp = m_txtTargetMashTempInfusion.getText().toString();
+                String sTotalWaterInMash = m_txtTotalWaterInMash.getText().toString();
+                String sHLTTemp = m_txtHLTTemp.getText().toString();
+
+                m_Controller.CalcMashInfusion(sCurrentTemp, sTargetMashTemp, sTotalWaterInMash, sHLTTemp);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        };
+
+        m_txtCurrentTempOfMash.addTextChangedListener(twMashInfusion);
+        m_txtTargetMashTempInfusion.addTextChangedListener(twMashInfusion);
+        m_txtTotalWaterInMash.addTextChangedListener(twMashInfusion);
+        m_txtHLTTemp.addTextChangedListener(twMashInfusion);
     }
 
     public void SwitchToMashView() {
@@ -195,6 +239,12 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         m_spGristRatio.setSelection(spinnerPosition);
         m_txtInitialMashTemp.setText(String.valueOf(recipeParameters.initialMashTemp));
         m_txtTargetMashTemp.setText(String.valueOf(recipeParameters.targetMashTemp));
+
+        //mash infusion
+        m_txtCurrentTempOfMash.setText(String.valueOf(recipeParameters.targetMashTemp));
+        m_txtTargetMashTempInfusion.setText(String.valueOf(recipeParameters.targetMashTemp));
+        //m_txtTotalWaterInMash.setText
+        //m_txtHLTTemp.setText();
     }
 
     private void SetupLists() {
@@ -243,6 +293,13 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         m_lblInitialStrikeTemp = findViewById(R.id.mashStrikeTemp);
         m_lblInitialStrikeVolume = findViewById(R.id.mashStrikeVolume);
         m_txtTargetMashTemp = findViewById(R.id.txtTargetMashTemp);
+
+        m_txtCurrentTempOfMash = findViewById(R.id.txtCurrentTempOfMash);
+        m_txtTargetMashTempInfusion = findViewById(R.id.txtMashTargetTempInfusion);
+        m_txtTotalWaterInMash = findViewById(R.id.txtTotalWaterInMash);
+        m_txtHLTTemp = findViewById(R.id.txtHltTemp);
+        m_lblWaterToAdd = findViewById(R.id.waterToAdd);
+        m_llMashInfusionWaterToAdd = findViewById(R.id.llMashInfusionWaterToAdd);
     }
 
     @Override
@@ -413,6 +470,9 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         //mash tab
         m_lblInitialStrikeTemp.setText(stats.getFormattedStrikeWaterTemp());
         m_lblInitialStrikeVolume.setText(stats.getFormattedStrikeWaterVolume() + " quarts");
+
+        m_txtTotalWaterInMash.setText(stats.getFormattedStrikeWaterVolume());
+        m_txtHLTTemp.setText(stats.getFormattedStrikeWaterTemp());
     }
 
     @Override
@@ -452,5 +512,9 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         m_Controller.SetYeasts(m_YeastAdapter.Dataset());
     }
 
-
+    @Override
+    public void MashInfusionShowWaterToAdd(String sVolume) {
+        m_llMashInfusionWaterToAdd.setVisibility(View.VISIBLE);
+        m_lblWaterToAdd.setText(sVolume);
+    }
 }
