@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import beer.unaccpetable.brewzilla.Models.Fermentable;
 import beer.unaccpetable.brewzilla.R;
@@ -117,6 +118,7 @@ public class FermentableAdapter extends Adapter {
         EditText ppg = (EditText) root.findViewById(R.id.ppg);
         EditText color = (EditText) root.findViewById(R.id.color);
         EditText fermentableID = (EditText) root.findViewById(R.id.fermentableID);
+        TextView title = root.findViewById(R.id.title);
 
         name.setVisibility(GONE);
         txtName.setInputType(TYPE_CLASS_TEXT);
@@ -130,6 +132,7 @@ public class FermentableAdapter extends Adapter {
             txtName.setText(h.name);
             ppg.setText(String.valueOf(h.ppg));
             color.setText(String.valueOf(h.color));
+            title.setText("Edit Malt");
         }
 
         return root;

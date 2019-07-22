@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item
+        <!--<item
             android:id="@+id/nav_create_recipe"
             android:icon="@drawable/ic_menu_camera"
             android:title="New Recipe" />
         <item
             android:id="@+id/nav_brew_beer"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Brew Beer" />
+            android:title="Brew Beer" />-->
         <item
             android:id="@+id/nav_ingredient_manager"
             android:icon="@drawable/ic_menu_manage"
             android:title="Ingredient Manager" />
-        <item
+        <!--<item
             android:id="@+id/nav_import_beerxml"
             android:icon="@drawable/ic_menu_share"
             android:title="@string/import_beerxml"
@@ -22,15 +22,16 @@
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="Tools" />-->
     </group>
 
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Settings" />
+
 
             <item
                 android:id="@+id/nav_signout"

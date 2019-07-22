@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -128,6 +129,7 @@ public class YeastAdapter extends Adapter {
         final EditText att = (EditText) root.findViewById(R.id.attenuation);
         final EditText yeastID = (EditText) root.findViewById(R.id.yeastID);
         final EditText name = (EditText) root.findViewById(R.id.name);
+        final TextView title = root.findViewById(R.id.title);
 
         Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/yeast", null, new Response.Listener<String>() {
             @Override
@@ -196,6 +198,7 @@ public class YeastAdapter extends Adapter {
             lab.setText(h1.lab);
             name.setText(h1.name);
             att.setText(String.valueOf(h.attenuation));
+            title.setText("Edit Yeast");
         }
 
         return root;

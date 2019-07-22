@@ -53,7 +53,7 @@
         android:clickable="true"
         android:focusable="true"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="200dp"
         android:layout_marginEnd="16dp"
         android:id="@+id/fabGrain"
         app:backgroundTint="?attr/actionModeSplitBackground" />
@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="200dp"
+        android:layout_marginBottom="80dp"
         android:clickable="true"
         android:focusable="true"
         app:backgroundTint="?attr/actionModeSplitBackground"/>

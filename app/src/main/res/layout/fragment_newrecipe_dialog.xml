@@ -19,8 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
+            android:inputType="textCapWords"
+            android:hint="Name" />
 
         <EditText
             android:id="@+id/txtNewRecipeStyle"
@@ -28,6 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Style" />
+            android:inputType="textCapWords"
+            android:hint="Style" />
 </LinearLayout>

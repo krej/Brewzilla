@@ -2,10 +2,12 @@ package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.gesture.Gesture;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
@@ -23,6 +25,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -108,6 +111,8 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         SetButtonClickEvents();
         SetupRecipeParamaterListeners();
 
+        SetupTabChangeListener();
+
         m_Controller = new RecipeEditorController(new Repository());
         m_Controller.attachView(this);
 
@@ -115,16 +120,37 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
         String sID = getIntent().getStringExtra("RecipeID");
 
-        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        final NestedScrollView nsv = findViewById(R.id.nestedscrollview);
-        nsv.post(new Runnable() {
+        m_Controller.LoadRecipe(sID);
+    }
+
+    private void SetupTabChangeListener() {
+        final Activity a = this;
+
+        m_TabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void run() {
-                nsv.fullScroll(View.FOCUS_DOWN);
+            public void onTabSelected(TabLayout.Tab tab) {
+                hideKeyboard(a);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
+    }
 
-        m_Controller.LoadRecipe(sID);
+    private void hideKeyboard(Activity a) {
+        InputMethodManager imm = (InputMethodManager) a.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View v = a.getCurrentFocus();
+        if (v == null)
+            v = new View(a);
+
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
     private void SetupRecipeParamaterListeners() {
@@ -252,9 +278,16 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         m_vcFermentable = new FermentableAdditionAdapterViewControl(m_Controller);
         m_vcYeasts = new YeastAdditionAdapterViewControl(m_Controller);
 
-        m_HopAdapter = Tools.setupRecyclerView(lstHops, getApplicationContext(), R.layout.hop_list, R.layout.fragment_hop_dialog, false, m_vcHop, true);
-        m_YeastAdapter = Tools.setupRecyclerView(lstYeasts, getApplicationContext(), R.layout.yeast_list, R.layout.fragment_yeast_dialog, false, m_vcYeasts, true);
-        m_FermentableAdapter = Tools.setupRecyclerView(lstGrains, getApplicationContext(), R.layout.hop_list, R.layout.fragment_malt_dialog, false, m_vcFermentable, true);
+        m_HopAdapter = Tools.setupRecyclerView(lstHops, getApplicationContext(), R.layout.hop_list, R.layout.fragment_hop_dialog, false, m_vcHop, true, false, true);
+        m_YeastAdapter = Tools.setupRecyclerView(lstYeasts, getApplicationContext(), R.layout.yeast_list, R.layout.fragment_yeast_dialog, false, m_vcYeasts, true, false, true);
+        m_FermentableAdapter = Tools.setupRecyclerView(lstGrains, getApplicationContext(), R.layout.hop_list, R.layout.fragment_malt_dialog, false, m_vcFermentable, true, false, true);
+
+        NewAdapter.INotifySwipeDelete nsd = () -> m_Controller.RecipeUpdated();
+
+        m_HopAdapter.setNotifySwipeDelete(nsd);
+        m_FermentableAdapter.setNotifySwipeDelete(nsd);
+        m_YeastAdapter.setNotifySwipeDelete(nsd);
+
         //TODO: Apparently I don't have adjuncts in the UI
         //m_AdjunctAdapter = Tools.setupRecyclerView(lstHops, getApplicationContext(), R.layout.hop_list, R.layout.fragment_hop_dialog, false, null, true);
     }
@@ -315,7 +348,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
             case R.id.save_recipe:
         }
 
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private <T> void PopulateAdditions(ArrayList<T> additions, NewAdapter adp) {

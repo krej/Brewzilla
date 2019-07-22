@@ -40,6 +40,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
                 public void onSuccess(String t) {
                     RecipeEditorViewModel r = Tools.convertJsonResponseToObject(t, RecipeEditorViewModel.class);
                     CurrentRecipe = r.Recipe;
+                    FixBadData(); //TODO: Temp, only for now when some old data doesn't exist
 
                     bPopulatingScreen = true;
                     view.SetTitle(CurrentRecipe.name);
@@ -64,6 +65,12 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
             //TODO: Is this even possible anymore? I changed it so it saves the recipe before going to the screen then loads it.
             view.SetTitle("Create Recipe");
         }
+    }
+
+    private void FixBadData() {
+        if (CurrentRecipe.recipeParameters == null)
+            CurrentRecipe.recipeParameters = new RecipeParameters();
+
     }
 
     public void RecipeUpdated() {

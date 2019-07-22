@@ -55,8 +55,9 @@ public class MainScreen extends BaseActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+                CreateNewRecipe();
             }
         });
 
@@ -91,10 +92,10 @@ public class MainScreen extends BaseActivity
         }
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_screen, menu);
+        //getMenuInflater().inflate(R.menu.main_screen, menu);
         return true;
     }
 
@@ -113,7 +114,7 @@ public class MainScreen extends BaseActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -123,7 +124,7 @@ public class MainScreen extends BaseActivity
 
         Intent intNextScreen = null;
 
-        if (id == R.id.nav_create_recipe) {
+        /*if (id == R.id.nav_create_recipe) {
             CreateNewRecipe();
         } else if (id == R.id.nav_brew_beer) {
 
@@ -132,7 +133,8 @@ public class MainScreen extends BaseActivity
         } else if (id == R.id.nav_share) {
 
 
-        } else if (id == R.id.nav_ingredient_manager) {
+        } else */
+        if (id == R.id.nav_ingredient_manager) {
             intNextScreen = new Intent(this, IngredientManager.class);
         } else if (id == R.id.nav_signout) {
             SharedPreferences sharedPreferences = getSharedPreferences("Prefs", MODE_PRIVATE);
@@ -140,10 +142,14 @@ public class MainScreen extends BaseActivity
             editor.remove("APIToken");
             editor.commit();
             Tools.LaunchSignInScreen(this, MainScreen.class);
-        }else if (id == R.id.nav_import_beerxml) {
+        } else if (id == R.id.nav_settings) {
+            intNextScreen = new Intent(this, SettingsActivity.class);
+        }
+
+        /*else if (id == R.id.nav_import_beerxml) {
             intNextScreen = new Intent(this, ImportBeerXML.class);
 
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

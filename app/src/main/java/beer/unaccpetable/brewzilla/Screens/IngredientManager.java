@@ -70,6 +70,9 @@ public class IngredientManager extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
@@ -102,7 +105,7 @@ public class IngredientManager extends AppCompatActivity {
     }
 
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_ingredient_manager, menu);
@@ -122,7 +125,7 @@ public class IngredientManager extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     //TODO: Try to make this 1 class instead of 3. Also try to figure out how to not clear the data every time it loads it. Why is it always reloading data?
 

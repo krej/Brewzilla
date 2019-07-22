@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import beer.unaccpetable.brewzilla.Models.Hop;
 import beer.unaccpetable.brewzilla.R;
@@ -107,11 +108,13 @@ public class HopAdapter extends Adapter {
 
         final Spinner snName = (Spinner) root.findViewById(R.id.hopSelector);
         final Spinner snType = (Spinner) root.findViewById(R.id.hopTypeSpinner);
+        final TextView hopType = root.findViewById(R.id.hopType);
 
         final EditText hopID = (EditText) root.findViewById(R.id.hopID);
         final EditText amount = (EditText) root.findViewById(R.id.amount);
         final EditText aau = (EditText) root.findViewById(R.id.aau);
         final EditText time = (EditText) root.findViewById(R.id.time);
+        final TextView title = root.findViewById(R.id.title);
 
         //Rearrange the HopAddition screen for Hops. I'm not sure if I want to keep it like this but its easy for now
         snName.setVisibility(View.GONE);
@@ -120,6 +123,7 @@ public class HopAdapter extends Adapter {
         aau.setEnabled(true);
         time.setVisibility(View.GONE);
         snType.setVisibility(View.GONE);
+        hopType.setVisibility(View.GONE);
 
         Hop h = (Hop)i;
 
@@ -127,6 +131,7 @@ public class HopAdapter extends Adapter {
             hopID.setText(h.idString);
             amount.setText(h.name);
             aau.setText(String.valueOf(h.aau));
+            title.setText("Edit Hop"); //temp until i delete this adapter class
         }
 
         return root;
