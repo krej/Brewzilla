@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.renderscript.ScriptGroup;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MotionEventCompat;
@@ -282,14 +283,35 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         m_YeastAdapter = Tools.setupRecyclerView(lstYeasts, getApplicationContext(), R.layout.yeast_list, R.layout.fragment_yeast_dialog, false, m_vcYeasts, true, false, true);
         m_FermentableAdapter = Tools.setupRecyclerView(lstGrains, getApplicationContext(), R.layout.hop_list, R.layout.fragment_malt_dialog, false, m_vcFermentable, true, false, true);
 
-        NewAdapter.INotifySwipeDelete nsd = () -> m_Controller.RecipeUpdated();
-
-        m_HopAdapter.setNotifySwipeDelete(nsd);
-        m_FermentableAdapter.setNotifySwipeDelete(nsd);
-        m_YeastAdapter.setNotifySwipeDelete(nsd);
+        m_HopAdapter.setNotifySwipeDelete(createNotifySwipeDeleteAdapter(m_HopAdapter));
+        m_FermentableAdapter.setNotifySwipeDelete(createNotifySwipeDeleteAdapter(m_FermentableAdapter));
+        m_YeastAdapter.setNotifySwipeDelete(createNotifySwipeDeleteAdapter(m_YeastAdapter));
 
         //TODO: Apparently I don't have adjuncts in the UI
         //m_AdjunctAdapter = Tools.setupRecyclerView(lstHops, getApplicationContext(), R.layout.hop_list, R.layout.fragment_hop_dialog, false, null, true);
+    }
+
+    private NewAdapter.INotifySwipeDelete createNotifySwipeDeleteAdapter(NewAdapter adapter) {
+        NewAdapter.INotifySwipeDelete nsd = new NewAdapter.INotifySwipeDelete() {
+
+            @Override
+            public void notifyDelete(int position, ListableObject i) {
+                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.coord), R.string.item_deleted, Snackbar.LENGTH_SHORT);
+
+                mySnackbar.setAction(R.string.undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        adapter.add(position, i);
+                        m_Controller.RecipeUpdated();
+                    }
+                });
+                mySnackbar.show();
+
+                m_Controller.RecipeUpdated();
+            }
+        };
+
+        return nsd;
     }
 
     private void FindUIElements() {
