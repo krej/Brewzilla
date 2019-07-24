@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import beer.unaccpetable.brewzilla.Models.Recipe;
 import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
+import beer.unaccpetable.brewzilla.Models.Style;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Repositories.Repository;
 import beer.unaccpetable.brewzilla.Screens.BaseActivity;
@@ -57,7 +59,8 @@ public class MainScreen extends BaseActivity
             public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                CreateNewRecipe();
+                m_Controller.ShowNewRecipeDialog();
+                //CreateNewRecipe();
             }
         });
 
@@ -160,8 +163,8 @@ public class MainScreen extends BaseActivity
         return true;
     }
 
-
-    private String CreateNewRecipe() {
+    @Override
+    public void ShowNewRecipeDialog(Style[] styles) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         //builder.setView(m_iDialogLayout);
 
@@ -180,6 +183,8 @@ public class MainScreen extends BaseActivity
         builder.setView(root);
         final AlertDialog dialog = builder.create();
 
+        Spinner spStyle = root.findViewById(R.id.spinStyle);
+        Tools.PopulateDropDown(spStyle, getApplicationContext(), styles);
 
         dialog.show();
 
@@ -188,17 +193,18 @@ public class MainScreen extends BaseActivity
         dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 EditText name = (EditText) dialog.findViewById(R.id.txtNewRecipeName);
-                EditText style = (EditText) dialog.findViewById(R.id.txtNewRecipeStyle);
+                Spinner style = dialog.findViewById(R.id.spinStyle);
                 String sName = name.getText().toString();
-                String sStyle = style.getText().toString();
+                //String sStyle = style.getText().toString();
+                Style s = (Style)style.getSelectedItem();
 
                 dialog.dismiss();
-                m_Controller.CreateNewRecipe(sName, sStyle);
+                m_Controller.CreateNewRecipe(sName, s);
 
             }
         });
 
-        return "";
+
     }
 
     @Override

@@ -7,8 +7,11 @@ import com.unacceptable.unacceptablelibrary.Logic.BaseLogic;
 import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
+import java.util.ArrayList;
+
 import beer.unaccpetable.brewzilla.Models.Recipe;
 import beer.unaccpetable.brewzilla.Models.Responses.RecipeStatsResponse;
+import beer.unaccpetable.brewzilla.Models.Style;
 import beer.unaccpetable.brewzilla.Repositories.IRepository;
 
 public class MainScreenController extends BaseLogic<MainScreenController.View> {
@@ -36,10 +39,10 @@ public class MainScreenController extends BaseLogic<MainScreenController.View> {
 
     }
 
-    public void CreateNewRecipe(String sName, String sStyle) {
+    public void CreateNewRecipe(String sName, Style sStyle) {
         final Recipe r = new Recipe();
         r.name = sName;
-        r.style = sStyle;
+        r.beerStyle = sStyle;
         r.recipeStats.Initialize();
         r.recipeParameters.Initialize();
 
@@ -61,9 +64,25 @@ public class MainScreenController extends BaseLogic<MainScreenController.View> {
 
     }
 
+    public void ShowNewRecipeDialog() {
+        m_repo.LoadStyles(new RepositoryCallback() {
+            @Override
+            public void onSuccess(String t) {
+                Style[] styles = Tools.convertJsonResponseToObject(t, Style[].class);
+                view.ShowNewRecipeDialog(styles);
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                view.ShowToast(Tools.ParseVolleyError(error));
+            }
+        });
+    }
+
     public interface View {
         void PopulateRecipeList(Recipe[] r);
         void ShowToast(String sMessage);
         void OpenRecipe(String sIDString);
+        void ShowNewRecipeDialog(Style[] styles);
     }
 }

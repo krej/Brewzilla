@@ -50,6 +50,7 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
 import beer.unaccpetable.brewzilla.Models.RecipeParameters;
 import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
+import beer.unaccpetable.brewzilla.Models.Style;
 import beer.unaccpetable.brewzilla.Models.Yeast;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Repositories.Repository;
@@ -75,6 +76,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     FloatingActionButton fabMain;
 
     private TextView txtIBU, txtOG, txtFG, txtABV, txtSRM;
+    Spinner m_spStyle;
     Toolbar toolbar;
 
     private ViewFlipper m_ViewFlipper;
@@ -111,6 +113,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
         SetButtonClickEvents();
         SetupRecipeParamaterListeners();
+        SetupStyleListener();
 
         SetupTabChangeListener();
 
@@ -122,6 +125,21 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         String sID = getIntent().getStringExtra("RecipeID");
 
         m_Controller.LoadRecipe(sID);
+    }
+
+    private void SetupStyleListener() {
+        m_spStyle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Style style = (Style)parent.getSelectedItem();
+                m_Controller.SetStyle(style);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void SetupTabChangeListener() {
@@ -327,6 +345,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         txtABV = findViewById(R.id.txtABV);
         txtSRM = findViewById(R.id.txtSRM);
         fabSRM = findViewById(R.id.srmColor);
+        m_spStyle = findViewById(R.id.spinStyle);
 
         fabGrain = findViewById(R.id.fabGrain);
         fabGrain.setVisibility(View.INVISIBLE);
@@ -571,5 +590,15 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     public void MashInfusionShowWaterToAdd(String sVolume) {
         m_llMashInfusionWaterToAdd.setVisibility(View.VISIBLE);
         m_lblWaterToAdd.setText(sVolume);
+    }
+
+    @Override
+    public void PopulateStyleDropDown(Style[] styles) {
+        Tools.PopulateDropDown(m_spStyle, getApplicationContext(), styles);
+    }
+
+    @Override
+    public void SetStyle(Style[] styles, Style beerStyle) {
+        Tools.SetDropDownSelection(m_spStyle, styles, beerStyle);
     }
 }

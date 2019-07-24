@@ -77,6 +77,13 @@
                                 android:orientation="vertical"
                                 android:weightSum="0">
 
+                                <Spinner
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/spinStyle">
+
+                                </Spinner>
+
                                 <TextView
                                     android:id="@+id/txtIBUs"
                                     android:layout_width="match_parent"

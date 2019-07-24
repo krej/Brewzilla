@@ -19,6 +19,7 @@ import beer.unaccpetable.brewzilla.Models.Recipe;
 import beer.unaccpetable.brewzilla.Models.RecipeParameters;
 import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
 import beer.unaccpetable.brewzilla.Models.Responses.RecipeStatsResponse;
+import beer.unaccpetable.brewzilla.Models.Style;
 import beer.unaccpetable.brewzilla.Models.Yeast;
 import beer.unaccpetable.brewzilla.Repositories.IRepository;
 
@@ -43,7 +44,11 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
                     FixBadData(); //TODO: Temp, only for now when some old data doesn't exist
 
                     bPopulatingScreen = true;
+                    view.PopulateStyleDropDown(r.Styles);
+
                     view.SetTitle(CurrentRecipe.name);
+                    if (CurrentRecipe.beerStyle != null)
+                        view.SetStyle(r.Styles, CurrentRecipe.beerStyle);
                     view.PopulateStats(CurrentRecipe.recipeStats);
                     view.PopulateHops(CurrentRecipe.hops);
                     view.PopulateYeasts(CurrentRecipe.yeasts);
@@ -157,6 +162,11 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         });
     }
 
+    public void SetStyle(Style style) {
+        CurrentRecipe.beerStyle = style;
+        RecipeUpdated();
+    }
+
     public interface View {
         void ShowToast(String sMessage);
         void SetTitle(String sTitle);
@@ -177,5 +187,8 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         void PopulateParameters(RecipeParameters recipeParameters);
 
         void MashInfusionShowWaterToAdd(String t);
+
+        void PopulateStyleDropDown(Style[] styles);
+        void SetStyle(Style[] styles, Style beerStyle);
     }
 }

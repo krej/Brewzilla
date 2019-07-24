@@ -13,8 +13,7 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
  */
 
 public class Recipe extends ListableObject implements Serializable { //6.5.2018 - I implemented Serializable to be able to pass it through intents. That worked but i'm not sure if it broke anything else
-    @Expose
-    public String style;
+
     @Expose
     public String description;
     @Expose
@@ -38,7 +37,11 @@ public class Recipe extends ListableObject implements Serializable { //6.5.2018 
     @Expose
     public ArrayList<AdjunctAddition> adjuncts;
     @Expose
-    public String styleID;
+    public Style beerStyle;
+
+    //obsolete
+    private String style;
+    private String styleID;
 
 
     public Recipe() {

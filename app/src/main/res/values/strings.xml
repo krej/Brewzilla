@@ -217,6 +217,7 @@
     <string name="lblMashInfusion">Mash Infusion</string>
     <string name="undo">Undo</string>
     <string name="item_deleted">Item Deleted</string>
+    <string name="style">Style</string>
     <string-array name="gristRatioNames">
         <item>Very Thick</item>
         <item>Thick</item>

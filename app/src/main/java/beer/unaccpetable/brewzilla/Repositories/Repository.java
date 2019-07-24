@@ -32,4 +32,9 @@ public class Repository implements IRepository {
     public void MashInfusionCalculation(String sRecipeID, String T1, String T2, String Wm, String Tw, RepositoryCallback callback) {
         Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/recipe/mashInfusion/" + sRecipeID + "/" + T1 + "/" + T2 + "/" + Wm + "/" + Tw + "/", null, callback, true, true);
     }
+
+    @Override
+    public void LoadStyles(RepositoryCallback callback) {
+        Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/style/", null, callback, true, false);
+    }
 }
