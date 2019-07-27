@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="StyleRangeBar">
+        <attr name="negativeColor" format="color"/>
+        <attr name="positiveColor" format="color"/>
+        <attr name="textColor" format="color"/>
+        <attr name="cornerRoundY" format="integer"/>
+        <attr name="cornerRoundX" format="integer"/>
+        <attr name="rangeCircleColor" format="color"/>
+        <attr name="barMin" format="float"/>
+        <attr name="barMax" format="float"/>
+        <attr name="valueColor" format="color"/>
+    </declare-styleable>
+</resources>

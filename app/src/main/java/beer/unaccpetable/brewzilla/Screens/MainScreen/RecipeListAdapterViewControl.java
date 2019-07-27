@@ -11,6 +11,7 @@ import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
+import beer.unaccpetable.brewzilla.Models.Recipe;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditor;
 
@@ -27,15 +28,26 @@ public class RecipeListAdapterViewControl extends BaseAdapterViewControl {
 
     @Override
     public void SetupViewInList(NewAdapter.ViewHolder view, ListableObject i) {
-        TextView textView = view.view.findViewById(R.id.firstLine);
+        Recipe r = (Recipe)i;
+
+        TextView textView = view.view.findViewById(R.id.recipeName);
+        TextView tvStyle = view.view.findViewById(R.id.recipeStyle);
+        TextView tvABV = view.view.findViewById(R.id.recipeABV);
         Tools.SetText(textView, i.name);
+
+
+        if (r.beerStyle != null)
+            Tools.SetText(tvStyle, r.beerStyle.name);
+        if (r.recipeStats != null)
+            Tools.SetText(tvABV, r.recipeStats.getFormattedABV(true));
     }
 
     @Override
     public void onItemClick(View v, ListableObject i) {
         Intent intent = new Intent(m_Activity.getApplicationContext(), RecipeEditor.class);
         intent.putExtra("RecipeID", i.idString);
-        m_Activity.startActivity(intent);
+        //m_Activity.startActivity(intent);
+        m_Activity.startActivityForResult(intent, MainScreen.EDIT_RECIPE);
     }
 
     @Override

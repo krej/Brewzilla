@@ -22,13 +22,15 @@ public class MainScreenController extends BaseLogic<MainScreenController.View> {
         m_repo = repo;
     }
 
-    public void LoadRecipes() {
+    public void LoadRecipes(boolean bStopRefresh) {
 
         m_repo.LoadRecipeList(new RepositoryCallback() {
             @Override
             public void onSuccess(String t) {
                 Recipe[] r = Tools.convertJsonResponseToObject(t, Recipe[].class);
                 view.PopulateRecipeList(r);
+                if (bStopRefresh)
+                    view.StopRefresh();
             }
 
             @Override
@@ -52,6 +54,7 @@ public class MainScreenController extends BaseLogic<MainScreenController.View> {
                 RecipeStatsResponse response = Tools.convertJsonResponseToObject(t, RecipeStatsResponse.class);
                 r.idString = response.idString;
 
+                view.AddRecipe(r);
                 view.OpenRecipe(r.idString);
             }
 
@@ -84,5 +87,8 @@ public class MainScreenController extends BaseLogic<MainScreenController.View> {
         void ShowToast(String sMessage);
         void OpenRecipe(String sIDString);
         void ShowNewRecipeDialog(Style[] styles);
+        void StopRefresh();
+
+        void AddRecipe(Recipe r);
     }
 }

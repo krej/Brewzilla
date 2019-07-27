@@ -44,11 +44,14 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
                     FixBadData(); //TODO: Temp, only for now when some old data doesn't exist
 
                     bPopulatingScreen = true;
-                    view.PopulateStyleDropDown(r.Styles);
+                    if (r.Styles != null)
+                        view.PopulateStyleDropDown(r.Styles);
 
                     view.SetTitle(CurrentRecipe.name);
-                    if (CurrentRecipe.beerStyle != null)
+                    if (CurrentRecipe.beerStyle != null) {
                         view.SetStyle(r.Styles, CurrentRecipe.beerStyle);
+                        view.SetStyleRanges(CurrentRecipe.beerStyle);
+                    }
                     view.PopulateStats(CurrentRecipe.recipeStats);
                     view.PopulateHops(CurrentRecipe.hops);
                     view.PopulateYeasts(CurrentRecipe.yeasts);
@@ -88,6 +91,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
             public void onSuccess(String t) {
                 RecipeStatsResponse response = Tools.convertJsonResponseToObject(t, RecipeStatsResponse.class);
                 view.PopulateStats(response.recipeStats);
+                CurrentRecipe.recipeStats = response.recipeStats;
             }
 
             @Override
@@ -164,7 +168,31 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
     public void SetStyle(Style style) {
         CurrentRecipe.beerStyle = style;
+        view.SetStyleRanges(style);
         RecipeUpdated();
+    }
+
+    public void GoBack() {
+
+        view.FinishActivity(CurrentRecipe.idString, CurrentRecipe.recipeStats.abv, false);
+    }
+
+    public void DeleteRecipe() {
+        m_repo.DeleteRecipe(CurrentRecipe.idString, new RepositoryCallback() {
+            @Override
+            public void onSuccess(String t) {
+                view.FinishActivity(CurrentRecipe.idString, 0, true);
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                view.ShowToast("Error deleting recipe.");
+            }
+        });
+    }
+
+    public void AskDeleteRecipe() {
+        view.PromptDeletion();
     }
 
     public interface View {
@@ -190,5 +218,8 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
         void PopulateStyleDropDown(Style[] styles);
         void SetStyle(Style[] styles, Style beerStyle);
+        void SetStyleRanges(Style style);
+        void FinishActivity(String sIDString, double dAbv, boolean bDeleted);
+        void PromptDeletion();
     }
 }

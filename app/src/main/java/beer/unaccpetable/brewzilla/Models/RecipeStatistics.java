@@ -37,8 +37,13 @@ public class RecipeStatistics {
         initialStrikeWaterVolume = 0;
     }
 
-    public String getFormatredAbv() {
+    public String getFormattedABV() {
+        if (abv == 0) return "0.000";
         return Tools.RoundString(abv, 3);
+    }
+
+    public String getFormattedABV(boolean bShowLabel) {
+        return getFormattedABV() + "% ABV";
     }
 
     public String getFormattedIBU() {
@@ -63,5 +68,17 @@ public class RecipeStatistics {
 
     public String getFormattedStrikeWaterVolume() {
         return Tools.RoundString(initialStrikeWaterVolume, 2);
+    }
+
+    public double getOgPoints() {
+        return getPoints(og);
+    }
+
+    public double getFgPoints() {
+        return getPoints(fg);
+    }
+
+    private double getPoints(double value) {
+        return (value - 1) * 1000;
     }
 }

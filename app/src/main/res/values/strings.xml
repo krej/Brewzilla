@@ -218,6 +218,12 @@
     <string name="undo">Undo</string>
     <string name="item_deleted">Item Deleted</string>
     <string name="style">Style</string>
+    <string name="IBUs">IBUs</string>
+    <string name="og">OG</string>
+    <string name="fg">FG</string>
+    <string name="ABV">ABV</string>
+    <string name="SRM">SRM</string>
+    <string name="refresh">Refresh</string>
     <string-array name="gristRatioNames">
         <item>Very Thick</item>
         <item>Thick</item>

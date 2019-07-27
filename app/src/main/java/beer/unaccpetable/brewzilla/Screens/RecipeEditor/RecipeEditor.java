@@ -3,6 +3,9 @@ package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.gesture.Gesture;
 import android.graphics.Color;
@@ -32,6 +35,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +51,7 @@ import beer.unaccpetable.brewzilla.Models.FermentableAddition;
 import beer.unaccpetable.brewzilla.Models.Hop;
 import beer.unaccpetable.brewzilla.Models.HopAddition;
 
+import com.unacceptable.unacceptablelibrary.Controls.ProgressDrawable;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
 import beer.unaccpetable.brewzilla.Models.RecipeParameters;
@@ -56,6 +62,7 @@ import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Repositories.Repository;
 import beer.unaccpetable.brewzilla.Screens.BaseActivity;
 import beer.unaccpetable.brewzilla.Tools.Calculations;
+import beer.unaccpetable.brewzilla.Tools.Controls.StyleRangeBar;
 
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
@@ -83,6 +90,8 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     TabLayout m_TabLayout;
     TabItem m_tabRecipe, m_tabMash;
 
+    StyleRangeBar m_srbIBU, m_srbOG, m_srbFG, m_srbABV, m_srbSRM;
+
     /******** Mash tab *************/
     //initial mash
     Spinner m_spGristRatio;
@@ -104,6 +113,13 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         setSupportActionBar(toolbar);
 
         FindUIElements();
+
+        ///
+        //StyleRangeBar srb = findViewById(R.id.ibuBar);
+        //srb.setRangeMin(100);
+        //srb.setRangeMax(120);
+
+        ///
 
         fabHop.setImageResource(R.drawable.ic_hop);
         fabGrain.setImageResource(R.drawable.ic_grain);
@@ -133,6 +149,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Style style = (Style)parent.getSelectedItem();
                 m_Controller.SetStyle(style);
+
             }
 
             @Override
@@ -339,11 +356,16 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         lstYeasts = findViewById(R.id.listYeast);
 
         //stats card
-        txtIBU = findViewById(R.id.txtIBUs);
-        txtOG = findViewById(R.id.txtOG);
+        //txtIBU = findViewById(R.id.txtIBUs);
+        m_srbIBU = findViewById(R.id.ibuBar);
+        m_srbOG = findViewById(R.id.ogBar);
+        m_srbFG = findViewById(R.id.fgBar);
+        m_srbABV = findViewById(R.id.abvBar);
+        m_srbSRM = findViewById(R.id.srmBar);
+        /*txtOG = findViewById(R.id.txtOG);
         txtFG = findViewById(R.id.txtFG);
         txtABV = findViewById(R.id.txtABV);
-        txtSRM = findViewById(R.id.txtSRM);
+        txtSRM = findViewById(R.id.txtSRM);*/
         fabSRM = findViewById(R.id.srmColor);
         m_spStyle = findViewById(R.id.spinStyle);
 
@@ -379,14 +401,16 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        //inflater.inflate(R.menu.menu_create_recipe, menu);
+        inflater.inflate(R.menu.menu_create_recipe, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.save_recipe:
+            case R.id.deleteRecipe:
+                m_Controller.AskDeleteRecipe();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -534,11 +558,16 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     @Override
     public void PopulateStats(RecipeStatistics stats) {
         //recipe tab
-        txtIBU.setText("IBUs: " + stats.getFormattedIBU());
-        txtOG.setText("OG: " + stats.getFormattedOG());
+        //txtIBU.setText("IBUs: " + stats.getFormattedIBU());
+        /*txtOG.setText("OG: " + stats.getFormattedOG());
         txtFG.setText("FG: " + stats.getFormattedFG());
-        txtABV.setText("ABV: " + stats.getFormatredAbv() + "%");
-        txtSRM.setText("SRM: " + stats.getFormattedSRM());
+        txtABV.setText("ABV: " + stats.getFormattedABV() + "%");
+        txtSRM.setText("SRM: " + stats.getFormattedSRM());*/
+        m_srbIBU.setValue(stats.ibu);
+        m_srbOG.setValue(stats.getOgPoints());
+        m_srbFG.setValue(stats.getFgPoints());
+        m_srbABV.setValue(stats.abv);
+        m_srbSRM.setValue(stats.srm);
         fabSRM.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(Calculations.GetSRMColor((int)stats.srm))));
 
         //mash tab
@@ -600,5 +629,56 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     @Override
     public void SetStyle(Style[] styles, Style beerStyle) {
         Tools.SetDropDownSelection(m_spStyle, styles, beerStyle);
+    }
+
+    @Override
+    public void SetStyleRanges(Style style) {
+
+        m_srbIBU.setRange(style.minIBU, style.maxIBU);
+        m_srbOG.setRange(Tools.DecimalPart(style.minOG), Tools.DecimalPart(style.maxOG));
+        m_srbFG.setRange(Tools.DecimalPart(style.minFG), Tools.DecimalPart(style.maxFG));
+        m_srbABV.setRange(style.minABV, style.maxABV);
+        m_srbSRM.setRange(style.minColor, style.maxColor);
+    }
+
+    @Override
+    public void FinishActivity(String sIDString, double dAbv, boolean bDeleted) {
+        Intent i = new Intent();
+        i.putExtra("idString", sIDString);
+        i.putExtra("abv", dAbv);
+        i.putExtra("deleted", bDeleted);
+        setResult(RESULT_OK, i);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        m_Controller.GoBack();
+
+        super.onBackPressed();
+    }
+
+    @Override
+    public void PromptDeletion() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch(which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //yes
+                        m_Controller.DeleteRecipe();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //no
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Delete? Are you sure?")
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener)
+                .show();
     }
 }

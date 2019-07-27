@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,7 +32,6 @@ import beer.unaccpetable.brewzilla.Models.Style;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Repositories.Repository;
 import beer.unaccpetable.brewzilla.Screens.BaseActivity;
-import beer.unaccpetable.brewzilla.Screens.ImportBeerXML;
 import beer.unaccpetable.brewzilla.Screens.IngredientManager;
 import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditor;
 import beer.unaccpetable.brewzilla.Screens.SettingsActivity;
@@ -45,6 +44,11 @@ public class MainScreen extends BaseActivity
     private MainScreenController m_Controller;
 
     TextView mTextView;
+
+    private SwipeRefreshLayout m_SwipeRefresh;
+
+    //new intent request codes
+    public static final int EDIT_RECIPE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,8 @@ public class MainScreen extends BaseActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        FindUIElements();
+
         m_Controller = new MainScreenController(new Repository());
         m_Controller.attachView(this);
 
@@ -77,11 +83,22 @@ public class MainScreen extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         lstRecipes = findViewById(R.id.listRecipe);
-        m_Adapter = Tools.setupRecyclerView(lstRecipes, getApplicationContext(), R.layout.one_line_list, 0, false, new RecipeListAdapterViewControl(this), true);
+        m_Adapter = Tools.setupRecyclerView(lstRecipes, getApplicationContext(), R.layout.list_recipe, 0, false, new RecipeListAdapterViewControl(this), true);
 
         mTextView = findViewById(R.id.mainscreen_text);
 
-        m_Controller.LoadRecipes();
+        m_Controller.LoadRecipes(false);
+
+        m_SwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                m_Controller.LoadRecipes(true);
+            }
+        });
+    }
+
+    private void FindUIElements() {
+        m_SwipeRefresh = findViewById(R.id.content_main_screen);
     }
 
 
@@ -95,10 +112,10 @@ public class MainScreen extends BaseActivity
         }
     }
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.main_screen, menu);
+        getMenuInflater().inflate(R.menu.main_screen, menu);
         return true;
     }
 
@@ -110,14 +127,16 @@ public class MainScreen extends BaseActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-            startActivity(intent);
+        if (id == R.id.refresh) {
+            m_SwipeRefresh.setRefreshing(true);
+            m_Controller.LoadRecipes(true);
+            /*Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(intent);*/
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -225,6 +244,44 @@ public class MainScreen extends BaseActivity
     public void OpenRecipe(String sIDString) {
         Intent i = new Intent(getApplicationContext(), RecipeEditor.class);
         i.putExtra("RecipeID", sIDString);
-        startActivity(i);
+        //startActivity(i);
+        startActivityForResult(i, EDIT_RECIPE);
+    }
+
+    @Override
+    public void StopRefresh() {
+        m_SwipeRefresh.setRefreshing(false);
+    }
+
+    @Override
+    public void AddRecipe(Recipe r){
+        m_Adapter.add(r);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case EDIT_RECIPE:
+                    String sIDString = data.getStringExtra("idString");
+                    double dAbv = data.getDoubleExtra("abv", 0);
+                    boolean bDeleted = data.getBooleanExtra("deleted", false);
+
+                    for (int i = 0; i < m_Adapter.size(); i++) {
+                        if (m_Adapter.get(i).idString.equals(sIDString)) {
+                            if (bDeleted) {
+                                m_Adapter.remove(i);
+                            } else {
+                                Recipe r = (Recipe) m_Adapter.get(i);
+                                r.recipeStats.abv = dAbv;
+                                //m_Adapter.notifyDataSetChanged();
+                                m_Adapter.notifyItemChanged(i);
+                            }
+                        }
+                    }
+            }
+        }
     }
 }

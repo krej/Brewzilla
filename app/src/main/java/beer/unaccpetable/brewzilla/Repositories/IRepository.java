@@ -11,4 +11,5 @@ public interface IRepository {
     void SaveRecipe(String sRecipeID, Recipe r, RepositoryCallback callback);
     void MashInfusionCalculation(String sRecipeID, String T1, String T2, String Wm, String Tw, RepositoryCallback callback);
     void LoadStyles(RepositoryCallback callback);
+    void DeleteRecipe(String sIDString, RepositoryCallback callback);
 }

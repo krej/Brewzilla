@@ -10,7 +10,8 @@
     android:id="@+id/nestedscrollview"
     android:clickable="true"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
 
 
     <LinearLayout
@@ -84,35 +85,113 @@
 
                                 </Spinner>
 
-                                <TextView
-                                    android:id="@+id/txtIBUs"
+                                <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="IBUs:"/>
+                                    android:orientation="horizontal">
 
-                                <TextView
-                                    android:id="@+id/txtOG"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="TextView"/>
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
 
-                                <TextView
-                                    android:id="@+id/txtFG"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="TextView"/>
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/IBUs"/>
 
-                                <TextView
-                                    android:id="@+id/txtABV"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="TextView"/>
+                                        <TextView
+                                            android:id="@+id/txtOG"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/og"/>
 
-                                <TextView
-                                    android:id="@+id/txtSRM"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="TextView"/>
+                                        <TextView
+                                            android:id="@+id/txtFG"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/fg"/>
+
+                                        <TextView
+                                            android:id="@+id/txtABV"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/ABV"/>
+
+                                        <TextView
+                                            android:id="@+id/txtSRM"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/SRM"/>
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
+
+                                        <beer.unaccpetable.brewzilla.Tools.Controls.StyleRangeBar
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="2dp"
+                                            android:layout_marginStart="2dp"
+                                            app:negativeColor="#FF0000"
+                                            app:positiveColor="#00FF00"
+                                            app:textColor="#000000"
+                                            app:barMin="0"
+                                            app:barMax="150"
+                                            android:id="@+id/ibuBar"/>
+
+                                        <beer.unaccpetable.brewzilla.Tools.Controls.StyleRangeBar
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="2dp"
+                                            android:layout_marginStart="2dp"
+                                            app:negativeColor="#FF0000"
+                                            app:positiveColor="#00FF00"
+                                            app:textColor="#000000"
+                                            app:barMin="00"
+                                            app:barMax="200"
+                                            android:id="@+id/ogBar"/>
+
+                                        <beer.unaccpetable.brewzilla.Tools.Controls.StyleRangeBar
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="2dp"
+                                            android:layout_marginStart="2dp"
+                                            app:negativeColor="#FF0000"
+                                            app:positiveColor="#00FF00"
+                                            app:textColor="#000000"
+                                            app:barMin="0"
+                                            app:barMax="200"
+                                            android:id="@+id/fgBar"/>
+
+                                        <beer.unaccpetable.brewzilla.Tools.Controls.StyleRangeBar
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="2dp"
+                                            android:layout_marginStart="2dp"
+                                            app:negativeColor="#FF0000"
+                                            app:positiveColor="#00FF00"
+                                            app:textColor="#000000"
+                                            app:barMin="0"
+                                            app:barMax="25"
+                                            android:id="@+id/abvBar"/>
+
+                                        <beer.unaccpetable.brewzilla.Tools.Controls.StyleRangeBar
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="2dp"
+                                            android:layout_marginStart="2dp"
+                                            app:negativeColor="#FF0000"
+                                            app:positiveColor="#00FF00"
+                                            app:textColor="#000000"
+                                            app:barMin="0"
+                                            app:barMax="40"
+                                            android:id="@+id/srmBar"/>
+                                    </LinearLayout>
+
+                                </LinearLayout>
 
                             </LinearLayout>
 

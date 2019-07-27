@@ -37,4 +37,9 @@ public class Repository implements IRepository {
     public void LoadStyles(RepositoryCallback callback) {
         Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/style/", null, callback, true, false);
     }
+
+    @Override
+    public void DeleteRecipe(String sIDString, RepositoryCallback callback) {
+        Network.WebRequest(Request.Method.DELETE, Preferences.BeerNetAPIURL() + "/recipe/" + sIDString, null, callback, true, false);
+    }
 }
