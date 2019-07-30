@@ -4,7 +4,9 @@ import android.app.Dialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.unacceptable.unacceptablelibrary.Adapters.BaseAdapterViewControl;
 import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
@@ -27,7 +29,7 @@ public class YeastAdditionAdapterViewControl extends BaseAdapterViewControl {
 
     @Override
     public void SetupDialog(View root, ListableObject i) {
-        final Yeast h = (Yeast) i;
+        /*final Yeast h = (Yeast) i;
 
         final Spinner snName = (Spinner) root.findViewById(R.id.yeastSelector);
         final EditText lab = (EditText) root.findViewById(R.id.lab);
@@ -61,21 +63,36 @@ public class YeastAdditionAdapterViewControl extends BaseAdapterViewControl {
 
             lab.setText(h.lab);
             att.setText(String.valueOf(h.attenuation));
-        }
+        }*/
     }
 
     @Override
     public void SetupViewInList(NewAdapter.ViewHolder view, ListableObject i) {
-        Yeast y = (Yeast) i;
+        YeastAddition y = (YeastAddition) i;
 
-        view.txtHeader.setText(y.name);
+        /*view.txtHeader.setText(y.name);
         view.txtFooter.setText("Lab: " + y.lab);
-        view.txtThirdLine.setText("Attenuation: " + y.attenuation);
+        view.txtThirdLine.setText("Attenuation: " + y.attenuation);*/
+
+        TextView tvLab = view.view.findViewById(R.id.yeastLab);
+        TextView tvName = view.view.findViewById(R.id.yeastName);
+        TextView tvAttenuation = view.view.findViewById(R.id.attenuation);
+
+        Tools.SetText(tvLab, y.yeast.lab);
+        Tools.SetText(tvName, y.yeast.name);
+        Tools.SetText(tvAttenuation, "Attenuation: " + y.yeast.attenuation);
+
     }
 
     @Override
     public void onItemClick(View v, ListableObject i) {
-        m_Adapter.showAddItemDialog(v.getContext(), i);
+        //m_Adapter.showAddItemDialog(v.getContext(), i);
+        RelativeLayout rlHidden = v.findViewById(R.id.rlYeastHidden);
+        if (rlHidden.getVisibility() == View.GONE) {
+            rlHidden.setVisibility(View.VISIBLE);
+        } else {
+            rlHidden.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -85,7 +102,7 @@ public class YeastAdditionAdapterViewControl extends BaseAdapterViewControl {
 
     @Override
     public boolean onDialogOkClicked(Dialog d, ListableObject i) {
-        boolean bExisting = i != null;
+        /*boolean bExisting = i != null;
 
         final Spinner snName = (Spinner) d.findViewById(R.id.yeastSelector);
         EditText lab = (EditText) d.findViewById(R.id.lab);
@@ -118,7 +135,7 @@ public class YeastAdditionAdapterViewControl extends BaseAdapterViewControl {
             m_Adapter.add(yeast);
         }
 
-        m_Controller.RecipeUpdated();
+        m_Controller.SaveRecipe();*/
         return true;
     }
 

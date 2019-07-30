@@ -1,5 +1,6 @@
 package beer.unaccpetable.brewzilla.Models;
 
+import com.google.gson.annotations.Expose;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
 /**
@@ -7,5 +8,6 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
  */
 
 public class Adjunct extends ListableObject {
-
+    @Expose
+    public String createdByUserId;
 }

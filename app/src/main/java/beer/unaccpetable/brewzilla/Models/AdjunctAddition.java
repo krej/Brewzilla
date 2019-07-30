@@ -8,7 +8,7 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
  * Created by Megatron on 10/25/2017.
  */
 
-public class AdjunctAddition extends ListableObject {
+public class AdjunctAddition extends IngredientAddition {
     @Expose
     public String adjunctID;
     @Expose

@@ -8,17 +8,18 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
  * Created by Megatron on 9/25/2017.
  */
 
-//TODO: Delete!!!
 
-
-public class YeastAddition extends ListableObject {
+public class YeastAddition extends IngredientAddition {
     @Expose
-    public String yeastID;
     public Yeast yeast;
-    @Expose
-    public String recipeID;
+
+    public YeastAddition(Yeast y) {
+        super();
+        yeast = y;
+    }
 
     public YeastAddition(String sProduct, String sLab,double dAttenuation) {
+        super();
         name = sProduct;
         yeast = new Yeast(sProduct, sLab, dAttenuation);
     }

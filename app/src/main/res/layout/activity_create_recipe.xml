@@ -42,21 +42,23 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
         android:layout_gravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_input_add"
-        app:backgroundTint="?attr/actionModeSplitBackground" />
+        android:layout_margin="@dimen/fab_margin"
+        android:visibility="gone"
+        app:backgroundTint="?attr/actionModeSplitBackground"
+        app:srcCompat="@android:drawable/ic_input_add"/>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabGrain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="200dp"
         android:clickable="true"
         android:focusable="true"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="200dp"
-        android:layout_marginEnd="16dp"
-        android:id="@+id/fabGrain"
-        app:backgroundTint="?attr/actionModeSplitBackground" />
+        android:visibility="gone"
+        app:backgroundTint="?attr/actionModeSplitBackground"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabHop"
@@ -67,6 +69,7 @@
         android:layout_marginBottom="140dp"
         android:clickable="true"
         android:focusable="true"
+        android:visibility="gone"
         app:backgroundTint="?attr/actionModeSplitBackground"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -78,6 +81,7 @@
         android:layout_marginBottom="80dp"
         android:clickable="true"
         android:focusable="true"
+        android:visibility="gone"
         app:backgroundTint="?attr/actionModeSplitBackground"/>
 
 

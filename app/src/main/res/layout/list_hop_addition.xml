@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hopName"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hopAmount"
+            android:layout_toStartOf="@id/hopAmountLabel"
+            android:layout_centerVertical="true"
+            android:inputType="numberDecimal"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hopAmountLabel"
+            android:text="@string/oz"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hopTime"
+            android:layout_toStartOf="@id/hopTimeLabel"
+            android:inputType="number"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hopTimeLabel"
+            android:text="@string/min"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
+
+
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rlHopHidden"
+        android:visibility="gone">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hopAAU"
+            android:layout_alignParentStart="true"
+            android:inputType="numberDecimal"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/hopAAU"
+            android:id="@+id/hopAAULabel"
+            android:layout_centerVertical="true"
+            android:text="@string/aau"/>
+
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spHopType"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
+</LinearLayout>

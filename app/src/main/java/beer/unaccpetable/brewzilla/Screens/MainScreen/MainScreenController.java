@@ -1,13 +1,9 @@
 package beer.unaccpetable.brewzilla.Screens.MainScreen;
 
-import android.widget.Toast;
-
 import com.android.volley.VolleyError;
 import com.unacceptable.unacceptablelibrary.Logic.BaseLogic;
 import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
-
-import java.util.ArrayList;
 
 import beer.unaccpetable.brewzilla.Models.Recipe;
 import beer.unaccpetable.brewzilla.Models.Responses.RecipeStatsResponse;
@@ -44,7 +40,7 @@ public class MainScreenController extends BaseLogic<MainScreenController.View> {
     public void CreateNewRecipe(String sName, Style sStyle) {
         final Recipe r = new Recipe();
         r.name = sName;
-        r.beerStyle = sStyle;
+        r.style = sStyle;
         r.recipeStats.Initialize();
         r.recipeParameters.Initialize();
 

@@ -224,6 +224,11 @@
     <string name="ABV">ABV</string>
     <string name="SRM">SRM</string>
     <string name="refresh">Refresh</string>
+    <string name="lbs">lbs</string>
+    <string name="add">Add</string>
+    <string name="search">Search</string>
+    <string name="oz">oz</string>
+    <string name="min">min</string>
     <string-array name="gristRatioNames">
         <item>Very Thick</item>
         <item>Thick</item>

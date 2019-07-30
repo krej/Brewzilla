@@ -1,42 +1,31 @@
 package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.gesture.Gesture;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.renderscript.ScriptGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,18 +35,21 @@ import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
 
 import java.util.ArrayList;
 
+import beer.unaccpetable.brewzilla.Adapters.SearchDialogAdapterViewControl;
 import beer.unaccpetable.brewzilla.Models.Fermentable;
 import beer.unaccpetable.brewzilla.Models.FermentableAddition;
 import beer.unaccpetable.brewzilla.Models.Hop;
 import beer.unaccpetable.brewzilla.Models.HopAddition;
 
-import com.unacceptable.unacceptablelibrary.Controls.ProgressDrawable;
+import com.unacceptable.unacceptablelibrary.Controls.CustomOnItemSelectedListener;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
+import beer.unaccpetable.brewzilla.Models.Recipe;
 import beer.unaccpetable.brewzilla.Models.RecipeParameters;
 import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
 import beer.unaccpetable.brewzilla.Models.Style;
 import beer.unaccpetable.brewzilla.Models.Yeast;
+import beer.unaccpetable.brewzilla.Models.YeastAddition;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Repositories.Repository;
 import beer.unaccpetable.brewzilla.Screens.BaseActivity;
@@ -81,6 +73,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     private Boolean bShowExtraFab = false;
     FloatingActionButton fabGrain,fabHop, fabYeast, fabSRM;
     FloatingActionButton fabMain;
+    Button m_btnAddFermentable, m_btnAddHop, m_btnAddYeast;
 
     private TextView txtIBU, txtOG, txtFG, txtABV, txtSRM;
     Spinner m_spStyle;
@@ -121,15 +114,16 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
         ///
 
-        fabHop.setImageResource(R.drawable.ic_hop);
+        /*fabHop.setImageResource(R.drawable.ic_hop);
         fabGrain.setImageResource(R.drawable.ic_grain);
-        fabYeast.setImageResource(R.drawable.ic_test_tube);
+        fabYeast.setImageResource(R.drawable.ic_test_tube);*/
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SetButtonClickEvents();
         SetupRecipeParamaterListeners();
         SetupStyleListener();
+        SetupAddButtonListeners();
 
         SetupTabChangeListener();
 
@@ -143,10 +137,72 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         m_Controller.LoadRecipe(sID);
     }
 
+    private void SetupAddButtonListeners() {
+        m_btnAddFermentable.setOnClickListener((v) -> m_Controller.ShowAddDialog(Recipe.IngredientType.Fermntable));
+        m_btnAddHop.setOnClickListener((v) -> m_Controller.ShowAddDialog(Recipe.IngredientType.Hop));
+        m_btnAddYeast.setOnClickListener((v) -> m_Controller.ShowAddDialog(Recipe.IngredientType.Yeast));
+    }
+
+    @Override
+    public void ShowAddDialog(ArrayList data, Recipe.IngredientType ingredientType) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View v = inflater.inflate(R.layout.dialog_search_list, null);
+        RecyclerView rv = v.findViewById(R.id.rvSearchResults);
+        SearchDialogAdapterViewControl svc = new SearchDialogAdapterViewControl();
+        NewAdapter adapter = Tools.setupRecyclerView(rv, this, R.layout.one_line_list, 0, false, svc, true);
+
+        PopulateAdditions(data, adapter);
+        builder.setView(v);
+        AlertDialog dialog = builder.create();
+
+        EditText et = v.findViewById(R.id.searchBox);
+        et.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        svc.attachAdapter(adapter);
+        svc.setItemSelectedListener((i) -> {m_Controller.AddIngredient(i, ingredientType); dialog.dismiss();});
+
+        dialog.show();
+        et.requestFocus();
+    }
+
     private void SetupStyleListener() {
-        m_spStyle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        m_spStyle.setOnItemSelectedListener(new CustomOnItemSelectedListener(new CustomOnItemSelectedListener.IMyAdapterViewOnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Style style = (Style)parent.getSelectedItem();
+                m_Controller.SetStyle(style);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        }));
+
+        /*m_spStyle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                *//*if (bSpinnerInitialRun) {
+                    //I don't like this if statement but apparently thats what you need to do.
+                    //https://stackoverflow.com/questions/1337424/android-spinner-get-the-selected-item-change-event
+                    bSpinnerInitialRun = false;
+                    return;
+                }*//*
                 Style style = (Style)parent.getSelectedItem();
                 m_Controller.SetStyle(style);
 
@@ -156,7 +212,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
     }
 
     private void SetupTabChangeListener() {
@@ -190,7 +246,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     }
 
     private void SetupRecipeParamaterListeners() {
-        m_spGristRatio.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        m_spGristRatio.setOnItemSelectedListener(new CustomOnItemSelectedListener(new CustomOnItemSelectedListener.IMyAdapterViewOnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -205,7 +261,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        }));
 
         m_txtInitialMashTemp.addTextChangedListener(new TextWatcher() {
             @Override
@@ -278,8 +334,8 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         /*fabYeast.setVisibility(View.GONE);
         fabHop.setVisibility(View.GONE);
         fabGrain.setVisibility(View.GONE);*/
-        HideExtraFAB();
-        fabMain.setVisibility(View.GONE);
+        //HideExtraFAB();
+        //fabMain.setVisibility(View.GONE);
         bShowExtraFab = false;
     }
 
@@ -288,8 +344,8 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         m_ViewFlipper.setInAnimation(getApplicationContext(), R.anim.slide_in_right);
         m_ViewFlipper.setOutAnimation(getApplicationContext(), R.anim.slide_out_right);
         m_ViewFlipper.setDisplayedChild(m_ViewFlipper.indexOfChild(findViewById(R.id.recipeView)));
-        fabMain.setVisibility(View.VISIBLE);
-        fabMain.setImageResource(android.R.drawable.ic_input_add);
+        //fabMain.setVisibility(View.VISIBLE);
+        //fabMain.setImageResource(android.R.drawable.ic_input_add);
     }
 
     @Override
@@ -312,21 +368,22 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     private void SetupLists() {
         m_vcHop = new HopAdditionAdapterViewControl(m_Controller);
         m_vcFermentable = new FermentableAdditionAdapterViewControl(m_Controller);
+        m_vcFermentable.m_Activity = this;
         m_vcYeasts = new YeastAdditionAdapterViewControl(m_Controller);
 
-        m_HopAdapter = Tools.setupRecyclerView(lstHops, getApplicationContext(), R.layout.hop_list, R.layout.fragment_hop_dialog, false, m_vcHop, true, false, true);
-        m_YeastAdapter = Tools.setupRecyclerView(lstYeasts, getApplicationContext(), R.layout.yeast_list, R.layout.fragment_yeast_dialog, false, m_vcYeasts, true, false, true);
-        m_FermentableAdapter = Tools.setupRecyclerView(lstGrains, getApplicationContext(), R.layout.hop_list, R.layout.fragment_malt_dialog, false, m_vcFermentable, true, false, true);
+        m_HopAdapter = Tools.setupRecyclerView(lstHops, getApplicationContext(), R.layout.list_hop_addition, R.layout.fragment_hop_dialog, false, m_vcHop, true, true, true);
+        m_YeastAdapter = Tools.setupRecyclerView(lstYeasts, getApplicationContext(), R.layout.list_yeast_addition, R.layout.fragment_yeast_dialog, false, m_vcYeasts, true, true, true);
+        m_FermentableAdapter = Tools.setupRecyclerView(lstGrains, getApplicationContext(), R.layout.list_fermentable_addition, R.layout.fragment_malt_dialog, false, m_vcFermentable, true, true, true);
 
-        m_HopAdapter.setNotifySwipeDelete(createNotifySwipeDeleteAdapter(m_HopAdapter));
-        m_FermentableAdapter.setNotifySwipeDelete(createNotifySwipeDeleteAdapter(m_FermentableAdapter));
-        m_YeastAdapter.setNotifySwipeDelete(createNotifySwipeDeleteAdapter(m_YeastAdapter));
+        m_HopAdapter.setNotifySwipeDelete(createNotifySwipeDeleteAdapter(m_HopAdapter, Recipe.IngredientType.Hop));
+        m_FermentableAdapter.setNotifySwipeDelete(createNotifySwipeDeleteAdapter(m_FermentableAdapter, Recipe.IngredientType.Fermntable));
+        m_YeastAdapter.setNotifySwipeDelete(createNotifySwipeDeleteAdapter(m_YeastAdapter, Recipe.IngredientType.Yeast));
 
         //TODO: Apparently I don't have adjuncts in the UI
         //m_AdjunctAdapter = Tools.setupRecyclerView(lstHops, getApplicationContext(), R.layout.hop_list, R.layout.fragment_hop_dialog, false, null, true);
     }
 
-    private NewAdapter.INotifySwipeDelete createNotifySwipeDeleteAdapter(NewAdapter adapter) {
+    private NewAdapter.INotifySwipeDelete createNotifySwipeDeleteAdapter(NewAdapter adapter, Recipe.IngredientType ingredientType) {
         NewAdapter.INotifySwipeDelete nsd = new NewAdapter.INotifySwipeDelete() {
 
             @Override
@@ -336,13 +393,13 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
                 mySnackbar.setAction(R.string.undo, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        adapter.add(position, i);
-                        m_Controller.RecipeUpdated();
+                        //adapter.add(position, i);
+                        m_Controller.AddIngredient(i, ingredientType, position);
                     }
                 });
                 mySnackbar.show();
 
-                m_Controller.RecipeUpdated();
+                m_Controller.DeleteIngredient(i, ingredientType);
             }
         };
 
@@ -369,12 +426,15 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         fabSRM = findViewById(R.id.srmColor);
         m_spStyle = findViewById(R.id.spinStyle);
 
-        fabGrain = findViewById(R.id.fabGrain);
+        /*fabGrain = findViewById(R.id.fabGrain);
         fabGrain.setVisibility(View.INVISIBLE);
         fabHop = findViewById(R.id.fabHop);
         fabHop.setVisibility(View.INVISIBLE);
         fabYeast = findViewById(R.id.fabYeast);
-        fabYeast.setVisibility(View.INVISIBLE);
+        fabYeast.setVisibility(View.INVISIBLE);*/
+        m_btnAddFermentable = findViewById(R.id.btnAddFermentable);
+        m_btnAddHop = findViewById(R.id.btnAddHop);
+        m_btnAddYeast = findViewById(R.id.btnAddYeast);
 
         m_ViewFlipper = findViewById(R.id.recipeEditorViewFlipper);
 
@@ -425,6 +485,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     }
 
     private void SetButtonClickEvents() {
+        /*
         //Main FAB
         //final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fabMain.setOnClickListener(new View.OnClickListener() {
@@ -469,7 +530,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
                 m_YeastAdapter.showAddItemDialog(view.getContext(), null);
             }
         });
-
+*/
         m_TabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -489,7 +550,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     }
 
 
-    private void ShowExtraFAB() {
+    /*private void ShowExtraFAB() {
         int cx = fabGrain.getWidth() / 2;
         int cy = fabGrain.getHeight() / 2;
         float finalRadius = (float) Math.hypot(cx, cy);
@@ -508,9 +569,9 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         //FloatingActionButton fab = (FloatingActionButton)findViewById(R.idString.fab);
         //fab.setImageIcon("@android:drawable/ic_input_add");
 
-    }
+    }*/
 
-    private void HideExtraFAB() {
+    /*private void HideExtraFAB() {
         int cx = fabGrain.getWidth() / 2;
         int cy = fabGrain.getHeight() / 2;
         float finalRadius = (float) Math.hypot(cx, cy);
@@ -543,7 +604,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
             }
         });
         anim.start();
-    }
+    }*/
 
     @Override
     public void ShowToast(String sMessage) {
@@ -584,13 +645,28 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     }
 
     @Override
-    public void PopulateYeasts(ArrayList<Yeast> yeasts) {
+    public void PopulateYeasts(ArrayList<YeastAddition> yeasts) {
         PopulateAdditions(yeasts, m_YeastAdapter);
     }
 
     @Override
     public void PopulateFermentables(ArrayList<FermentableAddition> fermentables) {
         PopulateAdditions(fermentables, m_FermentableAdapter);
+    }
+
+    @Override
+    public void AddFermentable(FermentableAddition fa) {
+        m_FermentableAdapter.add(fa);
+    }
+
+    @Override
+    public void AddHop(HopAddition ha) {
+        m_HopAdapter.add(ha);
+    }
+
+    @Override
+    public void AddYeast(YeastAddition ya) {
+        m_YeastAdapter.add(ya);
     }
 
     @Override
@@ -606,13 +682,6 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     @Override
     public void PopulateFermentableDialog(ArrayList<Fermentable> fermentables) {
         m_vcFermentable.PopulateList(fermentables);
-    }
-
-    @Override
-    public void GetIngredients() {
-        m_Controller.SetHops(m_HopAdapter.Dataset());
-        m_Controller.SetFermentables(m_FermentableAdapter.Dataset());
-        m_Controller.SetYeasts(m_YeastAdapter.Dataset());
     }
 
     @Override
@@ -680,5 +749,31 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
                 .setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener)
                 .show();
+    }
+
+    @Override
+    public void SetScreenReadOnly(boolean bEnabled) {
+
+        m_spStyle.setEnabled(bEnabled);
+        m_btnAddFermentable.setEnabled(bEnabled);
+        m_btnAddHop.setEnabled(bEnabled);
+        m_btnAddYeast.setEnabled(bEnabled);
+        m_txtInitialMashTemp.setEnabled(bEnabled);
+        m_spGristRatio.setEnabled(bEnabled);
+        m_txtTargetMashTemp.setEnabled(bEnabled);
+
+        m_HopAdapter.setReadOnly(!bEnabled, lstHops);
+        m_YeastAdapter.setReadOnly(!bEnabled, lstYeasts);
+        m_FermentableAdapter.setReadOnly(!bEnabled, lstGrains);
+
+        hideKeyboard(this);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        m_Controller.SaveRecipe();
     }
 }

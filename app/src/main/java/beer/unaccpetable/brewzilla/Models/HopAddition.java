@@ -8,9 +8,7 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
  * Created by Megatron on 9/25/2017.
  */
 
-public class HopAddition extends ListableObject {
-    @Expose
-    public String hopID;
+public class HopAddition extends IngredientAddition {
     @Expose
     public double amount;
     @Expose
@@ -22,7 +20,17 @@ public class HopAddition extends ListableObject {
 
     public static String[] Types = {"Boil", "Dry Hop", "Whirlpool"};
 
+    public HopAddition(Hop h) {
+        super();
+        hop = h;
+        name = h.name;
+        amount = 0;
+        type = Types[0];
+        time = 0;
+    }
+
     public HopAddition(String sName, double dAmount, double dAAU, int iTime) {
+        super();
         hop = new Hop(sName, dAAU);
         name = sName;
         amount = dAmount;

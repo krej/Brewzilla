@@ -11,15 +11,17 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 public class Hop extends ListableObject {
     @Expose
     public double aau;
+    @Expose
+    public String createdByUserId;
 
     public Hop(String sName, double dAAU) {
         name = sName;
         aau = dAAU;
     }
 
-    public String toString() {
+    /*public String toString() {
         if (aau >= 0)
-            return name + " (AAU: " + aau + ")";
+            return name;// + " (AAU: " + aau + ")";
         return name;
-    }
+    }*/
 }

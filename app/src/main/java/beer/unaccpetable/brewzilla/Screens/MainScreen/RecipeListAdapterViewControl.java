@@ -36,8 +36,8 @@ public class RecipeListAdapterViewControl extends BaseAdapterViewControl {
         Tools.SetText(textView, i.name);
 
 
-        if (r.beerStyle != null)
-            Tools.SetText(tvStyle, r.beerStyle.name);
+        if (r.style != null)
+            Tools.SetText(tvStyle, r.style.name);
         if (r.recipeStats != null)
             Tools.SetText(tvABV, r.recipeStats.getFormattedABV(true));
     }

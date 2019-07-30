@@ -1,11 +1,12 @@
 package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 
 import android.app.Dialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.unacceptable.unacceptablelibrary.Adapters.BaseAdapterViewControl;
 import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
@@ -28,7 +29,7 @@ public class FermentableAdditionAdapterViewControl extends BaseAdapterViewContro
 
     @Override
     public void SetupDialog(View root, ListableObject i) {
-        final FermentableAddition h = (FermentableAddition) i;
+        /*final FermentableAddition h = (FermentableAddition) i;
         final EditText weight = (EditText) root.findViewById(R.id.weight);
         final EditText ppg = (EditText) root.findViewById(R.id.ppg);
         final EditText color = (EditText) root.findViewById(R.id.color);
@@ -63,22 +64,66 @@ public class FermentableAdditionAdapterViewControl extends BaseAdapterViewContro
             weight.setText(String.valueOf(h.weight));
             ppg.setText(String.valueOf(h.fermentable.ppg));
             color.setText(String.valueOf(h.fermentable.color));
-        }
+        }*/
     }
 
     @Override
     public void SetupViewInList(NewAdapter.ViewHolder view, ListableObject i) {
+
         FermentableAddition f = (FermentableAddition) i;
 
-        view.txtHeader.setText(f.fermentable.name);
-        view.txtFooter.setText("Weight: " + f.weight + " lbs");
-        view.txtThirdLine.setText("PPG: " + f.fermentable.ppg);
-        view.txtFourthLine.setText(f.fermentable.color + " SRM");
+        TextView tvName = view.view.findViewById(R.id.fermntableName);
+        EditText tvWeight = view.view.findViewById(R.id.fermantableWeight);
+        TextView tvPPG = view.view.findViewById(R.id.fermantablePPG);
+        TextView tvColor = view.view.findViewById(R.id.fermantableColor);
+
+
+        Tools.SetText(tvName, f.fermentable.name);
+        Tools.SetText(tvWeight, f.weight);
+        Tools.SetText(tvPPG, "PPG: " + f.fermentable.ppg);
+        Tools.SetText(tvColor, "SRM: " + f.fermentable.color);
+
+
+        tvWeight.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                double dWeight = m_Controller.fermentableChanged(f, s.toString());
+                f.weight = dWeight;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        tvWeight.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    //user left the textbox, save the recipe
+                    m_Controller.SaveRecipe();
+                }
+            }
+        });
     }
 
     @Override
     public void onItemClick(View v, ListableObject i) {
-        m_Adapter.showAddItemDialog(v.getContext(), i);
+        RelativeLayout rlHidden = v.findViewById(R.id.fermantableHiddenExtras);
+        //m_Adapter.showAddItemDialog(v.getContext(), i);
+        if (rlHidden.getVisibility() == View.GONE) {
+            rlHidden.setVisibility(View.VISIBLE);
+
+        } else {
+            rlHidden.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -88,7 +133,7 @@ public class FermentableAdditionAdapterViewControl extends BaseAdapterViewContro
 
     @Override
     public boolean onDialogOkClicked(Dialog d, ListableObject i) {
-        boolean bExisting = i != null;
+        /*boolean bExisting = i != null;
 
         Spinner name = (Spinner) d.findViewById(R.id.fermentableSelector);
         EditText weight = (EditText) d.findViewById(R.id.weight);
@@ -122,15 +167,24 @@ public class FermentableAdditionAdapterViewControl extends BaseAdapterViewContro
             //m.recipeID = sExtraInfo;
         } else {
             FermentableAddition malt = new FermentableAddition(sName, dWeight, dPPG, iColor);
-            malt.fermentableID = f.idString;
+            //malt.fermentableID = f.idString;
+            malt.fermentableID = java.util.UUID.randomUUID().toString();
             //malt.recipeID = sExtraInfo;
             m_Adapter.add(malt);
         }
-        m_Controller.RecipeUpdated();
+        m_Controller.SaveRecipe();*/
         return true;
     }
 
     public void PopulateList(ArrayList<Fermentable> f) {
         m_Fermentables = f;
     }
+
+    @Override
+    public void setReadOnly(NewAdapter.ViewHolder viewHolder, boolean bReadOnly) {
+
+        EditText tvWeight = viewHolder.view.findViewById(R.id.fermantableWeight);
+        tvWeight.setEnabled(!bReadOnly);
+    }
+
 }

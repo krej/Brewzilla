@@ -212,42 +212,83 @@
 
                 </android.support.v7.widget.CardView>
 
-                <TextView
-                    android:text="Fermentables"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txtGrains"
-                    android:textSize="24sp"
-                    android:textStyle="normal|bold"
-                    android:textAlignment="center" />
+                    android:paddingHorizontal="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:text="Fermentables"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/txtGrains"
+                        android:textSize="24sp"
+                        android:textStyle="normal|bold"
+                        android:layout_alignParentStart="true" />
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btnAddFermentable"
+                        android:layout_alignParentEnd="true"
+                        android:text="@string/add"/>
+                </RelativeLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/listGrains" />
 
-                <TextView
-                    android:text="Hops"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txtHops"
-                    android:textStyle="normal|bold"
-                    android:textSize="24sp"
-                    android:textAlignment="center" />
+                    android:paddingHorizontal="10dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:text="Hops"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/txtHops"
+                        android:textStyle="normal|bold"
+                        android:textSize="24sp"
+                        android:layout_alignParentStart="true" />
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:id="@+id/btnAddHop"
+                        android:text="@string/add"/>
+                </RelativeLayout>
+
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/listHops" />
 
-                <TextView
-                    android:text="Yeasts"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/txtYeasts"
-                    android:textStyle="normal|bold"
-                    android:textAlignment="center"
-                    android:textSize="24sp" />
+                    android:paddingHorizontal="10dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="Yeasts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txtYeasts"
+                        android:textStyle="normal|bold"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:textSize="24sp" />
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btnAddYeast"
+                        android:text="@string/add"
+                        android:layout_alignParentEnd="true"/>
+                </RelativeLayout>
+
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"

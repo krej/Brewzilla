@@ -12,4 +12,5 @@ public interface IRepository {
     void MashInfusionCalculation(String sRecipeID, String T1, String T2, String Wm, String Tw, RepositoryCallback callback);
     void LoadStyles(RepositoryCallback callback);
     void DeleteRecipe(String sIDString, RepositoryCallback callback);
+    void CalculateRecipeStats(Recipe r, RepositoryCallback callback);
 }

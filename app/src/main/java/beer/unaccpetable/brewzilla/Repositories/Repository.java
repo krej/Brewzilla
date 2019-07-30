@@ -42,4 +42,13 @@ public class Repository implements IRepository {
     public void DeleteRecipe(String sIDString, RepositoryCallback callback) {
         Network.WebRequest(Request.Method.DELETE, Preferences.BeerNetAPIURL() + "/recipe/" + sIDString, null, callback, true, false);
     }
+
+    @Override
+    public void CalculateRecipeStats(Recipe r, RepositoryCallback callback) {
+        //this is a POST because volley doesn't send the body for GETs
+
+        String sEndpoint = "/recipe/" + r.idString + "/false";
+
+        Network.WebRequest(Request.Method.POST, Preferences.BeerNetAPIURL() + sEndpoint, r.BuildRestData(), callback, true);
+    }
 }

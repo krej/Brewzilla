@@ -12,11 +12,13 @@ public class Fermentable extends ListableObject {
     @Expose
     public double ppg;
     @Expose
-    public int color;
+    public float color;
     @Expose
     public String type;
     @Expose
     public String maltster;
+    @Expose
+    public String createdByUserId;
 
     public Fermentable(String sName, double dPPG, int iColor) {
         name = sName;

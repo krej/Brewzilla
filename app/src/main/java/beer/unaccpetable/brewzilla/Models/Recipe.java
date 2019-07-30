@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
@@ -23,25 +24,43 @@ public class Recipe extends ListableObject implements Serializable { //6.5.2018 
     @Expose
     public double version;
     @Expose
-    public String parentRecipe;
-    @Expose
     public String clonedFrom;
     @Expose
     public String hidden;
     @Expose
     public ArrayList<HopAddition> hops;
     @Expose
-    public ArrayList<Yeast> yeasts;
+    public ArrayList<YeastAddition> yeasts;
     @Expose
     public ArrayList<FermentableAddition> fermentables;
     @Expose
     public ArrayList<AdjunctAddition> adjuncts;
     @Expose
-    public Style beerStyle;
+    public Style style;
+    @Expose
+    public float boilVolume;
+    @Expose
+    public EquipmentProfile equipmentProfile;
+    @Expose
+    public String lastModifiedGuid;
+    @Expose
+    public String createdByUserID;
+    @Expose
+    public String groupID;
+    @Expose
+    public boolean isGroupEditable;
+    @Expose
+    public boolean isPublic;
+    @Expose
+    public boolean deleted;
 
-    //obsolete
-    private String style;
-    private String styleID;
+    public enum IngredientType {
+        Fermntable,
+        Hop,
+        Yeast,
+        Adjunct
+    }
+
 
 
     public Recipe() {
@@ -52,44 +71,18 @@ public class Recipe extends ListableObject implements Serializable { //6.5.2018 
         name = sName;
     }
 
-    public Recipe(String sName, String sStyle) {
+    public Recipe(String sName) {
         name = sName;
-        style = sStyle;
     }
 
     public void Initiliaze() {
         if (hops == null) hops = new ArrayList<>();
         if (fermentables == null) fermentables = new ArrayList<>();
         if (yeasts == null) yeasts = new ArrayList<>();
+        if (adjuncts == null) adjuncts = new ArrayList<>();
+        if (equipmentProfile == null) equipmentProfile = new EquipmentProfile();
+
         recipeStats = new RecipeStatistics();
         recipeParameters = new RecipeParameters();
-    }
-
-    /*
-    For Some reason I can't convert ArrayList<HopAddition> to ArrayList<ListableObject> so I need to clear and readd these...
-     */
-    public void ClearIngredients() {
-        hops.clear();
-        fermentables.clear();
-        yeasts.clear();
-    }
-
-    public void PopulateHops(ArrayList<ListableObject> hops) {
-        for (int i = 0; i < hops.size(); i++) {
-            HopAddition h = (HopAddition)hops.get(i);
-            this.hops.add(h);
-        }
-    }
-    public void PopulateFermentables(ArrayList<ListableObject> fermentables) {
-        for (int i = 0; i < fermentables.size(); i++) {
-            FermentableAddition h = (FermentableAddition) fermentables.get(i);
-            this.fermentables.add(h);
-        }
-    }
-    public void PopulateYeasts(ArrayList<ListableObject> yeasts) {
-        for (int i = 0; i < yeasts.size(); i++) {
-            Yeast h = (Yeast) yeasts.get(i);
-            this.yeasts.add(h);
-        }
     }
 }

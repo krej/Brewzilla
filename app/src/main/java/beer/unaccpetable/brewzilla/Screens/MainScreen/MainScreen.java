@@ -85,6 +85,7 @@ public class MainScreen extends BaseActivity
         lstRecipes = findViewById(R.id.listRecipe);
         m_Adapter = Tools.setupRecyclerView(lstRecipes, getApplicationContext(), R.layout.list_recipe, 0, false, new RecipeListAdapterViewControl(this), true);
 
+
         mTextView = findViewById(R.id.mainscreen_text);
 
         m_Controller.LoadRecipes(false);

@@ -4,13 +4,14 @@ import com.google.gson.annotations.Expose;
 
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
+import java.util.UUID;
+
 /**
  * Created by Megatron on 9/25/2017.
  */
 
-public class FermentableAddition extends ListableObject {
-    @Expose
-    public String fermentableID;
+public class FermentableAddition extends IngredientAddition {
+
     @Expose
     public String use = "Mash"; //Hard coded to Mash for now because I dont know the purpose of this
     @Expose
@@ -18,7 +19,14 @@ public class FermentableAddition extends ListableObject {
     @Expose
     public Fermentable fermentable;
 
+    public FermentableAddition(Fermentable f) {
+        super();
+        fermentable = f;
+        weight = 0;
+        name = f.name;
+    }
     public FermentableAddition(String sName, double dWeight, double dPPG, int iColor) {
+        super();
         fermentable = new Fermentable(sName, dPPG, iColor);
         name = sName;
         weight = dWeight;

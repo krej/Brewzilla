@@ -14,8 +14,6 @@ public class RecipeParameters {
     @Expose
     public double ibuBoilTimeCurveFit;
     @Expose
-    public double intoFermenterVolume;
-    @Expose
     public double gristRatio;
     @Expose
     public double initialMashTemp;
@@ -30,7 +28,7 @@ public class RecipeParameters {
         ibuCalcType = "basic";
         fermentableCalcType = "basic";
         ibuBoilTimeCurveFit = -0.04;
-        intoFermenterVolume = 5;
+        //intoFermenterVolume = 5;
         gristRatio = 1.5;
         initialMashTemp = 70;
         targetMashTemp = 150;
