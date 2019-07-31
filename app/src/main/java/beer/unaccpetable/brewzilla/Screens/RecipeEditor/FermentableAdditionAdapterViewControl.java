@@ -80,9 +80,11 @@ public class FermentableAdditionAdapterViewControl extends BaseAdapterViewContro
 
         Tools.SetText(tvName, f.fermentable.name);
         Tools.SetText(tvWeight, f.weight);
-        Tools.SetText(tvPPG, "PPG: " + f.fermentable.ppg);
+        Tools.SetText(tvPPG, "Yield: " + f.fermentable.yield);
         Tools.SetText(tvColor, "SRM: " + f.fermentable.color);
 
+
+        //tvWeight.setSelectAllOnFocus(true);
 
         tvWeight.addTextChangedListener(new TextWatcher() {
             @Override

@@ -19,6 +19,8 @@ public class Fermentable extends ListableObject {
     public String maltster;
     @Expose
     public String createdByUserId;
+    @Expose
+    public float yield;
 
     public Fermentable(String sName, double dPPG, int iColor) {
         name = sName;

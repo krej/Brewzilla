@@ -228,7 +228,8 @@
     <string name="add">Add</string>
     <string name="search">Search</string>
     <string name="oz">oz</string>
-    <string name="min">min</string>
+    <string name="min">Min</string>
+    <string name="max">Max</string>
     <string-array name="gristRatioNames">
         <item>Very Thick</item>
         <item>Thick</item>

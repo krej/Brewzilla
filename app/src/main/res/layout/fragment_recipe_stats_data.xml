@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+              android:paddingEnd="10dp"
+              android:paddingStart="10dp"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ibuDataLabel"
+            android:text="@string/IBUs"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ogDataLabel"
+            android:text="@string/og"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fgDataLabel"
+            android:text="@string/fg"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/abvDataLabel"
+            android:text="@string/ABV"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/srmDataLabel"
+            android:text="@string/SRM"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="30dp"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ibuDataMinLabel"
+                android:layout_alignParentEnd="true"
+                android:paddingEnd="20sp"
+                android:paddingStart="20sp"
+                android:textStyle="italic"
+                android:text="@string/min"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:paddingStart="20sp"
+                android:paddingEnd="20sp"
+                android:textStyle="bold"
+                android:id="@+id/ibuDataActual"
+
+                android:text="45"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ibuDataMin"
+                android:layout_alignParentEnd="true"
+                android:paddingEnd="20sp"
+                android:paddingStart="20sp"
+                android:textStyle="italic"
+                android:text="25"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:paddingStart="20sp"
+                android:paddingEnd="20sp"
+                android:textStyle="bold"
+                android:id="@+id/ogDataActual"
+
+                android:text="45"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ogDataMin"
+                android:layout_alignParentEnd="true"
+                android:paddingEnd="20sp"
+                android:paddingStart="20sp"
+                android:textStyle="italic"
+                android:text="25"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:paddingStart="20sp"
+                android:paddingEnd="20sp"
+                android:textStyle="bold"
+                android:id="@+id/fgDataActual"
+
+                android:text="45"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fgDataMin"
+                android:layout_alignParentEnd="true"
+                android:paddingEnd="20sp"
+                android:paddingStart="20sp"
+                android:textStyle="italic"
+                android:text="25"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:paddingStart="20sp"
+                android:paddingEnd="20sp"
+                android:textStyle="bold"
+                android:id="@+id/abvDataActual"
+
+                android:text="45"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/abvDataMin"
+                android:layout_alignParentEnd="true"
+                android:paddingEnd="20sp"
+                android:paddingStart="20sp"
+                android:textStyle="italic"
+                android:text="25"/>
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:paddingStart="20sp"
+                android:paddingEnd="20sp"
+                android:textStyle="bold"
+                android:id="@+id/srmDataActual"
+
+                android:text="45"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/srmDataMin"
+                android:layout_alignParentEnd="true"
+                android:paddingEnd="20sp"
+                android:paddingStart="20sp"
+                android:textStyle="italic"
+                android:text="25"/>
+        </RelativeLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:id="@+id/ibuDataMaxLabel"
+            android:text="@string/max"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:id="@+id/ibuDataMax"
+            android:text="75"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:id="@+id/ogDataMax"
+            android:text="75"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:id="@+id/fgDataMax"
+            android:text="75"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:id="@+id/abvDataMax"
+            android:text="75"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:id="@+id/srmDataMax"
+            android:text="75"/>
+    </LinearLayout>
+</RelativeLayout>

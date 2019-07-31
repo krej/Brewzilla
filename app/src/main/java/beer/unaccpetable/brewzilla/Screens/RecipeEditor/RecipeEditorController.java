@@ -73,6 +73,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
                     m_alHops = r.Hops;
                     m_alYeasts = r.Yeasts;
 
+                    //view.SetRefreshing(false);
                     m_bDontSave = false;
                 }
 
@@ -411,5 +412,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         void AddHop(HopAddition ha);
 
         void AddYeast(YeastAddition ya);
+
+        void SetRefreshing(boolean bRefeshing);
     }
 }

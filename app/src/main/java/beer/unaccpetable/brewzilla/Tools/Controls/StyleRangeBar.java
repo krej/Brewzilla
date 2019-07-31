@@ -16,6 +16,8 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.unacceptable.unacceptablelibrary.Tools.Tools;
+
 import beer.unaccpetable.brewzilla.R;
 
 public class StyleRangeBar extends View {
@@ -37,6 +39,8 @@ public class StyleRangeBar extends View {
 
     private float m_fValue;
     private int m_iValueColor;
+
+    private String m_sMinText, m_sMaxText;
 
     public StyleRangeBar(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -68,8 +72,8 @@ public class StyleRangeBar extends View {
         float w = (float)getMeasuredWidth();
         int h = getMeasuredHeight();
 
-        int iBarTop = 35;
-        int iBarBottom = 10;
+        int iBarTop = 30;
+        int iBarBottom = 5;
 
         float fBarLength = (m_fBarMax - m_fBarMin);
         float xMinPos = (m_fRangeMin / fBarLength) * w;
@@ -109,20 +113,18 @@ public class StyleRangeBar extends View {
         c.drawText("45", iX - 14, 27, m_p);
         */
 
-        m_p.setColor(Color.BLACK);
+        m_p.setColor(Color.YELLOW);
         m_p.setTextSize(25);
         c.save();
         //c.rotate(45);
         m_p.setShadowLayer(5, 2, 2, Color.WHITE);
-        c.drawText("45", xMinPos - 35, 32, m_p);
         c.restore();
 
         //draw max circle
         //c.drawCircle(xMaxPos, 20, 20, m_p);
-        c.drawText("70", xMaxPos + 5, 32, m_p);
 
         //draw value box
-        m_r.set(xValuePos, iBarTop + 10, xValuePos + 15, iBarBottom - 10);
+        m_r.set(xValuePos, iBarTop + 10, xValuePos + 7, iBarBottom - 10);
         m_p.setColor(m_iValueColor);
         m_p.setShadowLayer(10, 5, 5, Color.BLACK);
         c.drawRoundRect(m_r, m_iCornerRoundX, m_iCornerRoundY, m_p);
@@ -138,7 +140,7 @@ public class StyleRangeBar extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        setMeasuredDimension(widthMeasureSpec, 70);
+        setMeasuredDimension(widthMeasureSpec, 47);
     }
 
     public void setRangeMin(float min) {
@@ -162,6 +164,8 @@ public class StyleRangeBar extends View {
     public void setRange(double min, double max) {
         m_bInvalidate = false; //only redraw once
         setRangeMin(min);
+        setMinText(min);
+        setMaxText(max);
         m_bInvalidate = true;
         setRangeMax(max);
     }
@@ -171,4 +175,12 @@ public class StyleRangeBar extends View {
         invalidate();
     }
 
+    private void setMinText(double dValue) {
+
+        m_sMinText = String.valueOf(dValue);
+    }
+
+    private void setMaxText(double dValue) {
+        m_sMaxText = String.valueOf(dValue);
+    }
 }

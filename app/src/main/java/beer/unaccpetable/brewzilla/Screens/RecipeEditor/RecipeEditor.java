@@ -5,12 +5,18 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -20,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -53,6 +60,7 @@ import beer.unaccpetable.brewzilla.Models.YeastAddition;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Repositories.Repository;
 import beer.unaccpetable.brewzilla.Screens.BaseActivity;
+import beer.unaccpetable.brewzilla.Screens.RecipeEditor.Fragments.StatsSectionsPagerAdapter;
 import beer.unaccpetable.brewzilla.Tools.Calculations;
 import beer.unaccpetable.brewzilla.Tools.Controls.StyleRangeBar;
 
@@ -62,6 +70,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
     private RecipeEditorController m_Controller;
 
+    private SwipeRefreshLayout m_SwipeRefresh;
 
     /********** Recipe Editor tab *************/
     RecyclerView lstGrains, lstHops,lstYeasts;
@@ -76,14 +85,13 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     Button m_btnAddFermentable, m_btnAddHop, m_btnAddYeast;
 
     private TextView txtIBU, txtOG, txtFG, txtABV, txtSRM;
-    Spinner m_spStyle;
+    //Spinner m_spStyle;
     Toolbar toolbar;
 
     private ViewFlipper m_ViewFlipper;
     TabLayout m_TabLayout;
     TabItem m_tabRecipe, m_tabMash;
 
-    StyleRangeBar m_srbIBU, m_srbOG, m_srbFG, m_srbABV, m_srbSRM;
 
     /******** Mash tab *************/
     //initial mash
@@ -97,6 +105,8 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     TextView m_lblWaterToAdd;
     LinearLayout m_llMashInfusionWaterToAdd;
 
+    StatsSectionsPagerAdapter statsSectionsPagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,24 +117,26 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
         FindUIElements();
 
-        ///
-        //StyleRangeBar srb = findViewById(R.id.ibuBar);
-        //srb.setRangeMin(100);
-        //srb.setRangeMax(120);
+        statsSectionsPagerAdapter = new StatsSectionsPagerAdapter(getSupportFragmentManager());
 
-        ///
+        ViewPager m_vpStats = findViewById(R.id.statsPager);
+        TabLayout m_tbStats = findViewById(R.id.recipeStatsTabDots);
 
-        /*fabHop.setImageResource(R.drawable.ic_hop);
-        fabGrain.setImageResource(R.drawable.ic_grain);
-        fabYeast.setImageResource(R.drawable.ic_test_tube);*/
+        m_vpStats.setAdapter(statsSectionsPagerAdapter);
+        m_tbStats.setupWithViewPager(m_vpStats);
+
+        //statsSectionsPagerAdapter.setIBU(22);
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        String sID = getIntent().getStringExtra("RecipeID");
 
         SetButtonClickEvents();
         SetupRecipeParamaterListeners();
         SetupStyleListener();
         SetupAddButtonListeners();
-
+        //SetupSwipeRefresh(sID);
         SetupTabChangeListener();
 
         m_Controller = new RecipeEditorController(new Repository());
@@ -132,9 +144,17 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
         SetupLists();
 
-        String sID = getIntent().getStringExtra("RecipeID");
 
         m_Controller.LoadRecipe(sID);
+    }
+
+    private void SetupSwipeRefresh(final String sIDString) {
+        m_SwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                m_Controller.LoadRecipe(sIDString);
+            }
+        });
     }
 
     private void SetupAddButtonListeners() {
@@ -181,7 +201,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     }
 
     private void SetupStyleListener() {
-        m_spStyle.setOnItemSelectedListener(new CustomOnItemSelectedListener(new CustomOnItemSelectedListener.IMyAdapterViewOnItemSelectedListener() {
+        /*m_spStyle.setOnItemSelectedListener(new CustomOnItemSelectedListener(new CustomOnItemSelectedListener.IMyAdapterViewOnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Style style = (Style)parent.getSelectedItem();
@@ -192,7 +212,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        }));
+        }));*/
 
         /*m_spStyle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -407,24 +427,16 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     }
 
     private void FindUIElements() {
+//        m_SwipeRefresh = findViewById(R.id.recipeEditorSwipeRefresh);
+
         //Recipe Tab
         lstGrains = findViewById(R.id.listGrains);
         lstHops = findViewById(R.id.listHops);
         lstYeasts = findViewById(R.id.listYeast);
 
         //stats card
-        //txtIBU = findViewById(R.id.txtIBUs);
-        m_srbIBU = findViewById(R.id.ibuBar);
-        m_srbOG = findViewById(R.id.ogBar);
-        m_srbFG = findViewById(R.id.fgBar);
-        m_srbABV = findViewById(R.id.abvBar);
-        m_srbSRM = findViewById(R.id.srmBar);
-        /*txtOG = findViewById(R.id.txtOG);
-        txtFG = findViewById(R.id.txtFG);
-        txtABV = findViewById(R.id.txtABV);
-        txtSRM = findViewById(R.id.txtSRM);*/
-        fabSRM = findViewById(R.id.srmColor);
-        m_spStyle = findViewById(R.id.spinStyle);
+        //fabSRM = findViewById(R.id.srmColor);
+        //m_spStyle = findViewById(R.id.spinStyle);
 
         /*fabGrain = findViewById(R.id.fabGrain);
         fabGrain.setVisibility(View.INVISIBLE);
@@ -624,12 +636,22 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         txtFG.setText("FG: " + stats.getFormattedFG());
         txtABV.setText("ABV: " + stats.getFormattedABV() + "%");
         txtSRM.setText("SRM: " + stats.getFormattedSRM());*/
-        m_srbIBU.setValue(stats.ibu);
-        m_srbOG.setValue(stats.getOgPoints());
-        m_srbFG.setValue(stats.getFgPoints());
-        m_srbABV.setValue(stats.abv);
-        m_srbSRM.setValue(stats.srm);
-        fabSRM.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(Calculations.GetSRMColor((int)stats.srm))));
+        //statsSectionsPagerAdapter.setIBU(stats.ibu);
+        statsSectionsPagerAdapter.PopulateStats(stats);
+        int iColor = Color.parseColor(Calculations.GetSRMColor((int)stats.srm));
+        Color c = Color.valueOf(iColor);
+        int iDark = Color.rgb((int)(c.red() * .2f), (int)(c.green() * .2f), (int)(c.blue() * .2f));
+
+        //fabSRM.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(Calculations.GetSRMColor((int)stats.srm))));
+        toolbar.setBackgroundColor(Color.parseColor(Calculations.GetSRMColor((int)stats.srm)));
+        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
+        collapsingToolbarLayout.setBackgroundColor(Color.parseColor(Calculations.GetSRMColor((int)stats.srm)));
+        collapsingToolbarLayout.setStatusBarScrimColor(Color.parseColor(Calculations.GetSRMColor((int)stats.srm)));
+        Window window = this.getWindow();
+        window.setStatusBarColor(iDark);
+        /*AppBarLayout appBarLayout = findViewById(R.id.app_bar);
+        appBarLayout.setBackgroundColor(Color.parseColor(Calculations.GetSRMColor((int)stats.srm)));*/
+
 
         //mash tab
         m_lblInitialStrikeTemp.setText(stats.getFormattedStrikeWaterTemp());
@@ -692,22 +714,18 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
     @Override
     public void PopulateStyleDropDown(Style[] styles) {
-        Tools.PopulateDropDown(m_spStyle, getApplicationContext(), styles);
+        //Tools.PopulateDropDown(m_spStyle, getApplicationContext(), styles);
     }
 
     @Override
     public void SetStyle(Style[] styles, Style beerStyle) {
-        Tools.SetDropDownSelection(m_spStyle, styles, beerStyle);
+        //Tools.SetDropDownSelection(m_spStyle, styles, beerStyle);
     }
 
     @Override
     public void SetStyleRanges(Style style) {
+        statsSectionsPagerAdapter.PopulateStyleRanges(style);
 
-        m_srbIBU.setRange(style.minIBU, style.maxIBU);
-        m_srbOG.setRange(Tools.DecimalPart(style.minOG), Tools.DecimalPart(style.maxOG));
-        m_srbFG.setRange(Tools.DecimalPart(style.minFG), Tools.DecimalPart(style.maxFG));
-        m_srbABV.setRange(style.minABV, style.maxABV);
-        m_srbSRM.setRange(style.minColor, style.maxColor);
     }
 
     @Override
@@ -754,7 +772,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     @Override
     public void SetScreenReadOnly(boolean bEnabled) {
 
-        m_spStyle.setEnabled(bEnabled);
+        //m_spStyle.setEnabled(bEnabled);
         m_btnAddFermentable.setEnabled(bEnabled);
         m_btnAddHop.setEnabled(bEnabled);
         m_btnAddYeast.setEnabled(bEnabled);
@@ -775,5 +793,10 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         super.onPause();
 
         m_Controller.SaveRecipe();
+    }
+
+    @Override
+    public void SetRefreshing(boolean bRefreshing) {
+        m_SwipeRefresh.setRefreshing(bRefreshing);
     }
 }

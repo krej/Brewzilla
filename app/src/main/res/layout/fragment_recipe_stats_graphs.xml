@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="0">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:orientation="vertical"
+                    android:weightSum="0">
+
+                    <!--<Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinStyle">
+
+                    </Spinner>-->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/IBUs"/>
+
+                            <TextView
+                                android:id="@+id/txtOG"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/og"/>
+
+                            <TextView
+                                android:id="@+id/txtFG"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/fg"/>
+
+                            <TextView
+                                android:id="@+id/txtABV"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/ABV"/>
+
+                            <TextView
+                                android:id="@+id/txtSRM"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/SRM"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <beer.unaccpetable.brewzilla.Tools.Controls.StyleRangeBar
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginStart="2dp"
+                                app:negativeColor="#FF0000"
+                                app:positiveColor="#00FF00"
+                                app:textColor="#000000"
+                                app:barMin="0"
+                                app:barMax="150"
+                                android:id="@+id/ibuBar"/>
+
+                            <beer.unaccpetable.brewzilla.Tools.Controls.StyleRangeBar
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginStart="2dp"
+                                app:negativeColor="#FF0000"
+                                app:positiveColor="#00FF00"
+                                app:textColor="#000000"
+                                app:barMin="00"
+                                app:barMax="200"
+                                android:id="@+id/ogBar"/>
+
+                            <beer.unaccpetable.brewzilla.Tools.Controls.StyleRangeBar
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginStart="2dp"
+                                app:negativeColor="#FF0000"
+                                app:positiveColor="#00FF00"
+                                app:textColor="#000000"
+                                app:barMin="0"
+                                app:barMax="200"
+                                android:id="@+id/fgBar"/>
+
+                            <beer.unaccpetable.brewzilla.Tools.Controls.StyleRangeBar
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginStart="2dp"
+                                app:negativeColor="#FF0000"
+                                app:positiveColor="#00FF00"
+                                app:textColor="#000000"
+                                app:barMin="0"
+                                app:barMax="25"
+                                android:id="@+id/abvBar"/>
+
+                            <beer.unaccpetable.brewzilla.Tools.Controls.StyleRangeBar
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginStart="2dp"
+                                app:negativeColor="#FF0000"
+                                app:positiveColor="#00FF00"
+                                app:textColor="#000000"
+                                app:barMin="0"
+                                app:barMax="40"
+                                android:id="@+id/srmBar"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!--<android.support.design.widget.FloatingActionButton
+                    android:id="@+id/srmColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|end"
+                    android:layout_weight="0"
+                    android:clickable="false"
+                    android:layout_alignParentRight="true"
+                    app:fabSize="mini"/>-->
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+</RelativeLayout>
