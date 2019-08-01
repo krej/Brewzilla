@@ -1,7 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                                              android:layout_width="match_parent"
                                              android:layout_height="match_parent"
-    android:orientation="vertical">
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                                             android:id="@+id/recipeScrollView"
+                                             android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/recipeView">
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="4dp"
+            app:contentPadding="10dp"
+            android:layout_margin="5dp">
 
-</android.support.constraint.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="American Pale Ale"
+                    android:id="@+id/recipeStyle"
+                    android:paddingBottom="5dp"
+                    android:textAlignment="center"/>
+
+                <com.unacceptable.unacceptablelibrary.Controls.WrapContentViewPager
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/statsPager"/>
+
+                <android.support.design.widget.TabLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/recipeStatsTabDots"
+                    app:tabBackground="@drawable/tab_selector"
+                    app:tabGravity="center"
+                    app:tabIndicatorHeight="0dp"
+                    >
+
+                </android.support.design.widget.TabLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="Fermentables"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:id="@+id/txtGrains"
+                android:textSize="24sp"
+                android:textStyle="normal|bold"
+                android:layout_alignParentStart="true" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnAddFermentable"
+                android:layout_alignParentEnd="true"
+                android:text="@string/add"/>
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listGrains" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:orientation="horizontal">
+            <TextView
+                android:text="Hops"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:id="@+id/txtHops"
+                android:textStyle="normal|bold"
+                android:textSize="24sp"
+                android:layout_alignParentStart="true" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/btnAddHop"
+                android:text="@string/add"/>
+        </RelativeLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listHops" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:paddingHorizontal="10dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="Yeasts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtYeasts"
+                android:textStyle="normal|bold"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:textSize="24sp" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnAddYeast"
+                android:text="@string/add"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listYeast" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:paddingHorizontal="10dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="Adjuncts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="normal|bold"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:textSize="24sp" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listAdjunct" />
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
+<!--</android.support.v4.widget.SwipeRefreshLayout>-->

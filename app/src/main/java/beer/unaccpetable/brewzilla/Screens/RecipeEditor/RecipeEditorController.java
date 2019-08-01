@@ -1,5 +1,6 @@
 package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 
+import android.graphics.Color;
 import android.support.design.widget.TabLayout;
 
 import com.android.volley.VolleyError;
@@ -24,12 +25,17 @@ import beer.unaccpetable.brewzilla.Models.Style;
 import beer.unaccpetable.brewzilla.Models.Yeast;
 import beer.unaccpetable.brewzilla.Models.YeastAddition;
 import beer.unaccpetable.brewzilla.Repositories.IRepository;
+import beer.unaccpetable.brewzilla.Screens.RecipeEditor.Fragments.MashFragment;
+import beer.unaccpetable.brewzilla.Tools.Calculations;
 
 public class RecipeEditorController extends BaseLogic<RecipeEditorController.View> {
 
     public Recipe CurrentRecipe;
 
-    private ArrayList m_alFermentables, m_alHops, m_alYeasts, m_alAdjuncts;
+    private IActivityView m_ActivityView;
+    public IMashView m_MashView;
+
+    private ArrayList m_alFermentables, m_alHops, m_alYeasts, m_alAdjuncts, m_alStyle;
 
     private IRepository m_repo;
 
@@ -50,28 +56,28 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
                     RecipeEditorViewModel r = Tools.convertJsonResponseToObject(t, RecipeEditorViewModel.class);
                     CurrentRecipe = r.Recipe;
                     m_OriginalData = CurrentRecipe.BuildRestData();
-                    FixBadData(); //TODO: Temp, only for now when some old data doesn't exist
 
-                    if (r.Styles != null)
-                        view.PopulateStyleDropDown(r.Styles);
+                    //if (r.Styles != null)
+                    //    view.PopulateStyleDropDown(r.Styles);
 
-                    view.SetTitle(CurrentRecipe.name);
+                    m_ActivityView.SetTitle(CurrentRecipe.name);
                     if (CurrentRecipe.style != null) {
-                        view.SetStyle(r.Styles, CurrentRecipe.style);
+                        view.SetStyle(CurrentRecipe.style);
                         view.SetStyleRanges(CurrentRecipe.style);
                     }
-                    view.PopulateStats(CurrentRecipe.recipeStats);
+                    PopulateStats(CurrentRecipe.recipeStats);
                     view.PopulateHops(CurrentRecipe.hops);
                     view.PopulateYeasts(CurrentRecipe.yeasts);
                     view.PopulateFermentables(CurrentRecipe.fermentables);
-                    view.PopulateParameters(CurrentRecipe.recipeParameters);
+                    m_MashView.PopulateParameters(CurrentRecipe.recipeParameters);
 
-                    view.PopulateHopDialog(r.Hops);
+                    /*view.PopulateHopDialog(r.Hops);
                     view.PopulateFermentableDialog(r.Fermentables);
-                    view.PopulateYeastDialog(r.Yeasts);
+                    view.PopulateYeastDialog(r.Yeasts);*/
                     m_alFermentables = r.Fermentables;
                     m_alHops = r.Hops;
                     m_alYeasts = r.Yeasts;
+                    m_alStyle = r.Styles;
 
                     //view.SetRefreshing(false);
                     m_bDontSave = false;
@@ -79,13 +85,25 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
                 @Override
                 public void onError(VolleyError error) {
-                    view.ShowToast(Tools.ParseVolleyError(error));
+                    m_ActivityView.ShowToast(Tools.ParseVolleyError(error));
                 }
             });
         } else {
             //TODO: Is this even possible anymore? I changed it so it saves the recipe before going to the screen then loads it.
-            view.SetTitle("Create Recipe");
+            m_ActivityView.SetTitle("Create Recipe");
         }
+    }
+
+    private void PopulateStats(RecipeStatistics recipeStats) {
+        view.PopulateStats(recipeStats);
+        m_MashView.PopulateMashStats(recipeStats);
+
+
+        int iColor = Color.parseColor(Calculations.GetSRMColor((int)recipeStats.srm));
+        Color cDark = Color.valueOf(iColor);
+        float fDark = 0.8f;
+        int iDarkColor = Color.rgb(cDark.red() * fDark, cDark.green() * fDark, cDark.blue() * fDark);
+        m_ActivityView.SetTitleSRMColor(iColor, iDarkColor);
     }
 
     private void FixBadData() {
@@ -93,6 +111,15 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
             CurrentRecipe.recipeParameters = new RecipeParameters();
 
     }
+
+    public void attachActivityView(IActivityView view) {
+        m_ActivityView = view;
+    }
+
+    public void attachMashView(MashFragment mashFragment) {
+        m_MashView = mashFragment;
+    }
+
 
     public void SaveRecipe() {
         if (Arrays.equals(CurrentRecipe.BuildRestData(), m_OriginalData) || m_bDontSave) return;
@@ -104,7 +131,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
                 if (response.Success) {
                     //comment out this line to test locking
                     CurrentRecipe.lastModifiedGuid = response.lastModifiedGuid;
-                    view.PopulateStats(response.recipeStats);
+                    PopulateStats(response.recipeStats);
                     CurrentRecipe.recipeStats = response.recipeStats;
 
                     //This should always be last so it gets the real copy of the data
@@ -116,7 +143,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
             @Override
             public void onError(VolleyError error) {
-                view.ShowToast("ERROR");
+                m_ActivityView.ShowToast("ERROR");
             }
         });
     }
@@ -125,19 +152,11 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         if (response.Message.contains("Recipe has been modified")) {
             m_bDontSave = true;
 
-            view.ShowToast("Recipe has been modified elsewhere. Please refresh.");
+            m_ActivityView.ShowToast("Recipe has been modified elsewhere. Please refresh.");
             view.SetScreenReadOnly(false);
 
         } else {
-            view.ShowToast(response.Message);
-        }
-    }
-
-    public void TabSelected(TabLayout.Tab tab) {
-        if (tab.getText().equals("RECIPE")) {
-            view.SwitchToRecipeView();
-        } else {
-            view.SwitchToMashView();
+            m_ActivityView.ShowToast(response.Message);
         }
     }
 
@@ -171,12 +190,13 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         m_repo.MashInfusionCalculation(CurrentRecipe.idString, sCurrentTemp, sTargetMashTemp, sTotalWaterInMash, sHLTTemp, new RepositoryCallback() {
             @Override
             public void onSuccess(String t) {
-                view.MashInfusionShowWaterToAdd(t);
+                //TODO: this
+                m_MashView.MashInfusionShowWaterToAdd(t);
             }
 
             @Override
             public void onError(VolleyError error) {
-                view.ShowToast(Tools.ParseVolleyError(error));
+                m_ActivityView.ShowToast(Tools.ParseVolleyError(error));
             }
         });
     }
@@ -189,25 +209,25 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
     public void GoBack() {
 
-        view.FinishActivity(CurrentRecipe.idString, CurrentRecipe.recipeStats.abv, false);
+        m_ActivityView.FinishActivity(CurrentRecipe.idString, CurrentRecipe.recipeStats.abv, false);
     }
 
     public void DeleteRecipe() {
         m_repo.DeleteRecipe(CurrentRecipe.idString, new RepositoryCallback() {
             @Override
             public void onSuccess(String t) {
-                view.FinishActivity(CurrentRecipe.idString, 0, true);
+                m_ActivityView.FinishActivity(CurrentRecipe.idString, 0, true);
             }
 
             @Override
             public void onError(VolleyError error) {
-                view.ShowToast("Error deleting recipe.");
+                m_ActivityView.ShowToast("Error deleting recipe.");
             }
         });
     }
 
     public void AskDeleteRecipe() {
-        view.PromptDeletion();
+        m_ActivityView.PromptDeletion();
     }
 
     public double fermentableChanged(FermentableAddition f, String sNewWeight) {
@@ -265,7 +285,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
             public void onSuccess(String t) {
                 RecipeStatsResponse r = Tools.convertJsonResponseToObject(t, RecipeStatsResponse.class);
                 if (r.Success) {
-                    view.PopulateStats(r.recipeStats);
+                    PopulateStats(r.recipeStats);
                 } else {
                     HandleRecipeStatsResponseError(r);
                 }
@@ -273,14 +293,22 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
             @Override
             public void onError(VolleyError error) {
-                view.ShowToast(Tools.ParseVolleyError(error));
+                m_ActivityView.ShowToast(Tools.ParseVolleyError(error));
             }
         });
     }
 
     public void AddIngredient(ListableObject i, Recipe.IngredientType ingredientType) {
+        if (ingredientType == null) {
+            //changing style - i'm not sure if i like this or not, so we'll see
+            changeStyle((Style)i);
+
+            return;
+        }
+
         AddIngredient(i, ingredientType, -1);
     }
+
 
     public void AddIngredient(ListableObject i, Recipe.IngredientType ingredientType, int position) {
 
@@ -378,32 +406,27 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         }
     }
 
+    public void showChangeStylePrompt() {
+        view.ShowAddDialog(m_alStyle, null);
+    }
+
+
+    private void changeStyle(Style i) {
+        CurrentRecipe.style = i;
+        view.SetStyle(i);
+        view.SetStyleRanges(i);
+        SaveRecipe();
+    }
+
+
     public interface View {
-        void ShowToast(String sMessage);
-        void SetTitle(String sTitle);
         void PopulateStats(RecipeStatistics recipeStats);
         void PopulateHops(ArrayList<HopAddition> hops);
         void PopulateYeasts(ArrayList<YeastAddition> yeasts);
         void PopulateFermentables(ArrayList<FermentableAddition> fermentables);
 
-        void PopulateYeastDialog(ArrayList<Yeast> yeasts);
-
-        void PopulateHopDialog(ArrayList<Hop> hops);
-
-        void PopulateFermentableDialog(ArrayList<Fermentable> fermentables);
-        //void GetIngredients();
-        void SwitchToMashView();
-        void SwitchToRecipeView();
-
-        void PopulateParameters(RecipeParameters recipeParameters);
-
-        void MashInfusionShowWaterToAdd(String t);
-
-        void PopulateStyleDropDown(Style[] styles);
-        void SetStyle(Style[] styles, Style beerStyle);
+        void SetStyle(Style beerStyle);
         void SetStyleRanges(Style style);
-        void FinishActivity(String sIDString, double dAbv, boolean bDeleted);
-        void PromptDeletion();
         void ShowAddDialog(ArrayList data, Recipe.IngredientType ingredientType);
         void SetScreenReadOnly(boolean bEnabled);
 
@@ -414,5 +437,19 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         void AddYeast(YeastAddition ya);
 
         void SetRefreshing(boolean bRefeshing);
+    }
+
+    public interface IActivityView {
+        void FinishActivity(String sIDString, double dAbv, boolean bDeleted);
+        void ShowToast(String sMessage);
+        void SetTitle(String sTitle);
+        void PromptDeletion();
+        void SetTitleSRMColor(int iColor, int iDarkColor);
+    }
+
+    public interface IMashView {
+        void PopulateParameters(RecipeParameters recipeParameters);
+        void MashInfusionShowWaterToAdd(String t);
+        void PopulateMashStats(RecipeStatistics stats);
     }
 }

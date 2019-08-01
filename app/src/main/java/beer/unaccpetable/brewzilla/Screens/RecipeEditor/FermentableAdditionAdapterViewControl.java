@@ -20,7 +20,6 @@ import beer.unaccpetable.brewzilla.Models.FermentableAddition;
 import beer.unaccpetable.brewzilla.R;
 
 public class FermentableAdditionAdapterViewControl extends BaseAdapterViewControl {
-    private ArrayList<Fermentable> m_Fermentables;
     private RecipeEditorController m_Controller;
 
     public FermentableAdditionAdapterViewControl(RecipeEditorController controller) {
@@ -176,10 +175,6 @@ public class FermentableAdditionAdapterViewControl extends BaseAdapterViewContro
         }
         m_Controller.SaveRecipe();*/
         return true;
-    }
-
-    public void PopulateList(ArrayList<Fermentable> f) {
-        m_Fermentables = f;
     }
 
     @Override

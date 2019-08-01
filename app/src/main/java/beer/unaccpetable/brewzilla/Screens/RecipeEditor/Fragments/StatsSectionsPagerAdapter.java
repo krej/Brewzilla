@@ -9,6 +9,9 @@ import beer.unaccpetable.brewzilla.Models.Style;
 import beer.unaccpetable.brewzilla.Screens.IngredientManager;
 
 public class StatsSectionsPagerAdapter extends FragmentPagerAdapter {
+    private RecipeStatsDataFragment m_oDataFragment;
+    private RecipeStatsGraphFragment m_oGraphFragment;
+
     public StatsSectionsPagerAdapter(FragmentManager fm) {
         super(fm);
 
@@ -16,8 +19,6 @@ public class StatsSectionsPagerAdapter extends FragmentPagerAdapter {
         m_oGraphFragment = RecipeStatsGraphFragment.newInstance();
     }
 
-    private RecipeStatsDataFragment m_oDataFragment;
-    private RecipeStatsGraphFragment m_oGraphFragment;
 
     @Override
     public Fragment getItem(int position) {

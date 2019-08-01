@@ -20,5 +20,5 @@ public class RecipeEditorViewModel {
     @Expose
     public ArrayList<Yeast> Yeasts;
     @Expose
-    Style[] Styles;
+    ArrayList<Style> Styles;
 }
