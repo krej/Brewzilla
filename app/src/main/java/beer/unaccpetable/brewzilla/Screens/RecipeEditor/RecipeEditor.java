@@ -83,7 +83,6 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_recipe);
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Do It For Dale");
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -100,6 +99,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
         String sID = getIntent().getStringExtra("RecipeID");
         m_Controller.LoadRecipe(sID);
+        m_Controller.LoadIngredientLists();
     }
 
     private void SetupTabChangeListener() {

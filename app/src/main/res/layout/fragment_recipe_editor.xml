@@ -154,13 +154,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true"
+                android:id="@+id/btnAddAdjunct"/>
         </RelativeLayout>
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/listAdjunct" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="100dp"/>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
 <!--</android.support.v4.widget.SwipeRefreshLayout>-->

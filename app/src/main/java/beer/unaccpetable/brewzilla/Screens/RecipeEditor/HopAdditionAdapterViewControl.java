@@ -128,21 +128,12 @@ public class HopAdditionAdapterViewControl extends BaseAdapterViewControl {
             }
         };
 
-        View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    m_Controller.SaveRecipe();
-                }
-            }
-        };
-
         etTime.addTextChangedListener(tw);
-        etTime.setOnFocusChangeListener(focusChangeListener);
+        etTime.setOnFocusChangeListener(m_Controller.createFocusChangeListener());
         etAmount.addTextChangedListener(tw);
-        etAmount.setOnFocusChangeListener(focusChangeListener);
+        etAmount.setOnFocusChangeListener(m_Controller.createFocusChangeListener());
         etAAU.addTextChangedListener(tw);
-        etAAU.setOnFocusChangeListener(focusChangeListener);
+        etAAU.setOnFocusChangeListener(m_Controller.createFocusChangeListener());
 
         spType.setOnItemSelectedListener(new CustomOnItemSelectedListener(new CustomOnItemSelectedListener.IMyAdapterViewOnItemSelectedListener() {
             @Override

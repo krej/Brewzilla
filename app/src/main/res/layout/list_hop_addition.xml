@@ -22,6 +22,7 @@
             android:id="@+id/hopAmount"
             android:layout_toStartOf="@id/hopAmountLabel"
             android:layout_centerVertical="true"
+            android:selectAllOnFocus="true"
             android:inputType="numberDecimal"
             />
         <TextView
@@ -38,6 +39,7 @@
             android:id="@+id/hopTime"
             android:layout_toStartOf="@id/hopTimeLabel"
             android:inputType="number"
+            android:selectAllOnFocus="true"
             android:layout_centerVertical="true"/>
 
         <TextView
@@ -63,6 +65,7 @@
             android:id="@+id/hopAAU"
             android:layout_alignParentStart="true"
             android:inputType="numberDecimal"
+            android:selectAllOnFocus="true"
             android:layout_centerVertical="true"/>
         <TextView
             android:layout_width="wrap_content"

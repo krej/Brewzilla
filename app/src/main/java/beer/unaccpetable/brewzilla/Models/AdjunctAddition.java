@@ -10,8 +10,6 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
 public class AdjunctAddition extends IngredientAddition {
     @Expose
-    public String adjunctID;
-    @Expose
     public double amount;
     @Expose
     public String unit;
@@ -23,4 +21,19 @@ public class AdjunctAddition extends IngredientAddition {
     public String type;
     @Expose
     public Adjunct adjunct;
+
+    public AdjunctAddition() {
+
+    }
+
+    public AdjunctAddition(Adjunct a) {
+        super();
+        adjunct = a;
+        name = a.name;
+        amount = 0;
+        unit = "";
+        time = 0;
+        timeUnit = "";
+        type = "";
+    }
 }

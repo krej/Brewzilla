@@ -2,6 +2,7 @@ package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 
 import android.graphics.Color;
 import android.support.design.widget.TabLayout;
+import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.unacceptable.unacceptablelibrary.Logic.BaseLogic;
@@ -9,9 +10,13 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import beer.unaccpetable.brewzilla.Models.Adjunct;
+import beer.unaccpetable.brewzilla.Models.AdjunctAddition;
 import beer.unaccpetable.brewzilla.Models.Fermentable;
 import beer.unaccpetable.brewzilla.Models.FermentableAddition;
 import beer.unaccpetable.brewzilla.Models.Hop;
@@ -35,7 +40,8 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
     private IActivityView m_ActivityView;
     public IMashView m_MashView;
 
-    private ArrayList m_alFermentables, m_alHops, m_alYeasts, m_alAdjuncts, m_alStyle;
+    private @NotNull ArrayList m_alFermentables, m_alHops, m_alYeasts, m_alStyle;
+    private @NotNull ArrayList<Adjunct> m_alAdjuncts;
 
     private IRepository m_repo;
 
@@ -45,6 +51,11 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
     public RecipeEditorController(IRepository repository) {
         m_repo = repository;
+        m_alAdjuncts = new ArrayList<>();
+        m_alFermentables = new ArrayList();
+        m_alHops = new ArrayList();
+        m_alYeasts = new ArrayList();
+        m_alStyle = new ArrayList();
     }
 
     public void LoadRecipe(String sID) {
@@ -69,6 +80,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
                     view.PopulateHops(CurrentRecipe.hops);
                     view.PopulateYeasts(CurrentRecipe.yeasts);
                     view.PopulateFermentables(CurrentRecipe.fermentables);
+                    view.PopulateAdjuncts(CurrentRecipe.adjuncts);
                     m_MashView.PopulateParameters(CurrentRecipe.recipeParameters);
 
                     /*view.PopulateHopDialog(r.Hops);
@@ -279,6 +291,30 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         return ha;
     }
 
+
+    public @NotNull AdjunctAddition adjunctChanged(AdjunctAddition aa, String sAmount, String sAmountUnit, String sTime, String sTimeUnit) {
+        double dAmount = Tools.ParseDouble(sAmount);
+        int iTime = Tools.ParseInt(sTime);
+        AdjunctAddition aaReturn = null;
+
+        for (AdjunctAddition a : CurrentRecipe.adjuncts) {
+            if (a.additionGuid.equals(aa.additionGuid)) {
+                a.amount = dAmount;
+                a.unit = sAmountUnit;
+                a.time = iTime;
+                a.timeUnit = sTimeUnit;
+                aaReturn = a;
+
+                break;
+            }
+        }
+
+        if (aaReturn == null)
+            aaReturn = new AdjunctAddition();
+
+        return aaReturn;
+    }
+
     private void RecalculateStats() {
         m_repo.CalculateRecipeStats(CurrentRecipe, new RepositoryCallback() {
             @Override
@@ -344,6 +380,15 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
                 AddIngredient(CurrentRecipe.yeasts, ya, position);
                 view.AddYeast(ya);
                 break;
+            case Adjunct:
+                AdjunctAddition aa;
+                if (i instanceof Adjunct)
+                    aa = new AdjunctAddition((Adjunct)i);
+                else
+                    aa = (AdjunctAddition)i;
+                AddIngredient(CurrentRecipe.adjuncts, aa, position);
+                view.AddAdjunct(aa);
+                break;
         }
 
     }
@@ -362,7 +407,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
                 DeleteIngredient(CurrentRecipe.yeasts, ia);
                 break;
             case Adjunct:
-                //DeleteAdjunct((AdjunctAddition)i);
+                DeleteIngredient(CurrentRecipe.adjuncts, ia);
                 break;
         }
     }
@@ -403,6 +448,10 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
                 break;
             case Yeast:
                 view.ShowAddDialog(m_alYeasts, ingredientType);
+                break;
+            case Adjunct:
+                view.ShowAddDialog(m_alAdjuncts, ingredientType);
+                break;
         }
     }
 
@@ -418,6 +467,38 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         SaveRecipe();
     }
 
+    public void LoadIngredientLists() {
+        LoadAdjuncts();
+    }
+
+    private void LoadAdjuncts() {
+        m_repo.LoadIngredientList("adjunct", new RepositoryCallback() {
+            @Override
+            public void onSuccess(String t) {
+                Adjunct[] adjuncts = Tools.convertJsonResponseToObject(t, Adjunct[].class);
+                for (Adjunct a : adjuncts) {
+                    m_alAdjuncts.add(a);
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
+    }
+
+    public android.view.View.OnFocusChangeListener createFocusChangeListener() {
+        return new android.view.View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(android.view.View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    //user left the textbox, save the recipe
+                    SaveRecipe();
+                }
+            }
+        };
+    }
 
     public interface View {
         void PopulateStats(RecipeStatistics recipeStats);
@@ -435,8 +516,11 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         void AddHop(HopAddition ha);
 
         void AddYeast(YeastAddition ya);
+        void AddAdjunct(AdjunctAddition aa);
 
         void SetRefreshing(boolean bRefeshing);
+
+        void PopulateAdjuncts(ArrayList<AdjunctAddition> adjuncts);
     }
 
     public interface IActivityView {

@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ import com.unacceptable.unacceptablelibrary.Tools.Tools;
 import java.util.ArrayList;
 
 import beer.unaccpetable.brewzilla.Adapters.SearchDialogAdapterViewControl;
+import beer.unaccpetable.brewzilla.Models.AdjunctAddition;
 import beer.unaccpetable.brewzilla.Models.FermentableAddition;
 import beer.unaccpetable.brewzilla.Models.HopAddition;
 import beer.unaccpetable.brewzilla.Models.Recipe;
@@ -37,6 +39,7 @@ import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
 import beer.unaccpetable.brewzilla.Models.Style;
 import beer.unaccpetable.brewzilla.Models.YeastAddition;
 import beer.unaccpetable.brewzilla.R;
+import beer.unaccpetable.brewzilla.Screens.RecipeEditor.AdjunctAdditionAdapterViewControl;
 import beer.unaccpetable.brewzilla.Screens.RecipeEditor.FermentableAdditionAdapterViewControl;
 import beer.unaccpetable.brewzilla.Screens.RecipeEditor.HopAdditionAdapterViewControl;
 import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditor;
@@ -55,10 +58,11 @@ public class RecipeFragment
     HopAdditionAdapterViewControl m_vcHop;
     FermentableAdditionAdapterViewControl m_vcFermentable;
     YeastAdditionAdapterViewControl m_vcYeasts;
+    AdjunctAdditionAdapterViewControl m_vcAdjunct;
 
     TextView m_tvStyle;
 
-    Button m_btnAddFermentable, m_btnAddHop, m_btnAddYeast;
+    Button m_btnAddFermentable, m_btnAddHop, m_btnAddYeast, m_btnAddAdjunct;
     NestedScrollView m_recipeScrollView;
     ViewPager m_vpStats;
     TabLayout m_tbStats;
@@ -106,9 +110,11 @@ public class RecipeFragment
         lstGrains = view.findViewById(R.id.listGrains);
         lstHops = view.findViewById(R.id.listHops);
         lstYeasts = view.findViewById(R.id.listYeast);
+        lstAdjuncts = view.findViewById(R.id.listAdjunct);
         m_btnAddFermentable = view.findViewById(R.id.btnAddFermentable);
         m_btnAddHop = view.findViewById(R.id.btnAddHop);
         m_btnAddYeast = view.findViewById(R.id.btnAddYeast);
+        m_btnAddAdjunct = view.findViewById(R.id.btnAddAdjunct);
         m_tvStyle = view.findViewById(R.id.recipeStyle);
     }
 
@@ -117,6 +123,7 @@ public class RecipeFragment
         m_btnAddFermentable.setOnClickListener((v) -> m_Controller.ShowAddDialog(Recipe.IngredientType.Fermntable));
         m_btnAddHop.setOnClickListener((v) -> m_Controller.ShowAddDialog(Recipe.IngredientType.Hop));
         m_btnAddYeast.setOnClickListener((v) -> m_Controller.ShowAddDialog(Recipe.IngredientType.Yeast));
+        m_btnAddAdjunct.setOnClickListener((v) -> m_Controller.ShowAddDialog(Recipe.IngredientType.Adjunct));
     }
 
     @Override
@@ -134,11 +141,16 @@ public class RecipeFragment
         Tools.PopulateAdapter(m_FermentableAdapter, fermentables);
     }
 
+    @Override
+    public void PopulateAdjuncts(ArrayList<AdjunctAddition> adjuncts) {
+        Tools.PopulateAdapter(m_AdjunctAdapter, adjuncts);
+    }
+
     private void SetupLists() {
         m_vcHop = new HopAdditionAdapterViewControl(m_Controller);
         m_vcFermentable = new FermentableAdditionAdapterViewControl(m_Controller);
-        //m_vcFermentable.m_Activity = this;
         m_vcYeasts = new YeastAdditionAdapterViewControl(m_Controller);
+        m_vcAdjunct = new AdjunctAdditionAdapterViewControl(m_Controller);
 
         m_HopAdapter = Tools.setupRecyclerView(lstHops, getContext(), R.layout.list_hop_addition, R.layout.fragment_hop_dialog, false, m_vcHop, true, true, true);
         m_HopAdapter.setSwipeFlags(ItemTouchHelper.END);
@@ -146,13 +158,13 @@ public class RecipeFragment
         m_YeastAdapter.setSwipeFlags(ItemTouchHelper.END);
         m_FermentableAdapter = Tools.setupRecyclerView(lstGrains, getContext(), R.layout.list_fermentable_addition, R.layout.fragment_malt_dialog, false, m_vcFermentable, true, true, true);
         m_FermentableAdapter.setSwipeFlags(ItemTouchHelper.END);
+        m_AdjunctAdapter = Tools.setupRecyclerView(lstAdjuncts, getContext(), R.layout.list_adjunct_addition, R.layout.fragment_adjunct_dialog, false,m_vcAdjunct, true, true, true);
+        m_AdjunctAdapter.setSwipeFlags(ItemTouchHelper.END);
 
         m_HopAdapter.setNotifySwipeDelete(createNotifySwipeDeleteAdapter(m_HopAdapter, Recipe.IngredientType.Hop));
         m_FermentableAdapter.setNotifySwipeDelete(createNotifySwipeDeleteAdapter(m_FermentableAdapter, Recipe.IngredientType.Fermntable));
         m_YeastAdapter.setNotifySwipeDelete(createNotifySwipeDeleteAdapter(m_YeastAdapter, Recipe.IngredientType.Yeast));
-
-        //TODO: Apparently I don't have adjuncts in the UI
-        //m_AdjunctAdapter = Tools.setupRecyclerView(lstHops, getApplicationContext(), R.layout.hop_list, R.layout.fragment_hop_dialog, false, null, true);
+        m_AdjunctAdapter.setNotifySwipeDelete(createNotifySwipeDeleteAdapter(m_AdjunctAdapter, Recipe.IngredientType.Adjunct));
     }
 
     private NewAdapter.INotifySwipeDelete createNotifySwipeDeleteAdapter(NewAdapter adapter, Recipe.IngredientType ingredientType) {
@@ -213,6 +225,11 @@ public class RecipeFragment
     @Override
     public void AddYeast(YeastAddition ya) {
         m_YeastAdapter.add(ya);
+    }
+
+    @Override
+    public void AddAdjunct(AdjunctAddition aa) {
+        m_AdjunctAdapter.add(aa);
     }
 
     @Override
