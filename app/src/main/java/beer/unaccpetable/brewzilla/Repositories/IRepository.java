@@ -13,4 +13,5 @@ public interface IRepository {
     void LoadStyles(RepositoryCallback callback);
     void DeleteRecipe(String sIDString, RepositoryCallback callback);
     void CalculateRecipeStats(Recipe r, RepositoryCallback callback);
+    void LoadIngredientList(String sCollectionName, RepositoryCallback callback);
 }

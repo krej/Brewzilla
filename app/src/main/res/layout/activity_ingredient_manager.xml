@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="beer.unaccpetable.brewzilla.Screens.IngredientManager">
+    tools:context="beer.unaccpetable.brewzilla.Screens.IngredientManager.IngredientManager">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"

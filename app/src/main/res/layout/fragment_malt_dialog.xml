@@ -12,13 +12,15 @@
         android:textAlignment="center"
         android:textSize="24sp" />
 
-    <Spinner
-        android:id="@+id/fermentableSelector"
+    <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:id="@+id/name"
+        android:inputType="textCapWords"
+        android:hint="@string/malt_name"/>
 
     <EditText
-        android:id="@+id/weight"
+        android:id="@+id/yield"
         android:inputType="numberDecimal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,20 +28,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif"
-        android:hint="@string/weight"/>
-    <EditText
-        android:id="@+id/ppg"
-        android:inputType="numberDecimal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif"
-        android:enabled="false"
-        android:hint="@string/ppg"/>
+        android:hint="@string/yield"/>
     <EditText
         android:id="@+id/color"
         android:inputType="number"
@@ -49,18 +38,5 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif"
-        android:hint="@string/color"
-        android:enabled="false"/>
-    <EditText
-        android:id="@+id/fermentableID"
-        android:inputType="number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif"
-        android:visibility="gone"/>
+        android:hint="@string/color"/>
 </LinearLayout>

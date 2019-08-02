@@ -83,7 +83,7 @@ public class YeastAdapter extends Adapter {
 
     @Override
     protected boolean AddItem(Dialog d, boolean bExisting, String sExtraData) {
-        final Spinner snName = (Spinner) d.findViewById(R.id.yeastSelector);
+        /*final Spinner snName = (Spinner) d.findViewById(R.id.yeastSelector);
         final EditText lab = (EditText) d.findViewById(R.id.lab);
         final EditText att = (EditText) d.findViewById(R.id.attenuation);
         final EditText yeastID = (EditText) d.findViewById(R.id.yeastID);
@@ -113,7 +113,7 @@ public class YeastAdapter extends Adapter {
             add(yeast);
         }
 
-        yeast.Save();
+        yeast.Save();*/
 
         return true;
     }
@@ -122,7 +122,7 @@ public class YeastAdapter extends Adapter {
     protected View SetupDialog(final Context c, ListableObject i) {
         View root = super.SetupDialog(c,i);
 
-        final Yeast h = (Yeast)i;
+        /*final Yeast h = (Yeast)i;
 
         final Spinner snName = (Spinner) root.findViewById(R.id.yeastSelector);
         final EditText lab = (EditText) root.findViewById(R.id.lab);
@@ -199,7 +199,7 @@ public class YeastAdapter extends Adapter {
             name.setText(h1.name);
             att.setText(String.valueOf(h.attenuation));
             title.setText("Edit Yeast");
-        }
+        }*/
 
         return root;
     }

@@ -32,7 +32,7 @@ import beer.unaccpetable.brewzilla.Models.Style;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Repositories.Repository;
 import beer.unaccpetable.brewzilla.Screens.BaseActivity;
-import beer.unaccpetable.brewzilla.Screens.IngredientManager;
+import beer.unaccpetable.brewzilla.Screens.IngredientManager.IngredientManager;
 import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditor;
 import beer.unaccpetable.brewzilla.Screens.SettingsActivity;
 
@@ -42,8 +42,6 @@ public class MainScreen extends BaseActivity
     private RecyclerView lstRecipes;
     private NewAdapter m_Adapter;
     private MainScreenController m_Controller;
-
-    TextView mTextView;
 
     private SwipeRefreshLayout m_SwipeRefresh;
 
@@ -84,9 +82,6 @@ public class MainScreen extends BaseActivity
 
         lstRecipes = findViewById(R.id.listRecipe);
         m_Adapter = Tools.setupRecyclerView(lstRecipes, getApplicationContext(), R.layout.list_recipe, 0, false, new RecipeListAdapterViewControl(this), true);
-
-
-        mTextView = findViewById(R.id.mainscreen_text);
 
         m_Controller.LoadRecipes(false);
 

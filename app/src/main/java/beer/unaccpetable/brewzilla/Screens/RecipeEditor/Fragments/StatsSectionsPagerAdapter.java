@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
 import beer.unaccpetable.brewzilla.Models.Style;
-import beer.unaccpetable.brewzilla.Screens.IngredientManager;
 
 public class StatsSectionsPagerAdapter extends FragmentPagerAdapter {
     private RecipeStatsDataFragment m_oDataFragment;

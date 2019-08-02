@@ -12,7 +12,7 @@ public class Fermentable extends ListableObject {
     @Expose
     public double ppg;
     @Expose
-    public float color;
+    public double color;
     @Expose
     public String type;
     @Expose
@@ -20,12 +20,16 @@ public class Fermentable extends ListableObject {
     @Expose
     public String createdByUserId;
     @Expose
-    public float yield;
+    public double yield;
 
     public Fermentable(String sName, double dPPG, int iColor) {
         name = sName;
         ppg = dPPG;
         color = iColor;
+    }
+
+    public Fermentable() {
+
     }
 
     public String toString() {

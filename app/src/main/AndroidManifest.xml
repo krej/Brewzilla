@@ -50,7 +50,7 @@
                 android:value="beer.unaccpetable.brewzilla.Screens.MainScreen.MainScreen"/>
         </activity>
         <activity
-            android:name=".Screens.IngredientManager"
+            android:name=".Screens.IngredientManager.IngredientManager"
             android:label="@string/title_activity_ingredient_manager"
             android:theme="@style/AppTheme.NoActionBar">
 

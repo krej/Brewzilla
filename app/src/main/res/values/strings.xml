@@ -231,6 +231,8 @@
     <string name="min">Min</string>
     <string name="max">Max</string>
     <string name="changeStyle">Change Style</string>
+    <string name="yield">Yield</string>
+    <string name="name">Name</string>
     <string-array name="gristRatioNames">
         <item>Very Thick</item>
         <item>Thick</item>

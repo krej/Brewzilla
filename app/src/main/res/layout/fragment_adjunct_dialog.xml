@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:weightSum="1">
+
+    <TextView
+        android:text="Add Hop"
+        android:layout_width="385dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"
+        android:textStyle="normal|bold"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/name"
+        android:hint="@string/name"
+        android:inputType="textCapWords"/>
+
+
+</LinearLayout>

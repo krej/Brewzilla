@@ -71,7 +71,7 @@ public class HopAdapter extends Adapter {
 
     @Override
     protected boolean AddItem(Dialog d, boolean bExisting, String sExtraData) {
-        EditText txtAmount = (EditText) d.findViewById(R.id.amount);
+        /*EditText txtAmount = (EditText) d.findViewById(R.id.amount);
         EditText aau = (EditText) d.findViewById(R.id.aau);
         EditText hopID = (EditText) d.findViewById(R.id.hopID);
 
@@ -98,7 +98,7 @@ public class HopAdapter extends Adapter {
         }
 
         hop.Save();
-
+*/
         return true;
     }
 
@@ -106,7 +106,7 @@ public class HopAdapter extends Adapter {
     protected View SetupDialog(final Context c, ListableObject i) {
         View root = super.SetupDialog(c,i);
 
-        final Spinner snName = (Spinner) root.findViewById(R.id.hopSelector);
+        /*final Spinner snName = (Spinner) root.findViewById(R.id.hopSelector);
         final Spinner snType = (Spinner) root.findViewById(R.id.hopTypeSpinner);
         final TextView hopType = root.findViewById(R.id.hopType);
 
@@ -132,7 +132,7 @@ public class HopAdapter extends Adapter {
             amount.setText(h.name);
             aau.setText(String.valueOf(h.aau));
             title.setText("Edit Hop"); //temp until i delete this adapter class
-        }
+        }*/
 
         return root;
     }

@@ -72,7 +72,7 @@ public class FermentableAdapter extends Adapter {
 
     @Override
     protected boolean AddItem(Dialog d, boolean bExisting, String sExtraData) {
-        Spinner name = (Spinner) d.findViewById(R.id.fermentableSelector);
+        /*Spinner name = (Spinner) d.findViewById(R.id.fermentableSelector);
         EditText txtName = (EditText) d.findViewById(R.id.weight); //reuse weight for name in the editor
         EditText ppg = (EditText) d.findViewById(R.id.ppg);
         EditText color = (EditText) d.findViewById(R.id.color);
@@ -104,7 +104,7 @@ public class FermentableAdapter extends Adapter {
             add(fermentables);
         }
 
-        fermentables.Save();
+        fermentables.Save();*/
 
         return true;
     }
@@ -113,7 +113,7 @@ public class FermentableAdapter extends Adapter {
     protected View SetupDialog(final Context c, ListableObject i) {
         View root = super.SetupDialog(c,i);
 
-        Spinner name = (Spinner) root.findViewById(R.id.fermentableSelector);
+        /*Spinner name = (Spinner) root.findViewById(R.id.fermentableSelector);
         EditText txtName = (EditText) root.findViewById(R.id.weight); //reuse weight for name in the editor
         EditText ppg = (EditText) root.findViewById(R.id.ppg);
         EditText color = (EditText) root.findViewById(R.id.color);
@@ -133,7 +133,7 @@ public class FermentableAdapter extends Adapter {
             ppg.setText(String.valueOf(h.ppg));
             color.setText(String.valueOf(h.color));
             title.setText("Edit Malt");
-        }
+        }*/
 
         return root;
     }

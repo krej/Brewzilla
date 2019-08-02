@@ -16,6 +16,10 @@ public class Yeast extends ListableObject {
     @Expose
     public String createdByUserId;
 
+    public Yeast() {
+
+    }
+
     public Yeast(String sProduct, String sLab,double dAttenuation) {
         name = sProduct;
         lab = sLab;
