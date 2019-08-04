@@ -1,13 +1,11 @@
-package beer.unaccpetable.brewzilla.Screens.RecipeEditor.Fragments;
+package beer.unaccpetable.brewzilla.Fragments.RecipeView;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 

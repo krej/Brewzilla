@@ -18,11 +18,10 @@ import android.widget.Toast;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Repositories.Repository;
 import beer.unaccpetable.brewzilla.Screens.BaseActivity;
-import beer.unaccpetable.brewzilla.Screens.RecipeEditor.Fragments.RecipeEditorPagerAdapter;
 
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
-public class RecipeEditor extends BaseActivity implements RecipeEditorController.IActivityView {
+public class RecipeEditor extends BaseActivity implements RecipeEditorController.View {
 
     private RecipeEditorController m_Controller;
 
@@ -44,9 +43,9 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         FindUIElements();
 
         m_Controller = new RecipeEditorController(new Repository());
-        m_Controller.attachActivityView(this);
+        m_Controller.attachView(this);
 
-        RecipeEditorPagerAdapter recipeEditorPagerAdapter = new RecipeEditorPagerAdapter(getSupportFragmentManager(), m_Controller);
+        RecipeEditorPagerAdapter recipeEditorPagerAdapter = new RecipeEditorPagerAdapter(getSupportFragmentManager(), m_Controller.getRecipeViewController(), m_Controller.getMashViewController());
         m_ViewPager.setAdapter(recipeEditorPagerAdapter);
         m_TabLayout.setupWithViewPager(m_ViewPager);
 
@@ -54,8 +53,8 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
         String sID = getIntent().getStringExtra("RecipeID");
         m_Controller.LoadRecipe(sID);
-        m_Controller.LoadAllIngredientLists();
-        m_Controller.LoadStyles();
+        //m_Controller.LoadAllIngredientLists();
+        //m_Controller.LoadStyles();
     }
 
     private void SetupTabChangeListener() {

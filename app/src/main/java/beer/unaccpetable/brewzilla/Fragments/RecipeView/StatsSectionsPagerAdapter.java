@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Screens.RecipeEditor.Fragments;
+package beer.unaccpetable.brewzilla.Fragments.RecipeView;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

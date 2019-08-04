@@ -1,10 +1,13 @@
-package beer.unaccpetable.brewzilla.Screens.RecipeEditor.Fragments;
+package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import beer.unaccpetable.brewzilla.Models.Recipe;
+import beer.unaccpetable.brewzilla.Fragments.MashSetup.MashFragment;
+import beer.unaccpetable.brewzilla.Fragments.MashSetup.MashSetupController;
+import beer.unaccpetable.brewzilla.Fragments.RecipeView.RecipeFragment;
+import beer.unaccpetable.brewzilla.Fragments.RecipeView.RecipeViewController;
 import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditorController;
 
 public class RecipeEditorPagerAdapter extends FragmentStatePagerAdapter {
@@ -13,14 +16,14 @@ public class RecipeEditorPagerAdapter extends FragmentStatePagerAdapter {
     MashFragment m_fMash;
 
 
-    public RecipeEditorPagerAdapter(FragmentManager fm, RecipeEditorController controller) {
+    public RecipeEditorPagerAdapter(FragmentManager fm, RecipeViewController recipeViewController, MashSetupController mashViewController) {
         super(fm);
 
         m_fRecipe = RecipeFragment.newInstance();
         m_fMash = MashFragment.newInstance();
 
-        m_fRecipe.setController(controller);
-        m_fMash.setController(controller);
+        m_fRecipe.setController(recipeViewController);
+        m_fMash.setController(mashViewController);
     }
 
     @Override

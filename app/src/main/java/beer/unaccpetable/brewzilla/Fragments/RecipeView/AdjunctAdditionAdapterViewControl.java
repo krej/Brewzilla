@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
+package beer.unaccpetable.brewzilla.Fragments.RecipeView;
 
 import android.app.Dialog;
 import android.text.Editable;
@@ -15,11 +15,12 @@ import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 import beer.unaccpetable.brewzilla.Models.AdjunctAddition;
 import beer.unaccpetable.brewzilla.R;
+import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditorController;
 
 public class AdjunctAdditionAdapterViewControl extends BaseAdapterViewControl {
-    private RecipeEditorController m_Controller;
+    private RecipeViewController m_Controller;
 
-    public AdjunctAdditionAdapterViewControl(RecipeEditorController controller) {
+    public AdjunctAdditionAdapterViewControl(RecipeViewController controller) {
         m_Controller = controller;
     }
 

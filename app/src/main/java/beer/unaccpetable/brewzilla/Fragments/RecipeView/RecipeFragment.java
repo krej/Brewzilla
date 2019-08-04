@@ -1,16 +1,13 @@
-package beer.unaccpetable.brewzilla.Screens.RecipeEditor.Fragments;
+package beer.unaccpetable.brewzilla.Fragments.RecipeView;
 
 import android.app.AlertDialog;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
@@ -18,8 +15,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -39,19 +34,13 @@ import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
 import beer.unaccpetable.brewzilla.Models.Style;
 import beer.unaccpetable.brewzilla.Models.YeastAddition;
 import beer.unaccpetable.brewzilla.R;
-import beer.unaccpetable.brewzilla.Screens.RecipeEditor.AdjunctAdditionAdapterViewControl;
-import beer.unaccpetable.brewzilla.Screens.RecipeEditor.FermentableAdditionAdapterViewControl;
-import beer.unaccpetable.brewzilla.Screens.RecipeEditor.HopAdditionAdapterViewControl;
-import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditor;
 import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditorController;
-import beer.unaccpetable.brewzilla.Screens.RecipeEditor.YeastAdditionAdapterViewControl;
-import beer.unaccpetable.brewzilla.Tools.Calculations;
 
 public class RecipeFragment
         extends Fragment
-        implements RecipeEditorController.View
+        implements RecipeViewController.View
 {
-    RecipeEditorController m_Controller;
+    RecipeViewController m_Controller;
 
     RecyclerView lstGrains, lstHops, lstYeasts, lstAdjuncts;
     NewAdapter m_HopAdapter, m_YeastAdapter, m_FermentableAdapter, m_AdjunctAdapter;
@@ -82,7 +71,7 @@ public class RecipeFragment
         super.onCreate(savedInstanceState);
     }
 
-    public void setController(RecipeEditorController controller) {
+    public void setController(RecipeViewController controller) {
         m_Controller = controller;
         m_Controller.attachView(this);
     }
@@ -149,7 +138,7 @@ public class RecipeFragment
     private void SetupLists() {
         m_vcHop = new HopAdditionAdapterViewControl(m_Controller);
         m_vcFermentable = new FermentableAdditionAdapterViewControl(m_Controller);
-        m_vcYeasts = new YeastAdditionAdapterViewControl(m_Controller);
+        m_vcYeasts = new YeastAdditionAdapterViewControl();
         m_vcAdjunct = new AdjunctAdditionAdapterViewControl(m_Controller);
 
         m_HopAdapter = Tools.setupRecyclerView(lstHops, getContext(), R.layout.list_hop_addition, R.layout.fragment_hop_dialog, false, m_vcHop, true, true, true);
@@ -229,31 +218,24 @@ public class RecipeFragment
     }
 
     @Override
-    public void SetScreenReadOnly(boolean bEnabled) {
+    public void SetScreenReadOnly(boolean bReadOnly) {
 
         //m_spStyle.setEnabled(bEnabled);
-        m_btnAddFermentable.setEnabled(bEnabled);
-        m_btnAddHop.setEnabled(bEnabled);
-        m_btnAddYeast.setEnabled(bEnabled);
-        m_btnAddAdjunct.setEnabled(bEnabled);
+        m_btnAddFermentable.setEnabled(!bReadOnly);
+        m_btnAddHop.setEnabled(!bReadOnly);
+        m_btnAddYeast.setEnabled(!bReadOnly);
+        m_btnAddAdjunct.setEnabled(!bReadOnly);
         /*m_txtInitialMashTemp.setEnabled(bEnabled);
         m_spGristRatio.setEnabled(bEnabled);
         m_txtTargetMashTemp.setEnabled(bEnabled);*/
 
-        m_HopAdapter.setReadOnly(!bEnabled, lstHops);
-        m_YeastAdapter.setReadOnly(!bEnabled, lstYeasts);
-        m_FermentableAdapter.setReadOnly(!bEnabled, lstGrains);
-        m_AdjunctAdapter.setReadOnly(!bEnabled, lstAdjuncts);
+        m_HopAdapter.setReadOnly(bReadOnly, lstHops);
+        m_YeastAdapter.setReadOnly(bReadOnly, lstYeasts);
+        m_FermentableAdapter.setReadOnly(bReadOnly, lstGrains);
+        m_AdjunctAdapter.setReadOnly(bReadOnly, lstAdjuncts);
 
         Tools.hideKeyboard(getActivity());
 
-    }
-
-
-    @Override
-    public void SetRefreshing(boolean bRefreshing) {
-
-        //m_SwipeRefresh.setRefreshing(bRefreshing);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Screens.RecipeEditor.Fragments;
+package beer.unaccpetable.brewzilla.Fragments.MashSetup;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,15 +17,13 @@ import android.widget.TextView;
 import com.unacceptable.unacceptablelibrary.Controls.CustomOnItemSelectedListener;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-
 import beer.unaccpetable.brewzilla.Models.RecipeParameters;
 import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditorController;
 
-public class MashFragment extends Fragment implements RecipeEditorController.IMashView {
-    private RecipeEditorController m_Controller;
+public class MashFragment extends Fragment implements MashSetupController.View {
+    private MashSetupController m_Controller;
 
     //initial mash
     Spinner m_spGristRatio;
@@ -51,9 +49,9 @@ public class MashFragment extends Fragment implements RecipeEditorController.IMa
         super.onCreate(savedInstanceState);
     }
 
-    public void setController(RecipeEditorController controller) {
+    public void setController(MashSetupController controller) {
         m_Controller = controller;
-        m_Controller.attachMashView(this);
+        m_Controller.attachView(this);
     }
 
     // Inflate the view for the fragment based on layout XML

@@ -1,4 +1,4 @@
-package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
+package beer.unaccpetable.brewzilla.Fragments.RecipeView;
 
 import android.app.Dialog;
 import android.text.Editable;
@@ -18,11 +18,12 @@ import java.util.ArrayList;
 import beer.unaccpetable.brewzilla.Models.Fermentable;
 import beer.unaccpetable.brewzilla.Models.FermentableAddition;
 import beer.unaccpetable.brewzilla.R;
+import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditorController;
 
 public class FermentableAdditionAdapterViewControl extends BaseAdapterViewControl {
-    private RecipeEditorController m_Controller;
+    private RecipeViewController m_Controller;
 
-    public FermentableAdditionAdapterViewControl(RecipeEditorController controller) {
+    public FermentableAdditionAdapterViewControl(RecipeViewController controller) {
         m_Controller = controller;
     }
 
