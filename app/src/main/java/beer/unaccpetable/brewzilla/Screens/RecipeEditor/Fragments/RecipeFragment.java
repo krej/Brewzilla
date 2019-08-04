@@ -194,21 +194,6 @@ public class RecipeFragment
     public void PopulateStats(RecipeStatistics stats) {
 
         m_statsSectionsPagerAdapter.PopulateStats(stats);
-        int iColor = Color.parseColor(Calculations.GetSRMColor((int)stats.srm));
-        Color c = Color.valueOf(iColor);
-        int iDark = Color.rgb((int)(c.red() * .2f), (int)(c.green() * .2f), (int)(c.blue() * .2f));
-
-        //fabSRM.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(Calculations.GetSRMColor((int)stats.srm))));
-        /*toolbar.setBackgroundColor(Color.parseColor(Calculations.GetSRMColor((int)stats.srm)));
-        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
-        collapsingToolbarLayout.setBackgroundColor(Color.parseColor(Calculations.GetSRMColor((int)stats.srm)));
-        collapsingToolbarLayout.setStatusBarScrimColor(Color.parseColor(Calculations.GetSRMColor((int)stats.srm)));
-        Window window = this.getWindow();
-        window.setStatusBarColor(iDark);*/
-        /*AppBarLayout appBarLayout = findViewById(R.id.app_bar);
-        appBarLayout.setBackgroundColor(Color.parseColor(Calculations.GetSRMColor((int)stats.srm)));*/
-
-
 
     }
 
@@ -250,6 +235,7 @@ public class RecipeFragment
         m_btnAddFermentable.setEnabled(bEnabled);
         m_btnAddHop.setEnabled(bEnabled);
         m_btnAddYeast.setEnabled(bEnabled);
+        m_btnAddAdjunct.setEnabled(bEnabled);
         /*m_txtInitialMashTemp.setEnabled(bEnabled);
         m_spGristRatio.setEnabled(bEnabled);
         m_txtTargetMashTemp.setEnabled(bEnabled);*/
@@ -257,6 +243,7 @@ public class RecipeFragment
         m_HopAdapter.setReadOnly(!bEnabled, lstHops);
         m_YeastAdapter.setReadOnly(!bEnabled, lstYeasts);
         m_FermentableAdapter.setReadOnly(!bEnabled, lstGrains);
+        m_AdjunctAdapter.setReadOnly(!bEnabled, lstAdjuncts);
 
         Tools.hideKeyboard(getActivity());
 

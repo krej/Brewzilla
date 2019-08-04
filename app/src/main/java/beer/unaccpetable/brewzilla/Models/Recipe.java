@@ -55,10 +55,26 @@ public class Recipe extends ListableObject implements Serializable { //6.5.2018 
     public boolean deleted;
 
     public enum IngredientType {
-        Fermntable,
-        Hop,
-        Yeast,
-        Adjunct
+        Fermntable {
+            public String toString() {
+                return "fermentable";
+            }
+        },
+        Hop {
+            public String toString() {
+                return "hop";
+            }
+        },
+        Yeast {
+            public String toString() {
+                return "yeast";
+            }
+        },
+        Adjunct {
+            public String toString() {
+                return "adjunct";
+            }
+        }
     }
 
 

@@ -5,6 +5,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.unacceptable.unacceptablelibrary.Adapters.BaseAdapterViewControl;
@@ -36,12 +37,14 @@ public class AdjunctAdditionAdapterViewControl extends BaseAdapterViewControl {
         EditText etAmountUnit = view.view.findViewById(R.id.adjunctAmountUnit);
         EditText etTime = view.view.findViewById(R.id.adjunctTime);
         EditText etTimeUnit = view.view.findViewById(R.id.adjunctTimeUnit);
+        EditText etUse = view.view.findViewById(R.id.adjunctUse);
 
         Tools.SetText(tv, aa.adjunct.name);
         Tools.SetText(etAmount, aa.amount);
         Tools.SetText(etAmountUnit, aa.unit);
         Tools.SetText(etTime, aa.time);
         Tools.SetText(etTimeUnit, aa.timeUnit);
+        Tools.SetText(etUse, aa.type);
 
         TextWatcher tw = new TextWatcher() {
             @Override
@@ -55,12 +58,14 @@ public class AdjunctAdditionAdapterViewControl extends BaseAdapterViewControl {
                 String sAmountUnit = etAmountUnit.getText().toString();
                 String sTime = etTime.getText().toString();
                 String sTimeUnit = etTimeUnit.getText().toString();
+                String sType = etUse.getText().toString();
 
-                AdjunctAddition a  = m_Controller.adjunctChanged(aa, sAmount, sAmountUnit, sTime, sTimeUnit);
+                AdjunctAddition a  = m_Controller.adjunctChanged(aa, sAmount, sAmountUnit, sTime, sTimeUnit, sType);
                 aa.amount = a.amount;
                 aa.unit = a.unit;
                 aa.time = a.time;
                 aa.timeUnit = a.timeUnit;
+                aa.type = a.type;
             }
 
             @Override
@@ -73,6 +78,7 @@ public class AdjunctAdditionAdapterViewControl extends BaseAdapterViewControl {
         etAmountUnit.addTextChangedListener(tw);
         etTime.addTextChangedListener(tw);
         etTimeUnit.addTextChangedListener(tw);
+        etUse.addTextChangedListener(tw);
 
         etAmount.setOnFocusChangeListener(m_Controller.createFocusChangeListener());
         etAmountUnit.setOnFocusChangeListener(m_Controller.createFocusChangeListener());
@@ -82,7 +88,12 @@ public class AdjunctAdditionAdapterViewControl extends BaseAdapterViewControl {
 
     @Override
     public void onItemClick(View v, ListableObject i) {
-
+        RelativeLayout rlHidden = v.findViewById(R.id.rlAdjunctHidden);
+        if (rlHidden.getVisibility() == View.GONE) {
+            rlHidden.setVisibility(View.VISIBLE);
+        } else {
+            rlHidden.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -93,5 +104,21 @@ public class AdjunctAdditionAdapterViewControl extends BaseAdapterViewControl {
     @Override
     public boolean onDialogOkClicked(Dialog d, ListableObject i) {
         return false;
+    }
+
+    @Override
+    public void setReadOnly(NewAdapter.ViewHolder viewHolder, boolean bReadOnly) {
+
+        EditText etAmount = viewHolder.view.findViewById(R.id.adjunctAmount);
+        EditText etAmountUnit = viewHolder.view.findViewById(R.id.adjunctAmountUnit);
+        EditText etTime = viewHolder.view.findViewById(R.id.adjunctTime);
+        EditText etTimeUnit = viewHolder.view.findViewById(R.id.adjunctTimeUnit);
+        EditText etUse = viewHolder.view.findViewById(R.id.adjunctUse);
+
+        etAmount.setEnabled(!bReadOnly);
+        etAmountUnit.setEnabled(!bReadOnly);
+        etTime.setEnabled(!bReadOnly);
+        etTimeUnit.setEnabled(!bReadOnly);
+        etUse.setEnabled(!bReadOnly);
     }
 }

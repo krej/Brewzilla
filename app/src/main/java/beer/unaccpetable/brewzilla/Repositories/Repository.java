@@ -53,7 +53,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void LoadIngredientList(String sCollectionName, RepositoryCallback callback) {
+    public void LoadCollection(String sCollectionName, RepositoryCallback callback) {
         Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/" + sCollectionName, null, callback, true);
     }
 }

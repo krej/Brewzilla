@@ -189,11 +189,13 @@
         <item>Desktop</item>
         <item>BeerNet</item>
         <item>LinuxDesktop</item>
+        <item>BeerNet Dev</item>
     </string-array>
     <string-array name="list_preference_server_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
+        <item>3</item>
     </string-array>
     <string name="pref_server">Server to connect to</string>
     <string name="title_activity_import_beer_xml">Import BeerXML</string>
@@ -233,6 +235,7 @@
     <string name="changeStyle">Change Style</string>
     <string name="yield">Yield</string>
     <string name="name">Name</string>
+    <string name="adjunctUse">Use (Boil, Dry \'Hop\'?)</string>
     <string-array name="gristRatioNames">
         <item>Very Thick</item>
         <item>Thick</item>

@@ -12,15 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Screens.ImportBeerXML"
-            android:label="@string/title_activity_import_beer_xml"
-            android:parentActivityName=".Screens.MainScreen.MainScreen"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="beer.unaccpetable.brewzilla.Screens.MainScreen.MainScreen"/>
-        </activity>
-        <activity
             android:name=".Screens.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".Screens.MainScreen.MainScreen">

@@ -8,8 +8,6 @@ import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-
 import beer.unaccpetable.brewzilla.Models.Adjunct;
 import beer.unaccpetable.brewzilla.Models.Fermentable;
 import beer.unaccpetable.brewzilla.Models.Hop;
@@ -25,7 +23,7 @@ public class IngredientManagerController<T> extends BaseLogic<IngredientManagerC
     }
 
     public void LoadIngredientList(String sCollectionName) {
-        m_repo.LoadIngredientList(sCollectionName, new RepositoryCallback() {
+        m_repo.LoadCollection(sCollectionName, new RepositoryCallback() {
             @Override
             public void onSuccess(String t) {
                 SendListToScreen(t, sCollectionName);

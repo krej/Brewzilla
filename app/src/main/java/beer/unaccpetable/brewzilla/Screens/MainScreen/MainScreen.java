@@ -264,6 +264,7 @@ public class MainScreen extends BaseActivity
                     String sIDString = data.getStringExtra("idString");
                     double dAbv = data.getDoubleExtra("abv", 0);
                     boolean bDeleted = data.getBooleanExtra("deleted", false);
+                    String sStyleName = data.getStringExtra("styleName");
 
                     for (int i = 0; i < m_Adapter.size(); i++) {
                         if (m_Adapter.get(i).idString.equals(sIDString)) {
@@ -272,6 +273,9 @@ public class MainScreen extends BaseActivity
                             } else {
                                 Recipe r = (Recipe) m_Adapter.get(i);
                                 r.recipeStats.abv = dAbv;
+                                if (r.style == null)
+                                    r.style = new Style(); //for old bad data
+                                r.style.name = sStyleName; //TODO: Should this pass back the whole style, not just the name?
                                 //m_Adapter.notifyDataSetChanged();
                                 m_Adapter.notifyItemChanged(i);
                             }

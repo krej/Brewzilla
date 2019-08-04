@@ -4,66 +4,21 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.database.DataSetObserver;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 
-import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
-
-import java.util.ArrayList;
-
-import beer.unaccpetable.brewzilla.Adapters.SearchDialogAdapterViewControl;
-import beer.unaccpetable.brewzilla.Models.Fermentable;
-import beer.unaccpetable.brewzilla.Models.FermentableAddition;
-import beer.unaccpetable.brewzilla.Models.Hop;
-import beer.unaccpetable.brewzilla.Models.HopAddition;
-
-import com.unacceptable.unacceptablelibrary.Controls.CustomOnItemSelectedListener;
-import com.unacceptable.unacceptablelibrary.Models.ListableObject;
-
-import beer.unaccpetable.brewzilla.Models.Recipe;
-import beer.unaccpetable.brewzilla.Models.RecipeParameters;
-import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
-import beer.unaccpetable.brewzilla.Models.Style;
-import beer.unaccpetable.brewzilla.Models.Yeast;
-import beer.unaccpetable.brewzilla.Models.YeastAddition;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Repositories.Repository;
 import beer.unaccpetable.brewzilla.Screens.BaseActivity;
 import beer.unaccpetable.brewzilla.Screens.RecipeEditor.Fragments.RecipeEditorPagerAdapter;
-import beer.unaccpetable.brewzilla.Screens.RecipeEditor.Fragments.StatsSectionsPagerAdapter;
-import beer.unaccpetable.brewzilla.Tools.Calculations;
-import beer.unaccpetable.brewzilla.Tools.Controls.StyleRangeBar;
 
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
@@ -99,7 +54,8 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
         String sID = getIntent().getStringExtra("RecipeID");
         m_Controller.LoadRecipe(sID);
-        m_Controller.LoadIngredientLists();
+        m_Controller.LoadAllIngredientLists();
+        m_Controller.LoadStyles();
     }
 
     private void SetupTabChangeListener() {
@@ -165,11 +121,12 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
 
     @Override
-    public void FinishActivity(String sIDString, double dAbv, boolean bDeleted) {
+    public void FinishActivity(String sIDString, double dAbv, boolean bDeleted, String sStyleName) {
         Intent i = new Intent();
         i.putExtra("idString", sIDString);
         i.putExtra("abv", dAbv);
         i.putExtra("deleted", bDeleted);
+        i.putExtra("styleName", sStyleName);
         setResult(RESULT_OK, i);
         finish();
     }

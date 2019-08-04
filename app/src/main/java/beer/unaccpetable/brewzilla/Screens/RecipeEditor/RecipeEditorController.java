@@ -1,8 +1,6 @@
 package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 
 import android.graphics.Color;
-import android.support.design.widget.TabLayout;
-import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.unacceptable.unacceptablelibrary.Logic.BaseLogic;
@@ -14,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import beer.unaccpetable.brewzilla.Models.Adjunct;
 import beer.unaccpetable.brewzilla.Models.AdjunctAddition;
@@ -40,36 +39,36 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
     private IActivityView m_ActivityView;
     public IMashView m_MashView;
 
-    private @NotNull ArrayList m_alFermentables, m_alHops, m_alYeasts, m_alStyle;
+    private @NotNull ArrayList<Fermentable> m_alFermentables;
+    private @NotNull ArrayList<Yeast> m_alYeasts;
+    private @NotNull ArrayList<Style> m_alStyle;
     private @NotNull ArrayList<Adjunct> m_alAdjuncts;
+    private @NotNull ArrayList<Hop> m_alHops;
 
     private IRepository m_repo;
 
     //used the store a copy of the recipe to make it easy to check for changes, to know if we should actually update or not
     private byte[] m_OriginalData;
+
     private boolean m_bDontSave;
 
     public RecipeEditorController(IRepository repository) {
         m_repo = repository;
         m_alAdjuncts = new ArrayList<>();
-        m_alFermentables = new ArrayList();
-        m_alHops = new ArrayList();
-        m_alYeasts = new ArrayList();
-        m_alStyle = new ArrayList();
+        m_alFermentables = new ArrayList<>();
+        m_alHops = new ArrayList<>();
+        m_alYeasts = new ArrayList<>();
+        m_alStyle = new ArrayList<>();
     }
 
     public void LoadRecipe(String sID) {
         if (sID != null && sID.length() > 0) {
-            m_repo.LoadRecipeWithAllIngredients(sID, new RepositoryCallback() {
+            m_repo.LoadRecipe(sID, new RepositoryCallback() {
                 @Override
                 public void onSuccess(String t) {
-                    //TODO: Split the recipe call from the ingredient call after all. it is taking a while to load this next line and i'm guessing its because of all of the ingredients
-                    RecipeEditorViewModel r = Tools.convertJsonResponseToObject(t, RecipeEditorViewModel.class);
-                    CurrentRecipe = r.Recipe;
+                    Recipe r = Tools.convertJsonResponseToObject(t, Recipe.class);
+                    CurrentRecipe = r;
                     m_OriginalData = CurrentRecipe.BuildRestData();
-
-                    //if (r.Styles != null)
-                    //    view.PopulateStyleDropDown(r.Styles);
 
                     m_ActivityView.SetTitle(CurrentRecipe.name);
                     if (CurrentRecipe.style != null) {
@@ -82,14 +81,6 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
                     view.PopulateFermentables(CurrentRecipe.fermentables);
                     view.PopulateAdjuncts(CurrentRecipe.adjuncts);
                     m_MashView.PopulateParameters(CurrentRecipe.recipeParameters);
-
-                    /*view.PopulateHopDialog(r.Hops);
-                    view.PopulateFermentableDialog(r.Fermentables);
-                    view.PopulateYeastDialog(r.Yeasts);*/
-                    m_alFermentables = r.Fermentables;
-                    m_alHops = r.Hops;
-                    m_alYeasts = r.Yeasts;
-                    m_alStyle = r.Styles;
 
                     //view.SetRefreshing(false);
                     m_bDontSave = false;
@@ -116,12 +107,6 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         float fDark = 0.8f;
         int iDarkColor = Color.rgb(cDark.red() * fDark, cDark.green() * fDark, cDark.blue() * fDark);
         m_ActivityView.SetTitleSRMColor(iColor, iDarkColor);
-    }
-
-    private void FixBadData() {
-        if (CurrentRecipe.recipeParameters == null)
-            CurrentRecipe.recipeParameters = new RecipeParameters();
-
     }
 
     public void attachActivityView(IActivityView view) {
@@ -221,14 +206,14 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
     public void GoBack() {
 
-        m_ActivityView.FinishActivity(CurrentRecipe.idString, CurrentRecipe.recipeStats.abv, false);
+        m_ActivityView.FinishActivity(CurrentRecipe.idString, CurrentRecipe.recipeStats.abv, false, CurrentRecipe.style.name);
     }
 
     public void DeleteRecipe() {
         m_repo.DeleteRecipe(CurrentRecipe.idString, new RepositoryCallback() {
             @Override
             public void onSuccess(String t) {
-                m_ActivityView.FinishActivity(CurrentRecipe.idString, 0, true);
+                m_ActivityView.FinishActivity(CurrentRecipe.idString, 0, true, "");
             }
 
             @Override
@@ -292,7 +277,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
     }
 
 
-    public @NotNull AdjunctAddition adjunctChanged(AdjunctAddition aa, String sAmount, String sAmountUnit, String sTime, String sTimeUnit) {
+    public @NotNull AdjunctAddition adjunctChanged(AdjunctAddition aa, String sAmount, String sAmountUnit, String sTime, String sTimeUnit, String sType) {
         double dAmount = Tools.ParseDouble(sAmount);
         int iTime = Tools.ParseInt(sTime);
         AdjunctAddition aaReturn = null;
@@ -303,6 +288,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
                 a.unit = sAmountUnit;
                 a.time = iTime;
                 a.timeUnit = sTimeUnit;
+                a.type = sType;
                 aaReturn = a;
 
                 break;
@@ -467,18 +453,18 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         SaveRecipe();
     }
 
-    public void LoadIngredientLists() {
-        LoadAdjuncts();
+    public void LoadAllIngredientLists() {
+        LoadIngredientList(Recipe.IngredientType.Hop);
+        LoadIngredientList(Recipe.IngredientType.Yeast);
+        LoadIngredientList(Recipe.IngredientType.Fermntable);
+        LoadIngredientList(Recipe.IngredientType.Adjunct);
     }
 
-    private void LoadAdjuncts() {
-        m_repo.LoadIngredientList("adjunct", new RepositoryCallback() {
+    private void LoadIngredientList(Recipe.IngredientType type) {
+        m_repo.LoadCollection(type.toString(), new RepositoryCallback() {
             @Override
             public void onSuccess(String t) {
-                Adjunct[] adjuncts = Tools.convertJsonResponseToObject(t, Adjunct[].class);
-                for (Adjunct a : adjuncts) {
-                    m_alAdjuncts.add(a);
-                }
+                StoreIngredientList(t, type);
             }
 
             @Override
@@ -486,6 +472,43 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
             }
         });
+    }
+
+    public void LoadStyles() {
+        m_repo.LoadCollection("style", new RepositoryCallback() {
+            @Override
+            public void onSuccess(String t) {
+                Style[] styles = Tools.convertJsonResponseToObject(t, Style[].class);
+                Collections.addAll(m_alStyle, styles);
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
+    }
+
+    private void StoreIngredientList(String t, Recipe.IngredientType type) {
+        switch (type) {
+            case Adjunct:
+                Adjunct[] adjuncts = Tools.convertJsonResponseToObject(t, Adjunct[].class);
+                Collections.addAll(m_alAdjuncts, adjuncts);
+                break;
+            case Hop:
+                Hop[] hops = Tools.convertJsonResponseToObject(t, Hop[].class);
+                Collections.addAll(m_alHops, hops);
+                break;
+            case Fermntable:
+                Fermentable[] fermentables = Tools.convertJsonResponseToObject(t, Fermentable[].class);
+                Collections.addAll(m_alFermentables, fermentables);
+                break;
+            case Yeast:
+                Yeast[] yeasts = Tools.convertJsonResponseToObject(t, Yeast[].class);
+                Collections.addAll(m_alYeasts, yeasts);
+                break;
+        }
+
     }
 
     public android.view.View.OnFocusChangeListener createFocusChangeListener() {
@@ -499,6 +522,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
             }
         };
     }
+
 
     public interface View {
         void PopulateStats(RecipeStatistics recipeStats);
@@ -524,7 +548,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
     }
 
     public interface IActivityView {
-        void FinishActivity(String sIDString, double dAbv, boolean bDeleted);
+        void FinishActivity(String sIDString, double dAbv, boolean bDeleted, String sStyleName);
         void ShowToast(String sMessage);
         void SetTitle(String sTitle);
         void PromptDeletion();
