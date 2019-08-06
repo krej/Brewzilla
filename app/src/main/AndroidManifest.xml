@@ -12,6 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Screens.ViewBrewLog.ViewBrewLog"
+            android:label="@string/title_activity_brew_log"
+            android:parentActivityName=".Screens.MainScreen.MainScreen"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="beer.unaccpetable.brewzilla.Screens.MainScreen.MainScreen"/>
+        </activity>
+        <activity
             android:name=".Screens.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".Screens.MainScreen.MainScreen">
@@ -22,8 +31,8 @@
         <activity
             android:name=".Screens.MainScreen.MainScreen"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -34,8 +43,8 @@
             android:name=".Screens.RecipeEditor.RecipeEditor"
             android:label="@string/title_activity_create_recipe"
             android:parentActivityName=".Screens.MainScreen.MainScreen"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="beer.unaccpetable.brewzilla.Screens.MainScreen.MainScreen"/>
@@ -44,7 +53,6 @@
             android:name=".Screens.IngredientManager.IngredientManager"
             android:label="@string/title_activity_ingredient_manager"
             android:theme="@style/AppTheme.NoActionBar">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="beer.unaccpetable.brewzilla.Screens.MainScreen.MainScreen"/>

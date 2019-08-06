@@ -89,6 +89,7 @@ public class RecipeFragment
 
         m_vpStats.setAdapter(m_statsSectionsPagerAdapter);
         m_tbStats.setupWithViewPager(m_vpStats);
+        //m_Controller.activityCreated();
         return view;
     }
 
@@ -275,6 +276,10 @@ public class RecipeFragment
         et.requestFocus();
     }
 
+    public RecipeViewController getController() {
+        return m_Controller;
+    }
+
    /* private void SetupSwipeRefresh(final String sIDString) {
         m_SwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -283,4 +288,11 @@ public class RecipeFragment
             }
         });
     }*/
+
+   @Override
+    public void onActivityCreated(Bundle savedInstanceBundle) {
+       super.onActivityCreated(savedInstanceBundle);
+
+       m_Controller.activityCreated();
+   }
 }

@@ -198,4 +198,18 @@ public class MashFragment extends Fragment implements MashSetupController.View {
         m_txtTotalWaterInMash.setText(stats.getFormattedStrikeWaterVolume());
         m_txtHLTTemp.setText(stats.getFormattedStrikeWaterTemp());
     }
+
+    @Override
+    public void setReadOnly(boolean bReadOnly) {
+        m_spGristRatio.setEnabled(!bReadOnly);
+        m_txtInitialMashTemp.setEnabled(!bReadOnly);
+        m_lblInitialStrikeTemp.setEnabled(!bReadOnly);
+        m_lblInitialStrikeVolume.setEnabled(!bReadOnly);
+        m_txtTargetMashTemp.setEnabled(!bReadOnly);
+
+        m_txtCurrentTempOfMash.setEnabled(!bReadOnly);
+        m_txtTargetMashTempInfusion.setEnabled(!bReadOnly);
+        m_txtTotalWaterInMash.setEnabled(!bReadOnly);
+        m_txtHLTTemp.setEnabled(!bReadOnly);
+    }
 }

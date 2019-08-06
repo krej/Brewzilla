@@ -4,6 +4,13 @@
     tools:context="beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditor">
 
     <item
+        android:id="@+id/startBrewLog"
+        android:orderInCategory="80"
+        android:title="@string/start_brew_log"
+        app:showAsAction="never"
+        />
+
+    <item
         android:id="@+id/changeStyle"
         android:orderInCategory="90"
         android:title="@string/changeStyle"

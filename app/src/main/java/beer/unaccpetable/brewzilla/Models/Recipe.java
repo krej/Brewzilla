@@ -13,7 +13,7 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
  * Created by zak on 1/4/2017.
  */
 
-public class Recipe extends ListableObject implements Serializable { //6.5.2018 - I implemented Serializable to be able to pass it through intents. That worked but i'm not sure if it broke anything else
+public class Recipe extends ListableObject implements Serializable, Cloneable { //6.5.2018 - I implemented Serializable to be able to pass it through intents. That worked but i'm not sure if it broke anything else
 
     @Expose
     public String description;
@@ -100,5 +100,9 @@ public class Recipe extends ListableObject implements Serializable { //6.5.2018 
 
         recipeStats = new RecipeStatistics();
         recipeParameters = new RecipeParameters();
+    }
+
+    public Recipe clone() throws CloneNotSupportedException {
+        return (Recipe) super.clone();
     }
 }

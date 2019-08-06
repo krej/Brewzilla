@@ -18,6 +18,7 @@ import beer.unaccpetable.brewzilla.Repositories.IRepository;
 
 public class MashSetupController extends BaseLogic<MashSetupController.View> {
 
+
     public interface IRequestRecipeEvent {
         Recipe RequestRecipe();
     }
@@ -113,10 +114,16 @@ public class MashSetupController extends BaseLogic<MashSetupController.View> {
     }
 
 
+    public void setReadOnly(boolean bReadOnly) {
+        view.setReadOnly(bReadOnly);
+    }
+
     public interface View {
         void PopulateParameters(RecipeParameters recipeParameters);
         void MashInfusionShowWaterToAdd(String t);
         void PopulateMashStats(RecipeStatistics stats);
+
+        void setReadOnly(boolean bReadOnly);
     }
 
     public void setRecipeRequestListener(IRequestRecipeEvent listener) {

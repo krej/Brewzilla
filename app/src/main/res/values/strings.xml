@@ -246,4 +246,6 @@
         <item>1.5</item>
         <item>2.0</item>
     </string-array>
+    <string name="title_activity_brew_log">Brew Log</string>
+    <string name="start_brew_log">Start Brew Log</string>
 </resources>

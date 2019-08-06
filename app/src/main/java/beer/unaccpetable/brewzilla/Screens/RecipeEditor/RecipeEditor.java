@@ -15,9 +15,11 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
+import beer.unaccpetable.brewzilla.Models.BrewLog;
 import beer.unaccpetable.brewzilla.R;
 import beer.unaccpetable.brewzilla.Repositories.Repository;
 import beer.unaccpetable.brewzilla.Screens.BaseActivity;
+import beer.unaccpetable.brewzilla.Screens.ViewBrewLog.ViewBrewLog;
 
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
@@ -31,6 +33,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     TabLayout m_TabLayout;
     ViewPager m_ViewPager;
 
+    RecipeEditorPagerAdapter recipeEditorPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         m_Controller = new RecipeEditorController(new Repository());
         m_Controller.attachView(this);
 
-        RecipeEditorPagerAdapter recipeEditorPagerAdapter = new RecipeEditorPagerAdapter(getSupportFragmentManager(), m_Controller.getRecipeViewController(), m_Controller.getMashViewController());
+        recipeEditorPagerAdapter = new RecipeEditorPagerAdapter(getSupportFragmentManager(), m_Controller.getRecipeViewController());
         m_ViewPager.setAdapter(recipeEditorPagerAdapter);
         m_TabLayout.setupWithViewPager(m_ViewPager);
 
@@ -53,6 +56,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
 
         String sID = getIntent().getStringExtra("RecipeID");
         m_Controller.LoadRecipe(sID);
+        m_Controller.LoadBrewLogs(sID);
         //m_Controller.LoadAllIngredientLists();
         //m_Controller.LoadStyles();
     }
@@ -97,6 +101,9 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
+            case R.id.startBrewLog:
+                m_Controller.startNewBrewLog();
+                break;
             case R.id.changeStyle:
                 m_Controller.showChangeStylePrompt();
                 break;
@@ -175,5 +182,20 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         appBarLayout.setBackgroundColor(iColor);
         Window window = this.getWindow();
         window.setStatusBarColor(iDarkColor);
+    }
+
+    @Override
+    public void launchBrewLogActivity(String idString) {
+        Intent i = new Intent(getApplicationContext(), ViewBrewLog.class);
+        Bundle b = new Bundle();
+        //b.putSerializable("brewLog", brewLog);
+        b.putString("idString", idString);
+        i.putExtras(b);
+        startActivity(i);
+    }
+
+    @Override
+    public void PopulateBrewLogList(BrewLog[] brewLogs) {
+        recipeEditorPagerAdapter.PopulateBrewLogList(brewLogs);
     }
 }

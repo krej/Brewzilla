@@ -4,26 +4,27 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import beer.unaccpetable.brewzilla.Fragments.BrewLogList.BrewLogList;
 import beer.unaccpetable.brewzilla.Fragments.MashSetup.MashFragment;
 import beer.unaccpetable.brewzilla.Fragments.MashSetup.MashSetupController;
 import beer.unaccpetable.brewzilla.Fragments.RecipeView.RecipeFragment;
 import beer.unaccpetable.brewzilla.Fragments.RecipeView.RecipeViewController;
+import beer.unaccpetable.brewzilla.Models.BrewLog;
 import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditorController;
 
 public class RecipeEditorPagerAdapter extends FragmentStatePagerAdapter {
 
-    RecipeFragment m_fRecipe;
-    MashFragment m_fMash;
+    private RecipeFragment m_fRecipe;
+    private BrewLogList m_fBrewLogs;
 
 
-    public RecipeEditorPagerAdapter(FragmentManager fm, RecipeViewController recipeViewController, MashSetupController mashViewController) {
+    public RecipeEditorPagerAdapter(FragmentManager fm, RecipeViewController recipeViewController) {
         super(fm);
 
         m_fRecipe = RecipeFragment.newInstance();
-        m_fMash = MashFragment.newInstance();
-
         m_fRecipe.setController(recipeViewController);
-        m_fMash.setController(mashViewController);
+
+        m_fBrewLogs = BrewLogList.newInstance();
     }
 
     @Override
@@ -33,9 +34,7 @@ public class RecipeEditorPagerAdapter extends FragmentStatePagerAdapter {
         if (position == 0) {
             return m_fRecipe;
         } else if (position == 1) {
-            if (m_fMash == null)
-                m_fMash = MashFragment.newInstance();
-            return m_fMash;
+            return m_fBrewLogs;
         }
 
         return null;
@@ -53,10 +52,14 @@ public class RecipeEditorPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return "RECIPE";
             case 1:
-                return "MASH";
+                return "BREW LOGS";
             /*case 2:
                 return "YEASTS";*/
         }
         return null;
+    }
+
+    public void PopulateBrewLogList(BrewLog[] brewLogs) {
+        m_fBrewLogs.PopulateBrewLogList(brewLogs);
     }
 }

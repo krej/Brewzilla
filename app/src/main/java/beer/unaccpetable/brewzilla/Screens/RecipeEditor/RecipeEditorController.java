@@ -1,5 +1,6 @@
 package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 
+import android.content.Intent;
 import android.graphics.Color;
 
 import com.android.volley.VolleyError;
@@ -9,10 +10,15 @@ import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Date;
+import java.util.List;
+
 import beer.unaccpetable.brewzilla.Fragments.MashSetup.MashSetupController;
 import beer.unaccpetable.brewzilla.Fragments.RecipeView.RecipeViewController;
+import beer.unaccpetable.brewzilla.Models.BrewLog;
 import beer.unaccpetable.brewzilla.Models.Recipe;
 import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
+import beer.unaccpetable.brewzilla.Models.Responses.LastModifiedGuidResponse;
 import beer.unaccpetable.brewzilla.Models.Responses.RecipeStatsResponse;
 import beer.unaccpetable.brewzilla.Repositories.IRepository;
 import beer.unaccpetable.brewzilla.Tools.Calculations;
@@ -20,7 +26,6 @@ import beer.unaccpetable.brewzilla.Tools.Calculations;
 public class RecipeEditorController extends BaseLogic<RecipeEditorController.View> {
 
     private @NotNull RecipeViewController m_ViewController;
-    private @NotNull MashSetupController m_MashSetupController;
 
     private IRepository m_repo;
 
@@ -29,34 +34,8 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
     RecipeEditorController(IRepository repository) {
         m_repo = repository;
         m_ViewController = new RecipeViewController(repository);
-        m_MashSetupController = new MashSetupController(repository);
 
         CreateRecipeViewControllerListeners();
-        CreateMashSetupControllerListeners();
-    }
-
-    private void CreateMashSetupControllerListeners() {
-        m_MashSetupController.setRecipeRequestListener(m_ViewController::getRecipe);
-
-        m_MashSetupController.addGristRatioChangedEventListener((v) -> {
-            Recipe r = m_ViewController.getRecipe();
-            r.recipeParameters.gristRatio = v;
-            SaveRecipe();
-        });
-
-        m_MashSetupController.addInitialMashTempChangedListener((value -> {
-            Recipe r = m_ViewController.getRecipe();
-            r.recipeParameters.initialMashTemp = value;
-            SaveRecipe();
-        }));
-
-        m_MashSetupController.addTargetMashTempChangedListener((value -> {
-            Recipe r = m_ViewController.getRecipe();
-            r.recipeParameters.targetMashTemp = value;
-            SaveRecipe();
-        }));
-
-        m_MashSetupController.addShowMessageEventListener(view::ShowToast);
     }
 
     private void CreateRecipeViewControllerListeners() {
@@ -81,7 +60,6 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
                     view.SetTitle(r.name);
                     m_ViewController.SetRecipe(r);
-                    m_MashSetupController.PopulateParameters(r.recipeParameters);
                 }
 
                 @Override
@@ -96,14 +74,14 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
     }
 
     private void PopulateStats(RecipeStatistics recipeStats) {
-        m_MashSetupController.PopulateMashStats(recipeStats);
+        //m_MashSetupController.PopulateMashStats(recipeStats);
 
 
         int iColor = Color.parseColor(Calculations.GetSRMColor((int)recipeStats.srm));
         Color cDark = Color.valueOf(iColor);
         float fDark = 0.8f;
         int iDarkColor = Color.rgb(cDark.red() * fDark, cDark.green() * fDark, cDark.blue() * fDark);
-        view.SetTitleSRMColor(iColor, iDarkColor);
+        view.SetTitleSRMColor(iColor, iColor);
     }
 
     void SaveRecipe() {
@@ -111,6 +89,10 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
     }
 
     private void SaveRecipe(Recipe recipe) {
+        SaveRecipe(recipe, null);
+    }
+
+    private void SaveRecipe(Recipe recipe, RepositoryCallback callback) {
         if (m_bDeleted) return;
 
         m_repo.SaveRecipe(recipe.idString, recipe, new RepositoryCallback() {
@@ -126,6 +108,8 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
                     //This should always be last so it gets the real copy of the data
                     //m_OriginalData = CurrentRecipe.BuildRestData();
+                    if (callback != null)
+                        callback.onSuccess("");
                 }else {
                     HandleRecipeStatsResponseError(response);
                 }
@@ -134,6 +118,8 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
             @Override
             public void onError(VolleyError error) {
                 view.ShowToast("ERROR");
+                if (callback != null)
+                    callback.onError(error);
             }
         });
     }
@@ -180,12 +166,64 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         return m_ViewController;
     }
 
-    MashSetupController getMashViewController() {
-        return m_MashSetupController;
-    }
-
     void showChangeStylePrompt() {
         m_ViewController.showStylePrompt();
+    }
+
+    public void startNewBrewLog() {
+        Recipe recipe = m_ViewController.getRecipe();
+        SaveRecipe(recipe, new RepositoryCallback() {
+            @Override
+            public void onSuccess(String t) {
+                try {
+                    BrewLog brewLog = new BrewLog();
+                    brewLog.name = Tools.FormatDate(new Date(), "MM/dd/yyyy");
+                    brewLog.originalRecipe = m_ViewController.getRecipe().clone();
+                    brewLog.rectifiedRecipe = m_ViewController.getRecipe().clone();
+                    brewLog.recipeIdString = brewLog.originalRecipe.idString;
+
+                    m_repo.SaveBrewLog(brewLog, new RepositoryCallback() {
+                        @Override
+                        public void onSuccess(String t) {
+                            LastModifiedGuidResponse response = Tools.convertJsonResponseToObject(t, LastModifiedGuidResponse.class);
+                            if (response.Success)
+                                view.launchBrewLogActivity(response.idString);
+
+                            //TODO: Add this new brewlog to the brew log list in the recipe editor screen
+                        }
+
+                        @Override
+                        public void onError(VolleyError error) {
+                            view.ShowToast("Failed to save brew log.");
+                        }
+                    });
+
+                } catch (Exception e) {
+                    view.ShowToast("Failed to create brew log.");
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
+
+    }
+
+    public void LoadBrewLogs(String sID) {
+        m_repo.LoadBrewLogsForRecipe(sID, new RepositoryCallback() {
+            @Override
+            public void onSuccess(String t) {
+                BrewLog[] brewLogs = Tools.convertJsonResponseToObject(t, BrewLog[].class);
+                view.PopulateBrewLogList(brewLogs);
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
     }
 
     public interface View {
@@ -194,6 +232,8 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
         void SetTitle(String sTitle);
         void PromptDeletion();
         void SetTitleSRMColor(int iColor, int iDarkColor);
+        void launchBrewLogActivity(String idString);
+        void PopulateBrewLogList(BrewLog[] brewLogs);
     }
 
 }

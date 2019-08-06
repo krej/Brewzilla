@@ -3,11 +3,13 @@ package beer.unaccpetable.brewzilla.Models;
 import com.google.gson.annotations.Expose;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
+import java.io.Serializable;
+
 /**
  * Created by Megatron on 10/25/2017.
  */
 
-public class RecipeStatistics {
+public class RecipeStatistics implements Serializable {
     @Expose
     public double abv;
     @Expose

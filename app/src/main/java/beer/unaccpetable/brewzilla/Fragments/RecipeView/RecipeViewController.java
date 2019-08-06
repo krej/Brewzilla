@@ -83,6 +83,11 @@ public class RecipeViewController extends BaseLogic<RecipeViewController.View> {
         m_OriginalData = m_Recipe.BuildRestData();
     }
 
+    public void activityCreated() {
+        if (m_Recipe != null)
+            PopulateScreen(m_Recipe);
+    }
+
     private void PopulateScreen(Recipe r) {
         m_OriginalData = r.BuildRestData();
 
@@ -181,7 +186,7 @@ public class RecipeViewController extends BaseLogic<RecipeViewController.View> {
         return aaReturn;
     }
 
-    private void RecalculateStats() {
+    public void RecalculateStats() {
         m_repo.CalculateRecipeStats(m_Recipe, new RepositoryCallback() {
             @Override
             public void onSuccess(String t) {

@@ -2,6 +2,7 @@ package beer.unaccpetable.brewzilla.Repositories;
 
 import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 
+import beer.unaccpetable.brewzilla.Models.BrewLog;
 import beer.unaccpetable.brewzilla.Models.Recipe;
 
 public interface IRepository {
@@ -14,4 +15,7 @@ public interface IRepository {
     void DeleteRecipe(String sIDString, RepositoryCallback callback);
     void CalculateRecipeStats(Recipe r, RepositoryCallback callback);
     void LoadCollection(String sCollectionName, RepositoryCallback callback);
+    void SaveBrewLog(BrewLog brewLog, RepositoryCallback callback);
+    void LoadBrewLog(String idString, RepositoryCallback callback);
+    void LoadBrewLogsForRecipe(String idString, RepositoryCallback callback);
 }

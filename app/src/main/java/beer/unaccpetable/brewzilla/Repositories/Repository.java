@@ -5,6 +5,7 @@ import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 import com.unacceptable.unacceptablelibrary.Tools.Network;
 import com.unacceptable.unacceptablelibrary.Tools.Preferences;
 
+import beer.unaccpetable.brewzilla.Models.BrewLog;
 import beer.unaccpetable.brewzilla.Models.Recipe;
 
 public class Repository implements IRepository {
@@ -55,5 +56,20 @@ public class Repository implements IRepository {
     @Override
     public void LoadCollection(String sCollectionName, RepositoryCallback callback) {
         Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/" + sCollectionName, null, callback, true);
+    }
+
+    @Override
+    public void SaveBrewLog(BrewLog brewLog, RepositoryCallback callback) {
+        Network.WebRequest(Request.Method.POST, Preferences.BeerNetAPIURL() + "/brewlog/" + brewLog.idString, brewLog.BuildRestData(), callback, true);
+    }
+
+    @Override
+    public void LoadBrewLog(String idString, RepositoryCallback callback) {
+        Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/brewlog/" + idString, null, callback, true);
+    }
+
+    @Override
+    public void LoadBrewLogsForRecipe(String idString, RepositoryCallback callback) {
+        Network.WebRequest(Request.Method.GET, Preferences.BeerNetAPIURL() + "/brewlog/recipe/" + idString, null, callback, true);
     }
 }
