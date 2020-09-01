@@ -2,11 +2,15 @@ package beer.unaccpetable.brewzilla.Screens.ViewBrewLog;
 
 import com.android.volley.VolleyError;
 import com.unacceptable.unacceptablelibrary.Logic.BaseLogic;
+import com.unacceptable.unacceptablelibrary.Repositories.ITimeSource;
 import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+
+import beer.unaccpetable.brewzilla.Fragments.BrewStats.BrewStatsController;
 import beer.unaccpetable.brewzilla.Fragments.MashSetup.MashSetupController;
 import beer.unaccpetable.brewzilla.Fragments.RecipeView.RecipeViewController;
 import beer.unaccpetable.brewzilla.Models.BrewLog;
@@ -19,22 +23,36 @@ public class ViewBrewLogController extends BaseLogic<ViewBrewLogController.View>
     private @NotNull RecipeViewController m_oOriginalController;
     private @NotNull RecipeViewController m_oRectifiedController;
     private @NotNull MashSetupController m_MashSetupController;
+    private @NotNull BrewStatsController m_BrewStatsController;
 
     private @NotNull IRepository m_repo;
 
     private BrewLog m_BrewLog;
+    private byte[] m_OriginalData;
 
-    public ViewBrewLogController(@NotNull IRepository repository, ViewBrewLogController.View view) {
+    private ITimeSource m_oTimeSource;
+
+    public ViewBrewLogController(@NotNull IRepository repository, ViewBrewLogController.View view, ITimeSource oTimeSource) {
         m_repo = repository;
         attachView(view);
+
+        m_oTimeSource = oTimeSource;
 
         m_oOriginalController = new RecipeViewController(repository);
         m_oRectifiedController = new RecipeViewController(repository);
         m_MashSetupController = new MashSetupController(repository);
+        m_BrewStatsController = new BrewStatsController(m_oTimeSource);
 
 
         CreateMashSetupControllerListeners();
         CreateRectifiedRecipeListeners();
+        CreateBrewStatsListeners();
+    }
+
+    private void CreateBrewStatsListeners() {
+        m_BrewStatsController.addFGChangedListener((fg -> m_BrewLog.fg = fg));
+        m_BrewStatsController.addOGChangedListener((og -> m_BrewLog.og = og));
+        m_BrewStatsController.addMashStartTimeChangedListener((startTime -> m_BrewLog.mashStartTime = startTime));
     }
 
     private void CreateRectifiedRecipeListeners() {
@@ -64,7 +82,10 @@ public class ViewBrewLogController extends BaseLogic<ViewBrewLogController.View>
         SaveBrewLog();
     }
 
-    private void SaveBrewLog() {
+    void SaveBrewLog() {
+        if (Arrays.equals(m_OriginalData, m_BrewLog.BuildRestData())) return;
+
+
         m_repo.SaveBrewLog(m_BrewLog, new RepositoryCallback() {
             @Override
             public void onSuccess(String t) {
@@ -72,6 +93,7 @@ public class ViewBrewLogController extends BaseLogic<ViewBrewLogController.View>
                 if (response.Success) {
                     m_BrewLog.lastModifiedGuid = response.lastModifiedGuid;
                     m_oRectifiedController.saveComplete();
+                    m_OriginalData = m_BrewLog.BuildRestData();
                 } else {
                     if (response.Message.contains("Recipe has been modified")) {
                         setReadOnly(true);
@@ -123,6 +145,10 @@ public class ViewBrewLogController extends BaseLogic<ViewBrewLogController.View>
         return m_MashSetupController;
     }
 
+    BrewStatsController getBrewStatsController() {
+        return m_BrewStatsController;
+    }
+
     void LoadBrewLog(String idString) {
         if (Tools.IsEmptyString(idString)) {
             view.ShowToast("Error loading brew log.");
@@ -137,7 +163,10 @@ public class ViewBrewLogController extends BaseLogic<ViewBrewLogController.View>
                 m_oRectifiedController.SetRecipe(m_BrewLog.rectifiedRecipe);
                 //m_oOriginalController.SetRecipe(brewLog.originalRecipe);
                 m_MashSetupController.PopulateParameters(m_BrewLog.rectifiedRecipe.recipeParameters);
+                m_BrewStatsController.PopulateStats(m_BrewLog.fg, m_BrewLog.og, m_BrewLog.mashStartTime);
                 view.SetScreenTitle(m_BrewLog.rectifiedRecipe.name, m_BrewLog.name);
+
+                m_OriginalData = m_BrewLog.BuildRestData();
             }
 
             @Override
@@ -145,6 +174,13 @@ public class ViewBrewLogController extends BaseLogic<ViewBrewLogController.View>
 
             }
         });
+    }
+
+    public void pageSelected(int i) {
+        /*if (i == 0) {
+            m_oRectifiedController.refreshLayout();
+        }*/
+        SaveBrewLog();
     }
 
 

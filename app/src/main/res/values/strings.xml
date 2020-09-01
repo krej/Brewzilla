@@ -188,14 +188,14 @@
     <string-array name="list_preference_server">
         <item>Desktop</item>
         <item>BeerNet</item>
-        <item>LinuxDesktop</item>
+        <!--<item>LinuxDesktop</item>-->
         <item>BeerNet Dev</item>
     </string-array>
     <string-array name="list_preference_server_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+        <item>BeerNet_Desktop</item>
+        <item>BeerNet</item>
+        <!--<item>2</item>-->
+        <item>BeerNet_Dev</item>
     </string-array>
     <string name="pref_server">Server to connect to</string>
     <string name="title_activity_import_beer_xml">Import BeerXML</string>
@@ -248,4 +248,5 @@
     </string-array>
     <string name="title_activity_brew_log">Brew Log</string>
     <string name="start_brew_log">Start Brew Log</string>
+    <string name="mashStartTime">Mash Start Time</string>
 </resources>

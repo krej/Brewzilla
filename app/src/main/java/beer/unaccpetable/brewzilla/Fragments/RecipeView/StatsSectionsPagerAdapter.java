@@ -3,11 +3,12 @@ package beer.unaccpetable.brewzilla.Fragments.RecipeView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
 import beer.unaccpetable.brewzilla.Models.Style;
 
-public class StatsSectionsPagerAdapter extends FragmentPagerAdapter {
+public class StatsSectionsPagerAdapter extends FragmentStatePagerAdapter {
     private RecipeStatsDataFragment m_oDataFragment;
     private RecipeStatsGraphFragment m_oGraphFragment;
 
@@ -55,12 +56,12 @@ public class StatsSectionsPagerAdapter extends FragmentPagerAdapter {
     }
 
     public void PopulateStats(RecipeStatistics stats) {
-        m_oDataFragment.PopulateStats(stats);
-        m_oGraphFragment.PopulateStats(stats);
+        m_oDataFragment.setStats(stats);
+        m_oGraphFragment.setStats(stats);
     }
 
     public void PopulateStyleRanges(Style style) {
-        m_oDataFragment.PopulateStyleRanges(style);
-        m_oGraphFragment.PopulateStyleRanges(style);
+        m_oDataFragment.setStyle(style);
+        m_oGraphFragment.setStyle(style);
     }
 }

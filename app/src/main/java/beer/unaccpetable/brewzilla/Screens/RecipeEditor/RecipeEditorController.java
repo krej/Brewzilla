@@ -158,8 +158,11 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
 
 
     void GoBack() {
+        String sIDString = m_ViewController.getRecipe().idString;
+        double abv = m_ViewController.getRecipe().recipeStats.abv;
+        String sStyle = m_ViewController.getRecipe().style.name;
 
-        view.FinishActivity(m_ViewController.getRecipe().idString, m_ViewController.getRecipe().recipeStats.abv, false, m_ViewController.getRecipe().style.name);
+        view.FinishActivity(sIDString, abv, false, sStyle);
     }
 
     RecipeViewController getRecipeViewController() {

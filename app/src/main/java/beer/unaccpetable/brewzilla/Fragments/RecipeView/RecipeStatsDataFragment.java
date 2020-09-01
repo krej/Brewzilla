@@ -20,6 +20,13 @@ public class RecipeStatsDataFragment extends Fragment {
     TextView m_tvABVActual, m_tvABVMin, m_tvABVMax;
     TextView m_tvSRMActual, m_tvSRMMin, m_tvSRMMax;
 
+    private RecipeStatistics m_stats;
+    private Style m_Style;
+
+
+    private boolean m_bStatsPopulated, m_bStylePopulated;
+    private boolean m_bOnCreateViewRan;
+
     public static RecipeStatsDataFragment newInstance() {
         RecipeStatsDataFragment fragmentFirst = new RecipeStatsDataFragment();
         Bundle args = new Bundle();
@@ -60,7 +67,28 @@ public class RecipeStatsDataFragment extends Fragment {
         m_tvSRMMin = view.findViewById(R.id.srmDataMin);
         m_tvSRMMax = view.findViewById(R.id.srmDataMax);
 
+        m_bOnCreateViewRan = true;
+
+        if (m_stats != null)
+            PopulateStats(m_stats);
+
+        if (m_Style != null)
+            PopulateStyleRanges(m_Style);
+
+
+
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceBundle) {
+        super.onActivityCreated(savedInstanceBundle);
+
+        /*if (m_stats != null)
+            PopulateStats(m_stats);
+
+        if (m_Style != null)
+            PopulateStyleRanges(m_Style);*/
     }
 
     public void PopulateStats(RecipeStatistics stats) {
@@ -69,6 +97,8 @@ public class RecipeStatsDataFragment extends Fragment {
         Tools.SetText(m_tvFGActual, Tools.RoundString(stats.fg, 3));
         Tools.SetText(m_tvABVActual, Tools.RoundString(stats.abv, 3));
         Tools.SetText(m_tvSRMActual, Tools.RoundString(stats.srm, 2));
+
+        m_bStatsPopulated = true;
     }
 
     public void PopulateStyleRanges(Style style) {
@@ -86,5 +116,21 @@ public class RecipeStatsDataFragment extends Fragment {
 
         Tools.SetText(m_tvSRMMin, Tools.RoundString(style.minColor, 2));
         Tools.SetText(m_tvSRMMax, Tools.RoundString(style.maxColor, 2));
+
+        m_bStylePopulated = true;
+    }
+
+    public void setStats(RecipeStatistics stats) {
+        m_stats = stats;
+
+        if (!m_bStatsPopulated && m_bOnCreateViewRan)
+            PopulateStats(stats);
+    }
+
+    public void setStyle(Style style) {
+        m_Style = style;
+
+        if (!m_bStylePopulated && m_bOnCreateViewRan)
+            PopulateStyleRanges(style);
     }
 }

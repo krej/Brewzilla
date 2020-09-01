@@ -28,6 +28,8 @@ import beer.unaccpetable.brewzilla.Repositories.IRepository;
 
 public class RecipeViewController extends BaseLogic<RecipeViewController.View> {
 
+
+
     public interface ISaveRecipeEvent {
         void SaveRecipe(Recipe r);
     }
@@ -441,6 +443,16 @@ public class RecipeViewController extends BaseLogic<RecipeViewController.View> {
         m_OriginalData = m_Recipe.BuildRestData();
     }
 
+    public void afterOnCreateView() {
+        if (m_Recipe != null)
+            PopulateScreen(m_Recipe);
+    }
+
+
+    public void refreshLayout() {
+        view.RefreshStatsLayout();
+    }
+
     /**
      * View interface
      */
@@ -464,6 +476,8 @@ public class RecipeViewController extends BaseLogic<RecipeViewController.View> {
 
         void AddYeast(YeastAddition ya);
         void AddAdjunct(AdjunctAddition aa);
+
+        void RefreshStatsLayout();
     }
 
     /**

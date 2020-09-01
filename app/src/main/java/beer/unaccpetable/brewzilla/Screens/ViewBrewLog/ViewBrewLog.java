@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.unacceptable.unacceptablelibrary.Repositories.TimeSource;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 import beer.unaccpetable.brewzilla.Models.BrewLog;
@@ -43,13 +44,35 @@ public class ViewBrewLog extends AppCompatActivity implements ViewBrewLogControl
             idString = bundle.getString("idString");
         }
 
-        m_Controller = new ViewBrewLogController(new Repository(), this);
+        m_Controller = new ViewBrewLogController(new Repository(), this, new TimeSource());
 
         FindUIElements();
 
-        ViewBrewLogPageAdapter recipeEditorPagerAdapter = new ViewBrewLogPageAdapter(getSupportFragmentManager(), m_Controller.getOriginalController(), m_Controller.getRectifiedController(), m_Controller.getMashController());
+        ViewBrewLogPageAdapter recipeEditorPagerAdapter = new ViewBrewLogPageAdapter(getSupportFragmentManager(),
+                m_Controller.getOriginalController(),
+                m_Controller.getRectifiedController(),
+                m_Controller.getMashController(),
+                m_Controller.getBrewStatsController());
         m_ViewPager.setAdapter(recipeEditorPagerAdapter);
+        m_ViewPager.setOffscreenPageLimit(2);
         m_TabLayout.setupWithViewPager(m_ViewPager);
+
+        /*m_ViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                m_Controller.pageSelected(i);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });*/
 
         m_Controller.LoadBrewLog(idString);
     }
@@ -70,6 +93,20 @@ public class ViewBrewLog extends AppCompatActivity implements ViewBrewLogControl
     public void SetScreenTitle(String sBeerName, String sBrewLogName) {
         Tools.SetText(m_tvBrewLogBeerName, sBeerName);
         Tools.SetText(m_tvBrewLogName, sBrewLogName);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        m_Controller.SaveBrewLog();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        m_Controller.SaveBrewLog();
     }
 
 }

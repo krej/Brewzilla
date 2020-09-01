@@ -83,12 +83,16 @@ public class RecipeFragment
         View view = inflater.inflate(R.layout.fragment_recipe_editor, container, false);
         m_statsSectionsPagerAdapter = new StatsSectionsPagerAdapter(getActivity().getSupportFragmentManager());
 
+
         FindUIElements(view);
         SetupLists();
         SetupAddButtonListeners();
 
         m_vpStats.setAdapter(m_statsSectionsPagerAdapter);
         m_tbStats.setupWithViewPager(m_vpStats);
+
+        //8.31.2020. Uhh.. I'm not sure what this is. It's old and I'm just checking in my latest changes...
+        m_Controller.afterOnCreateView();
         //m_Controller.activityCreated();
         return view;
     }
@@ -293,6 +297,11 @@ public class RecipeFragment
     public void onActivityCreated(Bundle savedInstanceBundle) {
        super.onActivityCreated(savedInstanceBundle);
 
-       m_Controller.activityCreated();
+       //m_Controller.activityCreated();
+   }
+
+   @Override
+    public void RefreshStatsLayout() {
+       m_vpStats.requestLayout();
    }
 }

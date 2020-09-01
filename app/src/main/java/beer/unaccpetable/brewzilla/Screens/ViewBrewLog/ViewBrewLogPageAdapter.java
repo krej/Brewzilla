@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import beer.unaccpetable.brewzilla.Fragments.BrewStats.BrewStatsController;
+import beer.unaccpetable.brewzilla.Fragments.BrewStats.BrewStatsFragment;
 import beer.unaccpetable.brewzilla.Fragments.MashSetup.MashFragment;
 import beer.unaccpetable.brewzilla.Fragments.MashSetup.MashSetupController;
 import beer.unaccpetable.brewzilla.Fragments.RecipeView.RecipeFragment;
@@ -13,8 +15,13 @@ public class ViewBrewLogPageAdapter extends FragmentStatePagerAdapter {
     //private RecipeFragment m_fOriginalRecipe;
     private RecipeFragment m_fRectifiedRecipe;
     private MashFragment m_fMash;
+    private BrewStatsFragment m_fBrewStats;
 
-    ViewBrewLogPageAdapter(FragmentManager fm, RecipeViewController originalController, RecipeViewController rectifiedController, MashSetupController mashController) {
+    ViewBrewLogPageAdapter(FragmentManager fm,
+                           RecipeViewController originalController,
+                           RecipeViewController rectifiedController,
+                           MashSetupController mashController,
+                           BrewStatsController brewStatsController) {
         super(fm);
 /*
 
@@ -27,6 +34,11 @@ public class ViewBrewLogPageAdapter extends FragmentStatePagerAdapter {
 
         m_fMash = MashFragment.newInstance();
         m_fMash.setController(mashController);
+
+        m_fBrewStats = BrewStatsFragment.newInstance();
+        m_fBrewStats.setController(brewStatsController);
+
+
     }
 
     @Override
@@ -36,6 +48,8 @@ public class ViewBrewLogPageAdapter extends FragmentStatePagerAdapter {
                 return m_fRectifiedRecipe;
             case 1:
                 return m_fMash;
+            case 2:
+                return m_fBrewStats;
         }
 
         return null;
@@ -43,7 +57,7 @@ public class ViewBrewLogPageAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -53,8 +67,8 @@ public class ViewBrewLogPageAdapter extends FragmentStatePagerAdapter {
                 return "RECIPE";
             case 1:
                 return "MASH";
-            /*case 2:
-                return "YEASTS";*/
+            case 2:
+                return "STATS";
         }
         return null;
     }
