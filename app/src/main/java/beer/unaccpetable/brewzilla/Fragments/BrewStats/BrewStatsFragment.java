@@ -25,16 +25,28 @@ import beer.unaccpetable.brewzilla.R;
 
 public class BrewStatsFragment extends Fragment implements BrewStatsController.View{
 
+    /******
+     * TODO:
+     * BIG TODO: The UI will desparately need a rework. I'm currently working on adding all of the properties so they can
+     * BIG TODO: at least be entered, but they are not in any specific order. In the good doc we had an order to them all based on
+     * BIG TODO: when they were done, but I'm creating them based on level of easy to create.
+     * TODO:
+     *
+     * I will also probably want to make it look pretty and easy to use. Example: The Mash Start/End Date/Time are all small and next to each other.
+     * I haven't tested it on phones but I'm guessing it will be extremely fat-thumbable.
+     */
+
     private BrewStatsController m_Controller;
 
     EditText m_txtOG;
     EditText m_txtFG;
-    EditText m_txtMashStartTime;
-    TextView m_tvMashStartDate;
-    TextView m_tvMashStartTime;
-    TextView m_tvMashEndDate;
-    TextView m_tvMashEndTime;
+    TextView m_tvMashStartDate, m_tvMashStartTime;
+    TextView m_tvMashEndDate, m_tvMashEndTime;
     CheckBox m_chkVaurloffed;
+    TextView m_tvSpargeStartDate, m_tvSpargeStartTime;
+    TextView m_tvSpargeEndDate, m_tvSpargeEndTime;
+    TextView m_tvBoilStartDate, m_tvBoilStartTime;
+    TextView m_tvBoilEndDate, m_tvBoilEndTime;
 
     public static BrewStatsFragment newInstance() {
         BrewStatsFragment fragmentFirst = new BrewStatsFragment();
@@ -112,11 +124,34 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
             }
         });*/
 
-        m_tvMashStartDate.setOnClickListener((dtt) -> m_Controller.startDateDialog(BrewLog.Properties.MashStartTime));
-        m_tvMashStartTime.setOnClickListener((dtt) -> m_Controller.startTimeDialog(BrewLog.Properties.MashStartTime));
-        m_tvMashEndDate.setOnClickListener((dtt) -> m_Controller.startDateDialog(BrewLog.Properties.MashEndTime));
-        m_tvMashEndTime.setOnClickListener((dtt) -> m_Controller.startTimeDialog(BrewLog.Properties.MashEndTime));
+        //Mash
+        SetDateDialogClickListener(m_tvMashStartDate, BrewLog.Properties.MashStartTime);
+        SetDateDialogClickListener(m_tvMashEndDate, BrewLog.Properties.MashEndTime);
+        SetTimeDialogClickListener(m_tvMashStartTime, BrewLog.Properties.MashStartTime);
+        SetTimeDialogClickListener(m_tvMashEndTime, BrewLog.Properties.MashEndTime);
+        
+        //Vaurloff
         m_chkVaurloffed.setOnCheckedChangeListener((compoundButton, bChecked) -> m_Controller.setVaurloffed(bChecked));
+
+        //Sparge
+        SetDateDialogClickListener(m_tvSpargeStartDate, BrewLog.Properties.SpargeStartTime);
+        SetDateDialogClickListener(m_tvSpargeEndDate, BrewLog.Properties.SpargeEndTime);
+        SetTimeDialogClickListener(m_tvSpargeStartTime, BrewLog.Properties.SpargeStartTime);
+        SetTimeDialogClickListener(m_tvSpargeEndTime, BrewLog.Properties.SpargeEndTime);
+
+        //Boil
+        SetDateDialogClickListener(m_tvBoilStartDate, BrewLog.Properties.BoilStartTime);
+        SetDateDialogClickListener(m_tvBoilEndDate, BrewLog.Properties.BoilEndTime);
+        SetTimeDialogClickListener(m_tvBoilStartTime, BrewLog.Properties.BoilStartTime);
+        SetTimeDialogClickListener(m_tvBoilEndTime, BrewLog.Properties.BoilEndTime);
+    }
+
+    private void SetDateDialogClickListener(TextView tv, BrewLog.Properties p) {
+        tv.setOnClickListener((view) -> m_Controller.startDateDialog(p));
+    }
+
+    private void SetTimeDialogClickListener(TextView v, BrewLog.Properties p) {
+        v.setOnClickListener((view) -> m_Controller.startTimeDialog(p));
     }
 
     private void FindUIElements(View view) {
@@ -128,6 +163,15 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
         m_tvMashEndDate = view.findViewById(R.id.brewStatsMashEndDate);
         m_tvMashEndTime = view.findViewById(R.id.brewStatsMashEndTime);
         m_chkVaurloffed = view.findViewById(R.id.chkBrewStatsVaurloff);
+        m_tvSpargeStartDate = view.findViewById(R.id.brewStatsSpargeStartDate);
+        m_tvSpargeStartTime = view.findViewById(R.id.brewStatsSpargeStartTime);
+        m_tvSpargeEndDate = view.findViewById(R.id.brewStatsSpargeEndDate);
+        m_tvSpargeEndTime = view.findViewById(R.id.brewStatsSpargeEndTime);
+        m_tvBoilStartDate = view.findViewById(R.id.brewStatsBoilStartDate);
+        m_tvBoilStartTime = view.findViewById(R.id.brewStatsBoilStartTime);
+        m_tvBoilEndDate = view.findViewById(R.id.brewStatsBoilEndDate);
+        m_tvBoilEndTime = view.findViewById(R.id.brewStatsBoilEndTime);
+
     }
 
     @Override
@@ -153,7 +197,31 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
     }
 
     @Override
-    public void ShowDateDialog(BrewLog.Properties dtt, Calendar cal) {
+    public void setSpargeStartTime(String startDate, String startTime) {
+        Tools.SetText(m_tvSpargeStartDate, startDate);
+        Tools.SetText(m_tvSpargeStartTime, startTime);
+    }
+
+    @Override
+    public void setSpargeEndTime(String endDate, String endTime) {
+        Tools.SetText(m_tvSpargeEndDate, endDate);
+        Tools.SetText(m_tvSpargeEndTime, endTime);
+    }
+
+    @Override
+    public void setBoilStartTime(String startDate, String startTime) {
+        Tools.SetText(m_tvBoilStartDate, startDate);
+        Tools.SetText(m_tvBoilStartTime, startTime);
+    }
+
+    @Override
+    public void setBoilEndTime(String endDate, String endTime) {
+        Tools.SetText(m_tvBoilEndDate, endDate);
+        Tools.SetText(m_tvBoilEndTime, endTime);
+    }
+
+    @Override
+    public void ShowDateDialog(BrewLog.Properties property, Calendar cal) {
         //final Calendar cal = Calendar.getInstance();
         //cal.set
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -163,7 +231,7 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
                 cal.set(Calendar.MONTH, month);
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 //m_oController.setDate(cal, dateType);
-                m_Controller.setDateTime(cal, dtt);
+                m_Controller.setDateTime(cal, property);
             }
         };
 
@@ -173,14 +241,14 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
     }
 
     @Override
-    public void ShowTimeDialog(BrewLog.Properties dtt, Calendar cal) {
+    public void ShowTimeDialog(BrewLog.Properties property, Calendar cal) {
         TimePickerDialog.OnTimeSetListener time = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                 cal.set(Calendar.HOUR, hour);
                 cal.set(Calendar.MINUTE, minute);
 
-                m_Controller.setDateTime(cal, dtt);
+                m_Controller.setDateTime(cal, property);
             }
         };
 

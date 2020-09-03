@@ -7,6 +7,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <!--OG-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,6 +28,7 @@
 
         </RelativeLayout>
 
+        <!--FG-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,6 +49,7 @@
 
         </RelativeLayout>
 
+        <!--Mash Start Time-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,12 +61,6 @@
                 android:id="@+id/brewStatsMashStartTimeLabel"
                 android:layout_centerVertical="true"
                 android:text="@string/mashStartTime"/>
-            <!--<EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:ems="12"
-                android:id="@+id/brewStatsMashStartTime"/>-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -78,6 +75,7 @@
 
         </RelativeLayout>
 
+        <!--Mash End Time-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,12 +87,6 @@
                 android:id="@+id/brewStatsMashEndTimeLabel"
                 android:layout_centerVertical="true"
                 android:text="@string/mashEndTime"/>
-            <!--<EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:ems="12"
-                android:id="@+id/brewStatsMashStartTime"/>-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -109,6 +101,7 @@
 
         </RelativeLayout>
 
+        <!--Vaurloffed-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -125,6 +118,110 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/chkBrewStatsVaurloff"
                 android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <!--Sparge Start Time-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsSpargeStartTimeLabel"
+                android:layout_centerVertical="true"
+                android:text="@string/SpargeStartTime"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsSpargeStartDate"
+                android:layout_toStartOf="@id/brewStatsSpargeStartTime"
+                android:paddingHorizontal="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsSpargeStartTime"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+        
+        <!--Sparge End Time-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsSpargeEndTimeLabel"
+                android:layout_centerVertical="true"
+                android:text="@string/SpargeEndTime"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsSpargeEndDate"
+                android:layout_toStartOf="@id/brewStatsSpargeEndTime"
+                android:paddingHorizontal="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsSpargeEndTime"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+        <!--Boil Start Time-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsBoilStartTimeLabel"
+                android:layout_centerVertical="true"
+                android:text="@string/BoilStartTime"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsBoilStartDate"
+                android:layout_toStartOf="@id/brewStatsBoilStartTime"
+                android:paddingHorizontal="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsBoilStartTime"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+        <!--Boil End Time-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsBoilEndTimeLabel"
+                android:layout_centerVertical="true"
+                android:text="@string/BoilEndTime"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsBoilEndDate"
+                android:layout_toStartOf="@id/brewStatsBoilEndTime"
+                android:paddingHorizontal="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsBoilEndTime"
+                android:layout_alignParentEnd="true"/>
+
         </RelativeLayout>
 
     </LinearLayout>

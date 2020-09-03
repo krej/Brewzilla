@@ -25,8 +25,9 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
 
     private ITimeSource m_oTimeSource;
 
-    private @NotNull Calendar m_cMashStart;
-    private @NotNull Calendar m_cMashEnd;
+    private @NotNull Calendar m_cMashStart, m_cMashEnd;
+    private @NotNull Calendar m_cSpargeStart, m_cSpargeEnd;
+    private @NotNull Calendar m_cBoilStart, m_cBoilEnd;
 
     public BrewStatsController(ITimeSource oTimeSource) {
         m_evtPropertyChanged = new ArrayList<>();
@@ -35,6 +36,10 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
 
         m_cMashStart = m_oTimeSource.getCalendarInstance();
         m_cMashEnd = m_oTimeSource.getCalendarInstance();
+        m_cSpargeStart = m_oTimeSource.getCalendarInstance();
+        m_cSpargeEnd = m_oTimeSource.getCalendarInstance();
+        m_cBoilStart = m_oTimeSource.getCalendarInstance();
+        m_cBoilEnd = m_oTimeSource.getCalendarInstance();
     }
 
     public void fgChanged(CharSequence s) {
@@ -50,12 +55,16 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
     public void PopulateStats(BrewLog log) {
         view.setOg(log.og);
         view.setFg(log.fg);
-        ConvertAndSetMashStart(log.mashStartTime, BrewLog.Properties.MashStartTime);
-        ConvertAndSetMashStart(log.mashEndTime, BrewLog.Properties.MashEndTime);
+        ConvertAndSetDateTimes(log.mashStartTime, BrewLog.Properties.MashStartTime);
+        ConvertAndSetDateTimes(log.mashEndTime, BrewLog.Properties.MashEndTime);
         view.setVaurloff(log.vaurloff);
+        ConvertAndSetDateTimes(log.spargeStartTime, BrewLog.Properties.SpargeStartTime);
+        ConvertAndSetDateTimes(log.spargeEndTime, BrewLog.Properties.SpargeEndTime);
+        ConvertAndSetDateTimes(log.boilStartTime, BrewLog.Properties.BoilStartTime);
+        ConvertAndSetDateTimes(log.boilEndTime, BrewLog.Properties.BoilEndTime);
     }
 
-    private void ConvertAndSetMashStart(String sTime, BrewLog.Properties dtt) {
+    private void ConvertAndSetDateTimes(String sTime, BrewLog.Properties dtt) {
         Date date = parseDateFromString(sTime);
         String sDate = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).format(date);
         String sFormattedTime = new SimpleDateFormat("h:mm a", Locale.ENGLISH).format(date);
@@ -69,6 +78,21 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
                 m_cMashEnd.setTime(date);
                 view.setMashEndTime(sDate, sFormattedTime);
                 break;
+            case SpargeStartTime:
+                m_cSpargeStart.setTime(date);
+                view.setSpargeStartTime(sDate, sFormattedTime);
+                break;
+            case SpargeEndTime:
+                m_cSpargeEnd.setTime(date);
+                view.setSpargeEndTime(sDate, sFormattedTime);
+                break;
+            case BoilStartTime:
+                m_cBoilStart.setTime(date);
+                view.setBoilStartTime(sDate, sFormattedTime);
+                break;
+            case BoilEndTime:
+                m_cBoilEnd.setTime(date);
+                view.setBoilEndTime(sDate, sFormattedTime);
         }
     }
 
@@ -87,34 +111,35 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
     }
 
 
-    public void startDateDialog(BrewLog.Properties dtt) {
-        Calendar c = m_oTimeSource.getCalendarInstance();
+    public void startDateDialog(BrewLog.Properties p) {
+        Calendar c = getCalendar(p);
 
-        switch (dtt) {
-            case MashStartTime:
-                c = m_cMashStart;
-                break;
-            case MashEndTime:
-                c = m_cMashEnd;
-                break;
-        }
-
-        view.ShowDateDialog(dtt, c);
+        view.ShowDateDialog(p, c);
     }
 
-    public void startTimeDialog(BrewLog.Properties dtt) {
-        Calendar c = m_oTimeSource.getCalendarInstance();
+    public void startTimeDialog(BrewLog.Properties p) {
+        Calendar c = getCalendar(p);
 
-        switch (dtt) {
+        view.ShowTimeDialog(p, c);
+    }
+
+    private Calendar getCalendar(BrewLog.Properties p) {
+        switch (p) {
             case MashStartTime:
-                c = m_cMashStart;
-                break;
+                return m_cMashStart;
             case MashEndTime:
-                c = m_cMashEnd;
-                break;
+                return m_cMashEnd;
+            case SpargeStartTime:
+                return m_cSpargeStart;
+            case SpargeEndTime:
+                return m_cSpargeEnd;
+            case BoilStartTime:
+                return m_cBoilStart;
+            case BoilEndTime:
+                return m_cBoilEnd;
         }
 
-        view.ShowTimeDialog(dtt, c);
+        return m_oTimeSource.getCalendarInstance();
     }
 
     public void setDateTime(Calendar cal, BrewLog.Properties dtt) {
@@ -133,6 +158,22 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
                 view.setMashEndTime(sDate, sTime);
                 firePropertyChanged(BrewLog.Properties.MashEndTime, sDateTime);
                 break;
+            case SpargeStartTime:
+                view.setSpargeStartTime(sDate, sTime);
+                firePropertyChanged(BrewLog.Properties.SpargeStartTime, sDateTime);
+                break;
+            case SpargeEndTime:
+                view.setSpargeEndTime(sDate, sTime);
+                firePropertyChanged(BrewLog.Properties.SpargeEndTime, sDateTime);
+                break;
+            case BoilStartTime:
+                view.setBoilStartTime(sDate, sTime);
+                firePropertyChanged(BrewLog.Properties.BoilStartTime, sDateTime);
+                break;
+            case BoilEndTime:
+                view.setBoilEndTime(sDate, sTime);
+                firePropertyChanged(BrewLog.Properties.BoilEndTime, sDateTime);
+                break;
         }
     }
 
@@ -148,6 +189,10 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
 
         void setMashStartTime(String startDate, String startTime);
         void setMashEndTime(String endDate, String endTime);
+        void setSpargeStartTime(String startDate, String startTime);
+        void setSpargeEndTime(String endDate, String endTime);
+        void setBoilStartTime(String startDate, String startTime);
+        void setBoilEndTime(String endDate, String endTime);
 
         void ShowDateDialog(BrewLog.Properties dtt, Calendar c);
 

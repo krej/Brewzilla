@@ -251,4 +251,8 @@
     <string name="mashStartTime">Mash Start Time</string>
     <string name="mashEndTime">Mash End Time</string>
     <string name="vaurloffed">Vaurloffed?</string>
+    <string name="SpargeEndTime">Sparge End Time</string>
+    <string name="SpargeStartTime">Sparge Start Time</string>
+    <string name="BoilStartTime">Boil Start Time</string>
+    <string name="BoilEndTime">Boil End Time</string>
 </resources>

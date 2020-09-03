@@ -61,6 +61,7 @@ public class BrewLog extends ListableObject implements Serializable {
 
     public BrewLog(ITimeSource time) {
         idString = "";
+        //TODO: Add defaults to the times so they are at least on the correct day. Currently they default to 1900 so its a pain in the ass to get it to the current date/time.
         //mashStartTime = time.getTodaysDate().toString();
         //mashEndTime = time.getTodaysDate().toString();
     }
@@ -70,6 +71,10 @@ public class BrewLog extends ListableObject implements Serializable {
         MashEndTime,
         FG,
         OG,
-        Vaurloff
+        Vaurloff,
+        SpargeStartTime,
+        SpargeEndTime,
+        BoilStartTime,
+        BoilEndTime
     }
 }
