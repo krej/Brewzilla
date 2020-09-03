@@ -9,6 +9,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 import java.util.Calendar;
 
+import beer.unaccpetable.brewzilla.Models.BrewLog;
 import beer.unaccpetable.brewzilla.R;
 
 public class BrewStatsFragment extends Fragment implements BrewStatsController.View{
@@ -29,6 +32,9 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
     EditText m_txtMashStartTime;
     TextView m_tvMashStartDate;
     TextView m_tvMashStartTime;
+    TextView m_tvMashEndDate;
+    TextView m_tvMashEndTime;
+    CheckBox m_chkVaurloffed;
 
     public static BrewStatsFragment newInstance() {
         BrewStatsFragment fragmentFirst = new BrewStatsFragment();
@@ -106,8 +112,11 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
             }
         });*/
 
-        m_tvMashStartDate.setOnClickListener((dtt) -> m_Controller.startDateDialog(BrewStatsController.DateTimeType.Mash));
-        m_tvMashStartTime.setOnClickListener((dtt) -> m_Controller.startTimeDialog(BrewStatsController.DateTimeType.Mash));
+        m_tvMashStartDate.setOnClickListener((dtt) -> m_Controller.startDateDialog(BrewLog.Properties.MashStartTime));
+        m_tvMashStartTime.setOnClickListener((dtt) -> m_Controller.startTimeDialog(BrewLog.Properties.MashStartTime));
+        m_tvMashEndDate.setOnClickListener((dtt) -> m_Controller.startDateDialog(BrewLog.Properties.MashEndTime));
+        m_tvMashEndTime.setOnClickListener((dtt) -> m_Controller.startTimeDialog(BrewLog.Properties.MashEndTime));
+        m_chkVaurloffed.setOnCheckedChangeListener((compoundButton, bChecked) -> m_Controller.setVaurloffed(bChecked));
     }
 
     private void FindUIElements(View view) {
@@ -116,6 +125,9 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
         //m_txtMashStartTime = view.findViewById(R.id.brewStatsMashStartTime);
         m_tvMashStartDate = view.findViewById(R.id.brewStatsMashStartDate);
         m_tvMashStartTime = view.findViewById(R.id.brewStatsMashStartTime);
+        m_tvMashEndDate = view.findViewById(R.id.brewStatsMashEndDate);
+        m_tvMashEndTime = view.findViewById(R.id.brewStatsMashEndTime);
+        m_chkVaurloffed = view.findViewById(R.id.chkBrewStatsVaurloff);
     }
 
     @Override
@@ -135,7 +147,13 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
     }
 
     @Override
-    public void ShowDateDialog(BrewStatsController.DateTimeType dtt, Calendar cal) {
+    public void setMashEndTime(String endDate, String endTime) {
+        Tools.SetText(m_tvMashEndDate, endDate);
+        Tools.SetText(m_tvMashEndTime, endTime);
+    }
+
+    @Override
+    public void ShowDateDialog(BrewLog.Properties dtt, Calendar cal) {
         //final Calendar cal = Calendar.getInstance();
         //cal.set
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -155,7 +173,7 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
     }
 
     @Override
-    public void ShowTimeDialog(BrewStatsController.DateTimeType dtt, Calendar cal) {
+    public void ShowTimeDialog(BrewLog.Properties dtt, Calendar cal) {
         TimePickerDialog.OnTimeSetListener time = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
@@ -168,5 +186,10 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
 
         TimePickerDialog dialogTimePicker = new TimePickerDialog(getContext(), time, cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE), false);
         dialogTimePicker.show();
+    }
+
+    @Override
+    public void setVaurloff(boolean bVaurloff) {
+        m_chkVaurloffed.setChecked(bVaurloff);
     }
 }

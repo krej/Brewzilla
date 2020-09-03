@@ -13,134 +13,132 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import beer.unaccpetable.brewzilla.Models.BrewLog;
+
 public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
 
-
-
-    public enum DateTimeType {
-        Mash,
-        Boil
+    public interface IPropertyChangedListener {
+        void propertyChanged(BrewLog.Properties eProperty, Object value);
     }
 
-    public interface IFGChanged {
-        void fgChanged(double fg);
-    }
-
-    public interface IOGChanged {
-        void ogChanged(double og);
-    }
-
-    public interface IMashStartTimeChanged {
-        void mashStartTimeChanged(String startTime);
-    }
-
-    private @NotNull ArrayList<IFGChanged> m_evtFGChanged;
-    private @NotNull ArrayList<IOGChanged> m_evtOGChanged;
-    private @NotNull ArrayList<IMashStartTimeChanged> m_evtMashStartTimeChanged;
+    private @NotNull ArrayList<IPropertyChangedListener> m_evtPropertyChanged;
 
     private ITimeSource m_oTimeSource;
 
     private @NotNull Calendar m_cMashStart;
+    private @NotNull Calendar m_cMashEnd;
 
     public BrewStatsController(ITimeSource oTimeSource) {
-        m_evtFGChanged = new ArrayList<>();
-        m_evtOGChanged = new ArrayList<>();
-        m_evtMashStartTimeChanged = new ArrayList<>();
+        m_evtPropertyChanged = new ArrayList<>();
 
         m_oTimeSource = oTimeSource;
 
         m_cMashStart = m_oTimeSource.getCalendarInstance();
+        m_cMashEnd = m_oTimeSource.getCalendarInstance();
     }
 
     public void fgChanged(CharSequence s) {
         double fg = Tools.ParseDouble(s.toString());
-        fireFGChangedEvent(fg);
+        firePropertyChanged(BrewLog.Properties.FG, fg);
     }
 
     public void ogChanged(CharSequence s) {
         double og = Tools.ParseDouble(s.toString());
-        fireOGChangedEvent(og);
+        firePropertyChanged(BrewLog.Properties.OG, og);
     }
 
-    public void mashStartTimeChanged(String startTime) {
-        fireMashStartTimeChanged(startTime);
+    public void PopulateStats(BrewLog log) {
+        view.setOg(log.og);
+        view.setFg(log.fg);
+        ConvertAndSetMashStart(log.mashStartTime, BrewLog.Properties.MashStartTime);
+        ConvertAndSetMashStart(log.mashEndTime, BrewLog.Properties.MashEndTime);
+        view.setVaurloff(log.vaurloff);
     }
 
+    private void ConvertAndSetMashStart(String sTime, BrewLog.Properties dtt) {
+        Date date = parseDateFromString(sTime);
+        String sDate = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).format(date);
+        String sFormattedTime = new SimpleDateFormat("h:mm a", Locale.ENGLISH).format(date);
 
-    public void PopulateStats(double fg, double og, String mashStartTime) {
-        view.setOg(og);
-        view.setFg(fg);
-        ConvertAndSetMashStart(mashStartTime);
+        switch (dtt) {
+            case MashStartTime:
+                m_cMashStart.setTime(date);
+                view.setMashStartTime(sDate, sFormattedTime);
+                break;
+            case MashEndTime:
+                m_cMashEnd.setTime(date);
+                view.setMashEndTime(sDate, sFormattedTime);
+                break;
+        }
     }
 
-    private void ConvertAndSetMashStart(String sTime) {
+    private Date parseDateFromString(String sDate) {
         //2019-09-28T00:00:00-05:00
         //https://stackoverflow.com/questions/7681782/simpledateformat-unparseable-date-exception
         Date date;
         try {
-            date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.ENGLISH).parse(sTime);
+            date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.ENGLISH).parse(sDate);
         } catch (ParseException pe) {
             date = m_oTimeSource.getTodaysDate();
 
         }
 
-        m_cMashStart.setTime(date);
-
-
-
-        view.setMashStartTime(new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).format(date), new SimpleDateFormat("h:mm a", Locale.ENGLISH).format(date));
+        return date;
     }
 
 
-    public void startDateDialog(DateTimeType dtt) {
+    public void startDateDialog(BrewLog.Properties dtt) {
         Calendar c = m_oTimeSource.getCalendarInstance();
 
         switch (dtt) {
-            case Mash:
+            case MashStartTime:
                 c = m_cMashStart;
+                break;
+            case MashEndTime:
+                c = m_cMashEnd;
+                break;
         }
 
         view.ShowDateDialog(dtt, c);
     }
 
-    public void startTimeDialog(DateTimeType dtt) {
+    public void startTimeDialog(BrewLog.Properties dtt) {
         Calendar c = m_oTimeSource.getCalendarInstance();
 
         switch (dtt) {
-            case Mash:
+            case MashStartTime:
                 c = m_cMashStart;
+                break;
+            case MashEndTime:
+                c = m_cMashEnd;
+                break;
         }
 
         view.ShowTimeDialog(dtt, c);
     }
 
-    public void setDateTime(Calendar cal, DateTimeType dtt) {
+    public void setDateTime(Calendar cal, BrewLog.Properties dtt) {
         Date dt = cal.getTime();
 
         String sDate = Tools.FormatDate(dt, "MM/dd/yyyy");
         String sTime = Tools.FormatDate(dt, "h:mm a");
+        String sDateTime = sDate + " " + sTime;
 
         switch(dtt) {
-            case Mash:
+            case MashStartTime:
                 view.setMashStartTime(sDate, sTime);
-                fireMashStartTimeChanged(sDate + " " + sTime);
+                firePropertyChanged(BrewLog.Properties.MashStartTime, sDateTime);
+                break;
+            case MashEndTime:
+                view.setMashEndTime(sDate, sTime);
+                firePropertyChanged(BrewLog.Properties.MashEndTime, sDateTime);
                 break;
         }
     }
 
-    /*public void setTime(Calendar cal, DateTimeType dtt) {
-        Date dt = cal.getTime();
-
-        String sDate = Tools.FormatDate(dt, "MM/dd/yyyy");
-        String sTime = Tools.FormatDate(dt, "hh:mm a");
-
-        switch (dtt) {
-            case Mash:
-                view.setMashStartTime(sDate, sTime);
-                fireMashStartTimeChanged(sDate + " " + sTime);
-                break;
-        }
-    }*/
+    public void setVaurloffed(boolean bChecked) {
+        firePropertyChanged(BrewLog.Properties.Vaurloff, bChecked);
+    }
 
     public interface View {
 
@@ -149,39 +147,22 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
         void setFg(double fg);
 
         void setMashStartTime(String startDate, String startTime);
+        void setMashEndTime(String endDate, String endTime);
 
-        void ShowDateDialog(DateTimeType dtt, Calendar c);
+        void ShowDateDialog(BrewLog.Properties dtt, Calendar c);
 
-        void ShowTimeDialog(BrewStatsController.DateTimeType dtt, Calendar cal);
+        void ShowTimeDialog(BrewLog.Properties dtt, Calendar cal);
+
+        void setVaurloff(boolean bVaurloff);
     }
 
-    public void addFGChangedListener(IFGChanged listener) {
-        m_evtFGChanged.add(listener);
-    }
-
-    private void fireFGChangedEvent(double fg) {
-        for (IFGChanged listener : m_evtFGChanged) {
-            listener.fgChanged(fg);
+    private void firePropertyChanged(BrewLog.Properties eProperty, Object value) {
+        for (IPropertyChangedListener listener : m_evtPropertyChanged) {
+            listener.propertyChanged(eProperty, value);
         }
     }
 
-    public void addOGChangedListener(IOGChanged listener) {
-        m_evtOGChanged.add(listener);
-    }
-
-    private void fireOGChangedEvent(double og) {
-        for (IOGChanged listener : m_evtOGChanged) {
-            listener.ogChanged(og);
-        }
-    }
-
-    public void addMashStartTimeChangedListener(IMashStartTimeChanged listener) {
-        m_evtMashStartTimeChanged.add(listener);
-    }
-
-    private void fireMashStartTimeChanged(String startTime) {
-        for (IMashStartTimeChanged listener : m_evtMashStartTimeChanged) {
-            listener.mashStartTimeChanged(startTime);
-        }
+    public void addPropertyChangedListener(IPropertyChangedListener listener) {
+        m_evtPropertyChanged.add(listener);
     }
 }

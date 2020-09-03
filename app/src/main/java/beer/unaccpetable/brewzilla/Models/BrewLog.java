@@ -2,6 +2,7 @@ package beer.unaccpetable.brewzilla.Models;
 
 import com.google.gson.annotations.Expose;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
+import com.unacceptable.unacceptablelibrary.Repositories.ITimeSource;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -58,7 +59,17 @@ public class BrewLog extends ListableObject implements Serializable {
     @Expose
     public String lastModifiedGuid;
 
-    public BrewLog() {
+    public BrewLog(ITimeSource time) {
         idString = "";
+        //mashStartTime = time.getTodaysDate().toString();
+        //mashEndTime = time.getTodaysDate().toString();
+    }
+
+    public enum Properties {
+        MashStartTime,
+        MashEndTime,
+        FG,
+        OG,
+        Vaurloff
     }
 }

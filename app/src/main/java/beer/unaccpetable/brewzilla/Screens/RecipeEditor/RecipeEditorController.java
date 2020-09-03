@@ -5,6 +5,7 @@ import android.graphics.Color;
 
 import com.android.volley.VolleyError;
 import com.unacceptable.unacceptablelibrary.Logic.BaseLogic;
+import com.unacceptable.unacceptablelibrary.Repositories.ITimeSource;
 import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
@@ -28,11 +29,13 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
     private @NotNull RecipeViewController m_ViewController;
 
     private IRepository m_repo;
+    private ITimeSource m_time;
 
     private boolean m_bDeleted = false;
 
-    RecipeEditorController(IRepository repository) {
+    RecipeEditorController(IRepository repository, ITimeSource time) {
         m_repo = repository;
+        m_time = time;
         m_ViewController = new RecipeViewController(repository);
 
         CreateRecipeViewControllerListeners();
@@ -179,7 +182,7 @@ public class RecipeEditorController extends BaseLogic<RecipeEditorController.Vie
             @Override
             public void onSuccess(String t) {
                 try {
-                    BrewLog brewLog = new BrewLog();
+                    BrewLog brewLog = new BrewLog(m_time);
                     brewLog.name = Tools.FormatDate(new Date(), "MM/dd/yyyy");
                     brewLog.originalRecipe = m_ViewController.getRecipe().clone();
                     brewLog.rectifiedRecipe = m_ViewController.getRecipe().clone();
