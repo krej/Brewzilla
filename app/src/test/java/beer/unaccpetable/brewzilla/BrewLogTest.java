@@ -5,6 +5,11 @@ import com.unacceptable.unacceptablelibrary.Tools.Tools;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import beer.unaccpetable.brewzilla.Models.BrewLog;
 
 public class BrewLogTest {
@@ -643,5 +648,23 @@ public class BrewLogTest {
         }
 
         Assert.assertTrue(true);
+    }
+
+    @Test
+    public void ParseMashStartTime() {
+        String sMashStartTime = "2020-09-11T00:00:00-05:00";
+        Date date = new Date();
+        try {
+            //mm/dd/yyyy
+            //Y-MM-dd'T'KK:mm:ssZZZZZ
+            //yyyy-MM-dd'T'HH:mm:ssX
+            date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.ENGLISH).parse(sMashStartTime);
+        } catch (ParseException pe) {
+            //date = m_oTimeSource.getTodaysDate();
+            Assert.fail(pe.getMessage());
+        }
+
+        Assert.assertEquals(0, date.getHours());
+        Assert.assertEquals(8, date.getMonth());
     }
 }
