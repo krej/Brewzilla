@@ -17,6 +17,13 @@ public class RecipeStatsGraphFragment extends Fragment {
 
     StyleRangeBar m_srbIBU, m_srbOG, m_srbFG, m_srbABV, m_srbSRM;
 
+
+    private RecipeStatistics m_stats;
+    private Style m_Style;
+
+    private boolean m_bStatsPopulated, m_bStylePopulated;
+    private boolean m_bOnCreateViewRan;
+
     public static RecipeStatsGraphFragment newInstance() {
         RecipeStatsGraphFragment fragmentFirst = new RecipeStatsGraphFragment();
         Bundle args = new Bundle();
@@ -46,7 +53,26 @@ public class RecipeStatsGraphFragment extends Fragment {
         m_srbABV = view.findViewById(R.id.abvBar);
         m_srbSRM = view.findViewById(R.id.srmBar);
 
+        m_bOnCreateViewRan = true;
+
+        if (m_stats != null)
+            PopulateStats(m_stats);
+
+        if (m_Style != null)
+            PopulateStyleRanges(m_Style);
+
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceBundle) {
+        super.onActivityCreated(savedInstanceBundle);
+
+        /*if (m_stats != null)
+            PopulateStats(m_stats);
+
+        if (m_Style != null)
+            PopulateStyleRanges(m_Style);*/
     }
 
     public void PopulateStats(RecipeStatistics stats) {
@@ -56,6 +82,8 @@ public class RecipeStatsGraphFragment extends Fragment {
         m_srbFG.setValue(stats.getFgPoints());
         m_srbABV.setValue(stats.abv);
         m_srbSRM.setValue(stats.srm);
+
+        m_bStatsPopulated = true;
     }
 
     public void PopulateStyleRanges(Style style) {
@@ -65,5 +93,20 @@ public class RecipeStatsGraphFragment extends Fragment {
         m_srbFG.setRange(Tools.DecimalPart(style.minFG), Tools.DecimalPart(style.maxFG));
         m_srbABV.setRange(style.minABV, style.maxABV);
         m_srbSRM.setRange(style.minColor, style.maxColor);
+
+        m_bStylePopulated = true;
+    }
+
+    public void setStats(RecipeStatistics stats) {
+        m_stats = stats;
+
+        if (!m_bStatsPopulated && m_bOnCreateViewRan)
+            PopulateStats(stats);
+    }
+
+    public void setStyle(Style style) {
+        m_Style = style;
+        if (!m_bStylePopulated && m_bOnCreateViewRan)
+            PopulateStyleRanges(style);
     }
 }
