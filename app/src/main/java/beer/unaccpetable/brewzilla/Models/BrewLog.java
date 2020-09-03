@@ -64,4 +64,12 @@ public class BrewLog extends ListableObject implements Serializable {
         //mashStartTime = time.getTodaysDate().toString();
         //mashEndTime = time.getTodaysDate().toString();
     }
+
+    public enum Properties {
+        MashStartTime,
+        MashEndTime,
+        FG,
+        OG,
+        Vaurloff
+    }
 }

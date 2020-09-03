@@ -50,19 +50,30 @@ public class ViewBrewLogController extends BaseLogic<ViewBrewLogController.View>
     }
 
     private void CreateBrewStatsListeners() {
-        m_BrewStatsController.addFGChangedListener((fg -> m_BrewLog.fg = fg));
+        /*m_BrewStatsController.addFGChangedListener((fg -> m_BrewLog.fg = fg));
         m_BrewStatsController.addOGChangedListener((og -> m_BrewLog.og = og));
         m_BrewStatsController.addMashStartTimeChangedListener((startTime -> m_BrewLog.mashStartTime = startTime));
-        m_BrewStatsController.addMashEndTimeChangedListener((endTime -> m_BrewLog.mashEndTime = endTime));
+        m_BrewStatsController.addMashEndTimeChangedListener((endTime -> m_BrewLog.mashEndTime = endTime));*/
 
         m_BrewStatsController.addPropertyChangedListener((this::PropertyChanged));
     }
 
-    private void PropertyChanged(String sProperty, Object value) {
-        switch (sProperty) {
-            case "Vaurloff":
+    private void PropertyChanged(BrewLog.Properties eProperty, Object value) {
+        switch (eProperty) {
+            case Vaurloff:
                 m_BrewLog.vaurloff = (boolean)value;
                 break;
+            case FG:
+                m_BrewLog.fg = (double)value;
+                break;
+            case OG:
+                m_BrewLog.og = (double)value;
+                break;
+            case MashEndTime:
+                m_BrewLog.mashEndTime = (String)value;
+                break;
+            case MashStartTime:
+                m_BrewLog.mashStartTime = (String)value;
         }
     }
 

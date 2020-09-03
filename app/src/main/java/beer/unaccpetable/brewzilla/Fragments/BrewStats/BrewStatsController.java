@@ -6,7 +6,6 @@ import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,38 +17,11 @@ import beer.unaccpetable.brewzilla.Models.BrewLog;
 
 public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
 
-    public enum DateTimeType {
-        MashStart,
-        MashEnd,
-        BoilStart,
-        BoilEnd
+    public interface IPropertyChangedListener {
+        void propertyChanged(BrewLog.Properties eProperty, Object value);
     }
 
-    public interface IFGChanged {
-        void fgChanged(double fg);
-    }
-
-    public interface IOGChanged {
-        void ogChanged(double og);
-    }
-
-    public interface IMashStartTimeChanged {
-        void mashStartTimeChanged(String startTime);
-    }
-
-    public interface IMashEndTimeChanged {
-        void mashEndTimeChanged(String endTime);
-    }
-
-    public interface IGenericListener {
-        void propertyChanged(String sProperty, Object value);
-    }
-
-    private @NotNull ArrayList<IFGChanged> m_evtFGChanged;
-    private @NotNull ArrayList<IOGChanged> m_evtOGChanged;
-    private @NotNull ArrayList<IMashStartTimeChanged> m_evtMashStartTimeChanged;
-    private @NotNull ArrayList<IMashEndTimeChanged> m_evtMashEndTimeChanged;
-    private @NotNull ArrayList<IGenericListener> m_evtPropertyChanged;
+    private @NotNull ArrayList<IPropertyChangedListener> m_evtPropertyChanged;
 
     private ITimeSource m_oTimeSource;
 
@@ -57,10 +29,6 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
     private @NotNull Calendar m_cMashEnd;
 
     public BrewStatsController(ITimeSource oTimeSource) {
-        m_evtFGChanged = new ArrayList<>();
-        m_evtOGChanged = new ArrayList<>();
-        m_evtMashStartTimeChanged = new ArrayList<>();
-        m_evtMashEndTimeChanged = new ArrayList<>();
         m_evtPropertyChanged = new ArrayList<>();
 
         m_oTimeSource = oTimeSource;
@@ -71,38 +39,35 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
 
     public void fgChanged(CharSequence s) {
         double fg = Tools.ParseDouble(s.toString());
-        fireFGChangedEvent(fg);
+        firePropertyChanged(BrewLog.Properties.FG, fg);
     }
 
     public void ogChanged(CharSequence s) {
         double og = Tools.ParseDouble(s.toString());
-        fireOGChangedEvent(og);
+        firePropertyChanged(BrewLog.Properties.OG, og);
     }
 
-    public void mashStartTimeChanged(String startTime) {
-        fireMashStartTimeChanged(startTime);
-    }
-
-
-    public void PopulateStats(BrewLog log) { //double fg, double og, String mashStartTime) {
+    public void PopulateStats(BrewLog log) {
         view.setOg(log.og);
         view.setFg(log.fg);
-        ConvertAndSetMashStart(log.mashStartTime, DateTimeType.MashStart);
-        ConvertAndSetMashStart(log.mashEndTime, DateTimeType.MashEnd);
+        ConvertAndSetMashStart(log.mashStartTime, BrewLog.Properties.MashStartTime);
+        ConvertAndSetMashStart(log.mashEndTime, BrewLog.Properties.MashEndTime);
         view.setVaurloff(log.vaurloff);
     }
 
-    private void ConvertAndSetMashStart(String sTime, DateTimeType dtt) {
+    private void ConvertAndSetMashStart(String sTime, BrewLog.Properties dtt) {
         Date date = parseDateFromString(sTime);
+        String sDate = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).format(date);
+        String sFormattedTime = new SimpleDateFormat("h:mm a", Locale.ENGLISH).format(date);
 
         switch (dtt) {
-            case MashStart:
+            case MashStartTime:
                 m_cMashStart.setTime(date);
-                view.setMashStartTime(new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).format(date), new SimpleDateFormat("h:mm a", Locale.ENGLISH).format(date));
+                view.setMashStartTime(sDate, sFormattedTime);
                 break;
-            case MashEnd:
+            case MashEndTime:
                 m_cMashEnd.setTime(date);
-                view.setMashEndTime(new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).format(date), new SimpleDateFormat("h:mm a", Locale.ENGLISH).format(date));
+                view.setMashEndTime(sDate, sFormattedTime);
                 break;
         }
     }
@@ -122,14 +87,14 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
     }
 
 
-    public void startDateDialog(DateTimeType dtt) {
+    public void startDateDialog(BrewLog.Properties dtt) {
         Calendar c = m_oTimeSource.getCalendarInstance();
 
         switch (dtt) {
-            case MashStart:
+            case MashStartTime:
                 c = m_cMashStart;
                 break;
-            case MashEnd:
+            case MashEndTime:
                 c = m_cMashEnd;
                 break;
         }
@@ -137,14 +102,14 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
         view.ShowDateDialog(dtt, c);
     }
 
-    public void startTimeDialog(DateTimeType dtt) {
+    public void startTimeDialog(BrewLog.Properties dtt) {
         Calendar c = m_oTimeSource.getCalendarInstance();
 
         switch (dtt) {
-            case MashStart:
+            case MashStartTime:
                 c = m_cMashStart;
                 break;
-            case MashEnd:
+            case MashEndTime:
                 c = m_cMashEnd;
                 break;
         }
@@ -152,26 +117,27 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
         view.ShowTimeDialog(dtt, c);
     }
 
-    public void setDateTime(Calendar cal, DateTimeType dtt) {
+    public void setDateTime(Calendar cal, BrewLog.Properties dtt) {
         Date dt = cal.getTime();
 
         String sDate = Tools.FormatDate(dt, "MM/dd/yyyy");
         String sTime = Tools.FormatDate(dt, "h:mm a");
+        String sDateTime = sDate + " " + sTime;
 
         switch(dtt) {
-            case MashStart:
+            case MashStartTime:
                 view.setMashStartTime(sDate, sTime);
-                fireMashStartTimeChanged(sDate + " " + sTime);
+                firePropertyChanged(BrewLog.Properties.MashStartTime, sDateTime);
                 break;
-            case MashEnd:
+            case MashEndTime:
                 view.setMashEndTime(sDate, sTime);
-                fireMashEndTimeChanged(sDate + " " + sTime);
+                firePropertyChanged(BrewLog.Properties.MashEndTime, sDateTime);
                 break;
         }
     }
 
     public void setVaurloffed(boolean bChecked) {
-        firePropertyChanged("Vaurloff", bChecked);
+        firePropertyChanged(BrewLog.Properties.Vaurloff, bChecked);
     }
 
     public interface View {
@@ -183,60 +149,20 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
         void setMashStartTime(String startDate, String startTime);
         void setMashEndTime(String endDate, String endTime);
 
-        void ShowDateDialog(DateTimeType dtt, Calendar c);
+        void ShowDateDialog(BrewLog.Properties dtt, Calendar c);
 
-        void ShowTimeDialog(BrewStatsController.DateTimeType dtt, Calendar cal);
+        void ShowTimeDialog(BrewLog.Properties dtt, Calendar cal);
 
         void setVaurloff(boolean bVaurloff);
     }
 
-    public void addFGChangedListener(IFGChanged listener) {
-        m_evtFGChanged.add(listener);
-    }
-
-    private void fireFGChangedEvent(double fg) {
-        for (IFGChanged listener : m_evtFGChanged) {
-            listener.fgChanged(fg);
+    private void firePropertyChanged(BrewLog.Properties eProperty, Object value) {
+        for (IPropertyChangedListener listener : m_evtPropertyChanged) {
+            listener.propertyChanged(eProperty, value);
         }
     }
 
-    public void addOGChangedListener(IOGChanged listener) {
-        m_evtOGChanged.add(listener);
-    }
-
-    private void fireOGChangedEvent(double og) {
-        for (IOGChanged listener : m_evtOGChanged) {
-            listener.ogChanged(og);
-        }
-    }
-
-    public void addMashStartTimeChangedListener(IMashStartTimeChanged listener) {
-        m_evtMashStartTimeChanged.add(listener);
-    }
-
-    private void fireMashStartTimeChanged(String startTime) {
-        for (IMashStartTimeChanged listener : m_evtMashStartTimeChanged) {
-            listener.mashStartTimeChanged(startTime);
-        }
-    }
-
-    private void fireMashEndTimeChanged(String startTime) {
-        for (IMashEndTimeChanged listener : m_evtMashEndTimeChanged) {
-            listener.mashEndTimeChanged(startTime);
-        }
-    }
-
-    public void addMashEndTimeChangedListener(IMashEndTimeChanged listener) {
-        m_evtMashEndTimeChanged.add(listener);
-    }
-
-    private void firePropertyChanged(String sProperty, Object value) {
-        for (IGenericListener listener : m_evtPropertyChanged) {
-            listener.propertyChanged(sProperty, value);
-        }
-    }
-
-    public void addPropertyChangedListener(IGenericListener listener) {
+    public void addPropertyChangedListener(IPropertyChangedListener listener) {
         m_evtPropertyChanged.add(listener);
     }
 }
