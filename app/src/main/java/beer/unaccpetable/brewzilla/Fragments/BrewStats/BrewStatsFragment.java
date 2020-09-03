@@ -9,6 +9,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,6 +31,9 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
     EditText m_txtMashStartTime;
     TextView m_tvMashStartDate;
     TextView m_tvMashStartTime;
+    TextView m_tvMashEndDate;
+    TextView m_tvMashEndTime;
+    CheckBox m_chkVaurloffed;
 
     public static BrewStatsFragment newInstance() {
         BrewStatsFragment fragmentFirst = new BrewStatsFragment();
@@ -106,8 +111,11 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
             }
         });*/
 
-        m_tvMashStartDate.setOnClickListener((dtt) -> m_Controller.startDateDialog(BrewStatsController.DateTimeType.Mash));
-        m_tvMashStartTime.setOnClickListener((dtt) -> m_Controller.startTimeDialog(BrewStatsController.DateTimeType.Mash));
+        m_tvMashStartDate.setOnClickListener((dtt) -> m_Controller.startDateDialog(BrewStatsController.DateTimeType.MashStart));
+        m_tvMashStartTime.setOnClickListener((dtt) -> m_Controller.startTimeDialog(BrewStatsController.DateTimeType.MashStart));
+        m_tvMashEndDate.setOnClickListener((dtt) -> m_Controller.startDateDialog(BrewStatsController.DateTimeType.MashEnd));
+        m_tvMashEndTime.setOnClickListener((dtt) -> m_Controller.startTimeDialog(BrewStatsController.DateTimeType.MashEnd));
+        m_chkVaurloffed.setOnCheckedChangeListener((compoundButton, bChecked) -> m_Controller.setVaurloffed(bChecked));
     }
 
     private void FindUIElements(View view) {
@@ -116,6 +124,9 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
         //m_txtMashStartTime = view.findViewById(R.id.brewStatsMashStartTime);
         m_tvMashStartDate = view.findViewById(R.id.brewStatsMashStartDate);
         m_tvMashStartTime = view.findViewById(R.id.brewStatsMashStartTime);
+        m_tvMashEndDate = view.findViewById(R.id.brewStatsMashEndDate);
+        m_tvMashEndTime = view.findViewById(R.id.brewStatsMashEndTime);
+        m_chkVaurloffed = view.findViewById(R.id.chkBrewStatsVaurloff);
     }
 
     @Override
@@ -132,6 +143,12 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
     public void setMashStartTime(String startDate, String startTime) {
         Tools.SetText(m_tvMashStartDate, startDate);
         Tools.SetText(m_tvMashStartTime, startTime);
+    }
+
+    @Override
+    public void setMashEndTime(String endDate, String endTime) {
+        Tools.SetText(m_tvMashEndDate, endDate);
+        Tools.SetText(m_tvMashEndTime, endTime);
     }
 
     @Override
@@ -168,5 +185,10 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
 
         TimePickerDialog dialogTimePicker = new TimePickerDialog(getContext(), time, cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE), false);
         dialogTimePicker.show();
+    }
+
+    @Override
+    public void setVaurloff(boolean bVaurloff) {
+        m_chkVaurloffed.setChecked(bVaurloff);
     }
 }

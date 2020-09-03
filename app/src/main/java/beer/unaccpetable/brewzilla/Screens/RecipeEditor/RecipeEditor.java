@@ -21,6 +21,7 @@ import beer.unaccpetable.brewzilla.Repositories.Repository;
 import beer.unaccpetable.brewzilla.Screens.BaseActivity;
 import beer.unaccpetable.brewzilla.Screens.ViewBrewLog.ViewBrewLog;
 
+import com.unacceptable.unacceptablelibrary.Repositories.TimeSource;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 public class RecipeEditor extends BaseActivity implements RecipeEditorController.View {
@@ -45,7 +46,7 @@ public class RecipeEditor extends BaseActivity implements RecipeEditorController
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         FindUIElements();
 
-        m_Controller = new RecipeEditorController(new Repository());
+        m_Controller = new RecipeEditorController(new Repository(), new TimeSource());
         m_Controller.attachView(this);
 
         recipeEditorPagerAdapter = new RecipeEditorPagerAdapter(getSupportFragmentManager(), m_Controller.getRecipeViewController());

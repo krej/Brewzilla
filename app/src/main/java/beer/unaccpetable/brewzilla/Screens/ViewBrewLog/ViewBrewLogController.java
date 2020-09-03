@@ -53,6 +53,17 @@ public class ViewBrewLogController extends BaseLogic<ViewBrewLogController.View>
         m_BrewStatsController.addFGChangedListener((fg -> m_BrewLog.fg = fg));
         m_BrewStatsController.addOGChangedListener((og -> m_BrewLog.og = og));
         m_BrewStatsController.addMashStartTimeChangedListener((startTime -> m_BrewLog.mashStartTime = startTime));
+        m_BrewStatsController.addMashEndTimeChangedListener((endTime -> m_BrewLog.mashEndTime = endTime));
+
+        m_BrewStatsController.addPropertyChangedListener((this::PropertyChanged));
+    }
+
+    private void PropertyChanged(String sProperty, Object value) {
+        switch (sProperty) {
+            case "Vaurloff":
+                m_BrewLog.vaurloff = (boolean)value;
+                break;
+        }
     }
 
     private void CreateRectifiedRecipeListeners() {
@@ -163,7 +174,8 @@ public class ViewBrewLogController extends BaseLogic<ViewBrewLogController.View>
                 m_oRectifiedController.SetRecipe(m_BrewLog.rectifiedRecipe);
                 //m_oOriginalController.SetRecipe(brewLog.originalRecipe);
                 m_MashSetupController.PopulateParameters(m_BrewLog.rectifiedRecipe.recipeParameters);
-                m_BrewStatsController.PopulateStats(m_BrewLog.fg, m_BrewLog.og, m_BrewLog.mashStartTime);
+                //m_BrewStatsController.PopulateStats(m_BrewLog.fg, m_BrewLog.og, m_BrewLog.mashStartTime);
+                m_BrewStatsController.PopulateStats(m_BrewLog);
                 view.SetScreenTitle(m_BrewLog.rectifiedRecipe.name, m_BrewLog.name);
 
                 m_OriginalData = m_BrewLog.BuildRestData();
