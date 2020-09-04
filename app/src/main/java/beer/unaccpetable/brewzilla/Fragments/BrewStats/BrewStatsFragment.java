@@ -47,6 +47,7 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
     TextView m_tvSpargeEndDate, m_tvSpargeEndTime;
     TextView m_tvBoilStartDate, m_tvBoilStartTime;
     TextView m_tvBoilEndDate, m_tvBoilEndTime;
+    EditText m_txtPreBoilVolumeString, m_txtPreBoilVolumeDecimal;
 
     public static BrewStatsFragment newInstance() {
         BrewStatsFragment fragmentFirst = new BrewStatsFragment();
@@ -81,48 +82,9 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
     }
 
     private void SetupRecipeParamaterListeners() {
-        m_txtOG.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                m_Controller.ogChanged(s);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        m_txtFG.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                m_Controller.fgChanged(s);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-/*        m_txtMashStartTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    m_Controller.mashStartTimeChanged(m_txtMashStartTime.getText().toString());
-                }
-            }
-        });*/
+        //OG & FG
+        CreateTextChangedListener(m_txtOG, BrewLog.Properties.OG);
+        CreateTextChangedListener(m_txtFG, BrewLog.Properties.FG);
 
         //Mash
         SetDateDialogClickListener(m_tvMashStartDate, BrewLog.Properties.MashStartTime);
@@ -131,7 +93,7 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
         SetTimeDialogClickListener(m_tvMashEndTime, BrewLog.Properties.MashEndTime);
         
         //Vaurloff
-        m_chkVaurloffed.setOnCheckedChangeListener((compoundButton, bChecked) -> m_Controller.setVaurloffed(bChecked));
+        m_chkVaurloffed.setOnCheckedChangeListener((compoundButton, bChecked) -> m_Controller.propertyChanged(BrewLog.Properties.Vaurloff, bChecked));
 
         //Sparge
         SetDateDialogClickListener(m_tvSpargeStartDate, BrewLog.Properties.SpargeStartTime);
@@ -144,6 +106,29 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
         SetDateDialogClickListener(m_tvBoilEndDate, BrewLog.Properties.BoilEndTime);
         SetTimeDialogClickListener(m_tvBoilStartTime, BrewLog.Properties.BoilStartTime);
         SetTimeDialogClickListener(m_tvBoilEndTime, BrewLog.Properties.BoilEndTime);
+
+        //Pre Boil Volume
+        CreateTextChangedListener(m_txtPreBoilVolumeDecimal, BrewLog.Properties.PreBoilVolumeActual);
+        CreateTextChangedListener(m_txtPreBoilVolumeString, BrewLog.Properties.PreBoilVolumeEstimate);
+    }
+
+    private void CreateTextChangedListener(EditText txt, BrewLog.Properties prop) {
+        txt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                m_Controller.propertyChanged(prop, s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void SetDateDialogClickListener(TextView tv, BrewLog.Properties p) {
@@ -171,6 +156,8 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
         m_tvBoilStartTime = view.findViewById(R.id.brewStatsBoilStartTime);
         m_tvBoilEndDate = view.findViewById(R.id.brewStatsBoilEndDate);
         m_tvBoilEndTime = view.findViewById(R.id.brewStatsBoilEndTime);
+        m_txtPreBoilVolumeDecimal = view.findViewById(R.id.brewStatsPreBoilVolumeDecimal);
+        m_txtPreBoilVolumeString = view.findViewById(R.id.brewStatsPreBoilVolumeString);
 
     }
 
@@ -259,5 +246,15 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
     @Override
     public void setVaurloff(boolean bVaurloff) {
         m_chkVaurloffed.setChecked(bVaurloff);
+    }
+
+    @Override
+    public void setPreBoilVolumeDecimal(double preBoilVolumeActual) {
+        Tools.SetText(m_txtPreBoilVolumeDecimal, preBoilVolumeActual);
+    }
+
+    @Override
+    public void setPreBoilVolumeString(String preBoilVolumeEstimate) {
+        Tools.SetText(m_txtPreBoilVolumeString, preBoilVolumeEstimate);
     }
 }

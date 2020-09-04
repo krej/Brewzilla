@@ -42,16 +42,6 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
         m_cBoilEnd = m_oTimeSource.getCalendarInstance();
     }
 
-    public void fgChanged(CharSequence s) {
-        double fg = Tools.ParseDouble(s.toString());
-        firePropertyChanged(BrewLog.Properties.FG, fg);
-    }
-
-    public void ogChanged(CharSequence s) {
-        double og = Tools.ParseDouble(s.toString());
-        firePropertyChanged(BrewLog.Properties.OG, og);
-    }
-
     public void PopulateStats(BrewLog log) {
         view.setOg(log.og);
         view.setFg(log.fg);
@@ -62,6 +52,8 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
         ConvertAndSetDateTimes(log.spargeEndTime, BrewLog.Properties.SpargeEndTime);
         ConvertAndSetDateTimes(log.boilStartTime, BrewLog.Properties.BoilStartTime);
         ConvertAndSetDateTimes(log.boilEndTime, BrewLog.Properties.BoilEndTime);
+        view.setPreBoilVolumeString(log.preBoilVolumeEstimate);
+        view.setPreBoilVolumeDecimal(log.preBoilVolumeActual);
     }
 
     private void ConvertAndSetDateTimes(String sTime, BrewLog.Properties dtt) {
@@ -177,8 +169,23 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
         }
     }
 
-    public void setVaurloffed(boolean bChecked) {
-        firePropertyChanged(BrewLog.Properties.Vaurloff, bChecked);
+    public void propertyChanged(BrewLog.Properties property, Object value) {
+        switch (property) {
+            //Numbers, things that are coming over as a CharSequence(from a text box) and need to be converted to numbers first.
+            case FG:
+            case OG:
+            case PreBoilVolumeActual:
+                double d = Tools.ParseDouble(((CharSequence)value).toString());
+                firePropertyChanged(property, d);
+                break;
+
+                //Strings, Bools, etc. Things that don't need any extra conversion
+            case Vaurloff:
+            case PreBoilVolumeEstimate:
+                firePropertyChanged(property, value);
+                break;
+
+        }
     }
 
     public interface View {
@@ -199,6 +206,10 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
         void ShowTimeDialog(BrewLog.Properties dtt, Calendar cal);
 
         void setVaurloff(boolean bVaurloff);
+
+        void setPreBoilVolumeDecimal(double preBoilVolumeActual);
+
+        void setPreBoilVolumeString(String preBoilVolumeEstimate);
     }
 
     private void firePropertyChanged(BrewLog.Properties eProperty, Object value) {

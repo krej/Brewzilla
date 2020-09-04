@@ -83,6 +83,12 @@ public class ViewBrewLogController extends BaseLogic<ViewBrewLogController.View>
             case BoilEndTime:
                 m_BrewLog.boilEndTime = (String)value;
                 break;
+            case PreBoilVolumeActual:
+                m_BrewLog.preBoilVolumeActual = (double)value;
+                break;
+            case PreBoilVolumeEstimate:
+                m_BrewLog.preBoilVolumeEstimate = value.toString();
+                break;
             default:
                 break;
         }

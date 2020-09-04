@@ -223,6 +223,8 @@
     <string name="IBUs">IBUs</string>
     <string name="og">OG</string>
     <string name="fg">FG</string>
+    <string name="ogDescription">Original Gravity (OG)</string>
+    <string name="fgDescription">Final Gravity (FG)</string>
     <string name="ABV">ABV</string>
     <string name="SRM">SRM</string>
     <string name="refresh">Refresh</string>
@@ -255,4 +257,6 @@
     <string name="SpargeStartTime">Sparge Start Time</string>
     <string name="BoilStartTime">Boil Start Time</string>
     <string name="BoilEndTime">Boil End Time</string>
+    <string name="preBoilVolumeStringLabel">Pre Boil Volume Description</string>
+    <string name="preBoilVolumeDecimalLabel">Pre Boil Volume (gal)</string>
 </resources>

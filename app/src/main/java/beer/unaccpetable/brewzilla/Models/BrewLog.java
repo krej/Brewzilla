@@ -75,6 +75,8 @@ public class BrewLog extends ListableObject implements Serializable {
         SpargeStartTime,
         SpargeEndTime,
         BoilStartTime,
-        BoilEndTime
+        BoilEndTime,
+        PreBoilVolumeEstimate,
+        PreBoilVolumeActual
     }
 }

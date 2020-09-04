@@ -7,48 +7,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!--OG-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="5dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/brewStatsOgLabel"
-                android:layout_centerVertical="true"
-                android:text="@string/og"/>
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:ems="4"
-                android:id="@+id/brewStatsOg"/>
-
-        </RelativeLayout>
-
-        <!--FG-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="5dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/brewStatsFgLabel"
-                android:layout_centerVertical="true"
-                android:text="@string/fg"/>
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:ems="4"
-                android:id="@+id/brewStatsFg"/>
-
-        </RelativeLayout>
-
         <!--Mash Start Time-->
         <RelativeLayout
             android:layout_width="match_parent"
@@ -172,6 +130,49 @@
 
         </RelativeLayout>
 
+
+        <!--Pre Boil Volume (String)-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="5dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsBreBoilVolumeStringLabel"
+                android:text="@string/preBoilVolumeStringLabel"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="4"
+                android:id="@+id/brewStatsPreBoilVolumeString"/>
+
+        </LinearLayout>
+
+        <!--Pre Boil Volume (Decimal)-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsBreBoilVolumeDecimalLabel"
+                android:layout_centerVertical="true"
+                android:text="@string/preBoilVolumeDecimalLabel"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:ems="4"
+                android:inputType="numberDecimal"
+                android:id="@+id/brewStatsPreBoilVolumeDecimal"/>
+
+        </RelativeLayout>
+
         <!--Boil Start Time-->
         <RelativeLayout
             android:layout_width="match_parent"
@@ -224,5 +225,48 @@
 
         </RelativeLayout>
 
+        <!--OG-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsOgLabel"
+                android:layout_centerVertical="true"
+                android:text="@string/ogDescription"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:ems="4"
+                android:inputType="numberDecimal"
+                android:id="@+id/brewStatsOg"/>
+
+        </RelativeLayout>
+
+        <!--FG-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/brewStatsFgLabel"
+                android:layout_centerVertical="true"
+                android:text="@string/fgDescription"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:ems="4"
+                android:inputType="numberDecimal"
+                android:id="@+id/brewStatsFg"/>
+
+        </RelativeLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
