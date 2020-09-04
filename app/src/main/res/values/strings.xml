@@ -259,4 +259,6 @@
     <string name="BoilEndTime">Boil End Time</string>
     <string name="preBoilVolumeStringLabel">Pre Boil Volume Description</string>
     <string name="preBoilVolumeDecimalLabel">Pre Boil Volume (gal)</string>
+    <string name="actualBatchSizeStringLabel">Actual Batch Size Description</string>
+    <string name="actualBatchSizeDecimalLabel">Actual Batch Size (gal)</string>
 </resources>

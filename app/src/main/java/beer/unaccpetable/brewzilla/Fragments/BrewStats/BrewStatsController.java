@@ -54,6 +54,8 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
         ConvertAndSetDateTimes(log.boilEndTime, BrewLog.Properties.BoilEndTime);
         view.setPreBoilVolumeString(log.preBoilVolumeEstimate);
         view.setPreBoilVolumeDecimal(log.preBoilVolumeActual);
+        view.setActualBatchSizeString(log.actualBatchSizeString);
+        view.setActualBatchSizeDecimal(log.actualBatchSize);
     }
 
     private void ConvertAndSetDateTimes(String sTime, BrewLog.Properties dtt) {
@@ -175,6 +177,7 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
             case FG:
             case OG:
             case PreBoilVolumeActual:
+            case ActualBatchSize:
                 double d = Tools.ParseDouble(((CharSequence)value).toString());
                 firePropertyChanged(property, d);
                 break;
@@ -182,6 +185,7 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
                 //Strings, Bools, etc. Things that don't need any extra conversion
             case Vaurloff:
             case PreBoilVolumeEstimate:
+            case ActualBatchSizeString:
                 firePropertyChanged(property, value);
                 break;
 
@@ -210,6 +214,10 @@ public class BrewStatsController extends BaseLogic<BrewStatsController.View> {
         void setPreBoilVolumeDecimal(double preBoilVolumeActual);
 
         void setPreBoilVolumeString(String preBoilVolumeEstimate);
+
+        void setActualBatchSizeString(String actualBatchSizeString);
+
+        void setActualBatchSizeDecimal(double actualBatchSize);
     }
 
     private void firePropertyChanged(BrewLog.Properties eProperty, Object value) {

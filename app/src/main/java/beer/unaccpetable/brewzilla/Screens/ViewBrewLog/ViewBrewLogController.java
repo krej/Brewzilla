@@ -89,6 +89,12 @@ public class ViewBrewLogController extends BaseLogic<ViewBrewLogController.View>
             case PreBoilVolumeEstimate:
                 m_BrewLog.preBoilVolumeEstimate = value.toString();
                 break;
+            case ActualBatchSize:
+                m_BrewLog.actualBatchSize = (double)value;
+                break;
+            case ActualBatchSizeString:
+                m_BrewLog.actualBatchSizeString = value.toString();
+                break;
             default:
                 break;
         }

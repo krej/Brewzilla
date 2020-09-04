@@ -48,6 +48,7 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
     TextView m_tvBoilStartDate, m_tvBoilStartTime;
     TextView m_tvBoilEndDate, m_tvBoilEndTime;
     EditText m_txtPreBoilVolumeString, m_txtPreBoilVolumeDecimal;
+    EditText m_txtActualBatchSizeString, m_txtActualBatchSizeDecimal;
 
     public static BrewStatsFragment newInstance() {
         BrewStatsFragment fragmentFirst = new BrewStatsFragment();
@@ -110,6 +111,10 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
         //Pre Boil Volume
         CreateTextChangedListener(m_txtPreBoilVolumeDecimal, BrewLog.Properties.PreBoilVolumeActual);
         CreateTextChangedListener(m_txtPreBoilVolumeString, BrewLog.Properties.PreBoilVolumeEstimate);
+
+        //Actual Batch Size
+        CreateTextChangedListener(m_txtActualBatchSizeDecimal, BrewLog.Properties.ActualBatchSize);
+        CreateTextChangedListener(m_txtActualBatchSizeString, BrewLog.Properties.ActualBatchSizeString);
     }
 
     private void CreateTextChangedListener(EditText txt, BrewLog.Properties prop) {
@@ -158,6 +163,8 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
         m_tvBoilEndTime = view.findViewById(R.id.brewStatsBoilEndTime);
         m_txtPreBoilVolumeDecimal = view.findViewById(R.id.brewStatsPreBoilVolumeDecimal);
         m_txtPreBoilVolumeString = view.findViewById(R.id.brewStatsPreBoilVolumeString);
+        m_txtActualBatchSizeDecimal = view.findViewById(R.id.actualBatchSizeDecimal);
+        m_txtActualBatchSizeString = view.findViewById(R.id.actualBatchSizeString);
 
     }
 
@@ -256,5 +263,16 @@ public class BrewStatsFragment extends Fragment implements BrewStatsController.V
     @Override
     public void setPreBoilVolumeString(String preBoilVolumeEstimate) {
         Tools.SetText(m_txtPreBoilVolumeString, preBoilVolumeEstimate);
+    }
+
+
+    @Override
+    public void setActualBatchSizeString(String actualBatchSizeString) {
+        Tools.SetText(m_txtActualBatchSizeString, actualBatchSizeString);
+    }
+
+    @Override
+    public void setActualBatchSizeDecimal(double actualBatchSize) {
+        Tools.SetText(m_txtActualBatchSizeDecimal, actualBatchSize);
     }
 }
