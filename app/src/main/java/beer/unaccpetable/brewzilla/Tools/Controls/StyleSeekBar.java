@@ -8,7 +8,9 @@ import android.graphics.Rect;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 
-public class StyleSeekBar extends android.support.v7.widget.AppCompatSeekBar {
+import androidx.appcompat.widget.AppCompatSeekBar;
+
+public class StyleSeekBar extends AppCompatSeekBar {
 
     TextPaint m_tp = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
 

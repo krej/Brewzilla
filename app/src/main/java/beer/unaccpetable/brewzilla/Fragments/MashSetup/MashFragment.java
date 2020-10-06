@@ -1,7 +1,6 @@
 package beer.unaccpetable.brewzilla.Fragments.MashSetup;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -14,13 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.unacceptable.unacceptablelibrary.Controls.CustomOnItemSelectedListener;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 import beer.unaccpetable.brewzilla.Models.RecipeParameters;
 import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
 import beer.unaccpetable.brewzilla.R;
-import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditorController;
 
 public class MashFragment extends Fragment implements MashSetupController.View {
     private MashSetupController m_Controller;

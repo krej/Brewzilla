@@ -2,14 +2,12 @@ package beer.unaccpetable.brewzilla.Fragments.RecipeView;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -19,6 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
@@ -34,7 +34,6 @@ import beer.unaccpetable.brewzilla.Models.RecipeStatistics;
 import beer.unaccpetable.brewzilla.Models.Style;
 import beer.unaccpetable.brewzilla.Models.YeastAddition;
 import beer.unaccpetable.brewzilla.R;
-import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditorController;
 
 public class RecipeFragment
         extends Fragment

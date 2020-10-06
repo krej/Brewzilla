@@ -1,16 +1,14 @@
 package beer.unaccpetable.brewzilla.Screens.RecipeEditor;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import beer.unaccpetable.brewzilla.Fragments.BrewLogList.BrewLogList;
-import beer.unaccpetable.brewzilla.Fragments.MashSetup.MashFragment;
-import beer.unaccpetable.brewzilla.Fragments.MashSetup.MashSetupController;
 import beer.unaccpetable.brewzilla.Fragments.RecipeView.RecipeFragment;
 import beer.unaccpetable.brewzilla.Fragments.RecipeView.RecipeViewController;
 import beer.unaccpetable.brewzilla.Models.BrewLog;
-import beer.unaccpetable.brewzilla.Screens.RecipeEditor.RecipeEditorController;
 
 public class RecipeEditorPagerAdapter extends FragmentStatePagerAdapter {
 
